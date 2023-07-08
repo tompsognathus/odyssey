@@ -2,25 +2,28 @@
 
 
 #include "TreasureChest.h"
+#include "Components/ArrowComponent.h"
 
 // Sets default values
 ATreasureChest::ATreasureChest()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
-// Called when the game starts or when spawned
-void ATreasureChest::BeginPlay()
+
+// Interaface Functions
+void ATreasureChest::EnteredInteractionZone_Implementation()
 {
-	Super::BeginPlay();
+	UE_LOG(LogTemp, Display, TEXT("Entered treasure interaction zone"));
 
+	
 }
 
-// Called every frame
-void ATreasureChest::Tick(float DeltaTime)
+void ATreasureChest::InteractRequest_Implementation()
 {
-	Super::Tick(DeltaTime);
+	UE_LOG(LogTemp, Display, TEXT("Treasure clicked"));
 
 }
+
+

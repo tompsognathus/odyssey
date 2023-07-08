@@ -4,23 +4,38 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interactable.h"
 #include "TreasureChest.generated.h"
 
 UCLASS()
-class ODYSSEY_API ATreasureChest : public AActor
+class ODYSSEY_API ATreasureChest : public AActor, public IInteractable
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ATreasureChest();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	// Variables
+	UPROPERTY(EditAnywhere)
+	float LidOpenAngle = 90.0f;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere)
+	float LidClosedAngle = 0.0f;
 
+	UPROPERTY(EditAnywhere)
+	class UArrowComponent* LidHingeArrow;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsOpen = false;
+
+
+	// Interactable interface
+	virtual void EnteredInteractionZone_Implementation() override;
+
+	virtual void InteractRequest_Implementation() override;
+
+private:
+	bool IsRotating = false;
+	float TargetLidAngle = LidOpenAngle;
 };
