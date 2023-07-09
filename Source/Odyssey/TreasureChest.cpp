@@ -13,17 +13,17 @@ ATreasureChest::ATreasureChest()
 
 
 // Interaface Functions
-void ATreasureChest::EnteredInteractionZone_Implementation()
-{
-	UE_LOG(LogTemp, Display, TEXT("Entered treasure interaction zone"));
-
-	
-}
-
-void ATreasureChest::InteractRequest_Implementation()
-{
-	UE_LOG(LogTemp, Display, TEXT("Treasure clicked"));
-
-}
+//void ATreasureChest::EnteredInteractionZone_Implementation()
+//{
+//	UE_LOG(LogTemp, Display, TEXT("Entered treasure interaction zone"));
+//
+//	
+//}
+//
+//void ATreasureChest::InteractRequest_Implementation()
+//{
+//	UE_LOG(LogTemp, Display, TEXT("Treasure clicked"));
+//
+//}
 
 

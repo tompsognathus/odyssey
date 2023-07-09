@@ -31,9 +31,9 @@ public:
 
 
 	// Interactable interface
-	virtual void EnteredInteractionZone_Implementation() override;
+	//virtual void EnteredInteractionZone_Implementation() override;
 
-	virtual void InteractRequest_Implementation() override;
+	//virtual void InteractRequest_Implementation() override;
 
 private:
 	bool IsRotating = false;
