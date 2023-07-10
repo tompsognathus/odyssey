@@ -57,13 +57,8 @@ void AOdysseyCharacter::ActivateExploreMappingContext()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			if (ExploreMappingContext)
-			{
-				Subsystem->ClearAllMappings();
-				Subsystem->AddMappingContext(ExploreMappingContext, 0);
-
-			}
-			else { UE_LOG(LogTemp, Warning, TEXT("ExploreMappingContext is null (not set in blueprint?)")); }
+			Subsystem->ClearAllMappings();
+			Subsystem->AddMappingContext(ExploreMappingContext, 0);
 		}
 	}
 }
@@ -74,12 +69,20 @@ void AOdysseyCharacter::ActivateInteractMappingContext()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			if (InteractMappingContext)
-			{
-				Subsystem->ClearAllMappings();
-				Subsystem->AddMappingContext(InteractMappingContext, 0);
+			Subsystem->ClearAllMappings();
+			Subsystem->AddMappingContext(InteractMappingContext, 0);
+		}
+	}
+}
 
-			} else { UE_LOG(LogTemp, Warning, TEXT("InteractMappingContext is null (not set in blueprint?)")); }
+void AOdysseyCharacter::ActivateMenuMappingContext()
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->ClearAllMappings();
+			Subsystem->AddMappingContext(MenuMappingContext, 0);
 		}
 	}
 }
@@ -101,49 +104,27 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-
+		
 		//Jumping
-		if (JumpAction)
-		{
-			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Jump Action is null. Not set in the Character Blueprint?")); }
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		//Moving
-		if (MoveAction)
-		{
-			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Move);
-
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Move Action is null. Not set in the Character Blueprint?")); }
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Move);
 
 		//Looking
-		if (LookAction)
-		{
-			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Look);
-
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Look Action is null. Not set in the Character Blueprint?")); }
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Look);
 
 		//Interacting
-		if (InteractAction)
-		{
-			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Interact);
-
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Interact Action is null. Not set in the Character Blueprint?")); }
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Interact);
 
 		//Pause Game
-		if (PauseGameAction)
-		{
-			EnhancedInputComponent->BindAction(PauseGameAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::PauseGame);
+		EnhancedInputComponent->BindAction(PauseGameAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::PauseGame);
 
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Pause Game Action is null. Not set in the Character Blueprint?")); }
-
+		//Resume Game
+		EnhancedInputComponent->BindAction(ResumeGameAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::ResumeGame);
 	}
+
 }
 
 void AOdysseyCharacter::Move(const FInputActionValue& Value)
