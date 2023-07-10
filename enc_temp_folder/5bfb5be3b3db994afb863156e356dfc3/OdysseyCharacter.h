@@ -47,10 +47,10 @@ class AOdysseyCharacter : public ACharacter
 public:
 	AOdysseyCharacter();
 	
-	UFUNCTION(BlueprintCallable, Category="Input")
+	UFUNCTION(BlueprintCallable)	
 	void ActivateExploreMappingContext();
 
-	UFUNCTION(BlueprintCallable, Category="Input")
+	UFUNCTION(BlueprintCallable)
 	void ActivateInteractMappingContext();
 
 
@@ -63,7 +63,6 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	/** Called for interact input */
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnInteract"))
 	void Interact();
 
 

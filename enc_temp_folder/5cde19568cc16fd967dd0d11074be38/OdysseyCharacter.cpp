@@ -144,6 +144,10 @@ void AOdysseyCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void AOdysseyCharacter::Interact()
+{
+	UE_LOG(LogTemp, Display, TEXT("Interact called in Character"));
+}
 
 
 
