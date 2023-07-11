@@ -23,14 +23,11 @@ void UMainMenuWidget::HandleContinueGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Continue game button clicked"));
 	UIManager->DisplayHUDWidgetOnly();
-
 }
 
 void UMainMenuWidget::HandleNewGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("New game button clicked"));
-	UIManager->DisplayHUDWidgetOnly();
-
 }
 
 void UMainMenuWidget::HandleOptionsBtnClicked()

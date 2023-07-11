@@ -36,21 +36,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> HUDWidgetAssetRef;
 
-
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayHUDWidgetOnly();
-
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayMainMenuWidget();
-
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayPauseMenuWidget();
-
-
-
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayPreviousWidget();
-
 
 private:
 	// Variable to hold the Parent UI Widget After Creating it

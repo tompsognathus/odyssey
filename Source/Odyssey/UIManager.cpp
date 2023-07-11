@@ -57,6 +57,21 @@ void UUIManager::DisplayHUDWidgetOnly()
 	DisplayWidget(HUDWidgetInstance);
 }
 
+void UUIManager::DisplayMainMenuWidget()
+{
+	DisplayWidget(MainMenuWidgetInstance);
+}
+
+void UUIManager::DisplayPauseMenuWidget()
+{
+	DisplayWidget(PauseMenuWidgetInstance);
+}
+
+void UUIManager::DisplayPreviousWidget()
+{
+	DisplayWidget(PreviousWidget);
+}
+
 /*
  * Create all UI widgets and add them to the widget switcher
  */
@@ -123,45 +138,36 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay)
 {
 	PreviousWidget = Cast<UUserWidget>(WidgetSwitcher->GetActiveWidget());
 
-	if (WidgetSwitcher)
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(GetOwner());
+
+	if (!WidgetSwitcher) { UE_LOG(LogTemp, Error, TEXT("WidgetSwitcher not found in UIManager, DisplayWidget")); return; }
+	if (!PlayerController) { UE_LOG(LogTemp, Error, TEXT("PlayerController not found in UIManager, DisplayWidget")); return; }
+	if (!PlayerCharacter) { UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found in UIManager, DisplayWidget")); return; }
+
+
+	WidgetSwitcher->SetActiveWidget(WidgetInstanceToDisplay);
+
+	// When returning to game world from anywhere
+	if (WidgetInstanceToDisplay == HUDWidgetInstance)
 	{
-		WidgetSwitcher->SetActiveWidget(WidgetInstanceToDisplay);
-		
+		// Hide mouse cursor
+		PlayerController->bShowMouseCursor = false;
+		// Switch to exploration controls
+		PlayerCharacter->ActivateExploreMappingContext();
+		// Resume game world
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
+
+	}
+	// When leaving game and entering a menu or other UI screen
+	else
+	{
 		// Show mouse cursor
-		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-		if (PlayerController)
-		{
-			PlayerController->bShowMouseCursor = true;
-	
-		} else { UE_LOG(LogTemp, Error, TEXT("PlayerController not found in UIManager, DisplayWidget")); }
-
-		// Switch to menu action mapping context
-		AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(GetOwner());
-		if (PlayerCharacter)
-		{
-			if (WidgetInstanceToDisplay == HUDWidgetInstance)
-			{
-				PlayerCharacter->ActivateExploreMappingContext();
-
-			}
-			else
-			{
-				PlayerCharacter->ActivateMenuMappingContext();
-			}
-		
-		} else { UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found in UIManager, DisplayWidget")); }
-
-		if (WidgetInstanceToDisplay == HUDWidgetInstance)
-		{
-			// Resume game
-			UGameplayStatics::SetGamePaused(GetWorld(), false);
-		}
-		else
-		{
-			// Pause game
-			UGameplayStatics::SetGamePaused(GetWorld(), true);
-		}
-		
-	} else { UE_LOG(LogTemp, Error, TEXT("WidgetSwitcher not found in UIManager, DisplayWidget")); }
+		PlayerController->bShowMouseCursor = true;
+		// Switch to menu controls
+		PlayerCharacter->ActivateMenuMappingContext();
+		// Pause game world
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
+	}
 }
 

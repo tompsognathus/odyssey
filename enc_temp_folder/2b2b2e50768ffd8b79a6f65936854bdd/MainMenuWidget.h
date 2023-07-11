@@ -26,6 +26,7 @@ private:
 protected:
 	virtual void NativeConstruct() override;
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void HandleContinueGameBtnClicked();
 	
