@@ -84,6 +84,23 @@ void AOdysseyCharacter::ActivateInteractMappingContext()
 	}
 }
 
+void AOdysseyCharacter::ActivateMenuMappingContext()
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			if (MenuMappingContext)
+			{
+				Subsystem->ClearAllMappings();
+				Subsystem->AddMappingContext(MenuMappingContext, 0);
+
+			}
+			else { UE_LOG(LogTemp, Warning, TEXT("<InteractMenuMappingContext is null (not set in blueprint?)")); }
+		}
+	}
+}
+
 
 void AOdysseyCharacter::BeginPlay()
 {
@@ -143,6 +160,13 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 		}
 		else { UE_LOG(LogTemp, Warning, TEXT("Pause Game Action is null. Not set in the Character Blueprint?")); }
 
+		//Resume Game
+		if (ResumeGameAction)
+		{
+			EnhancedInputComponent->BindAction(ResumeGameAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::ResumeGame);
+
+		}
+		else { UE_LOG(LogTemp, Warning, TEXT("Resume Game Action is null. Not set in the Character Blueprint?")); }
 	}
 }
 

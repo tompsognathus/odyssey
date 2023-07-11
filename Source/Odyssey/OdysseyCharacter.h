@@ -28,6 +28,9 @@ class AOdysseyCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* InteractMappingContext;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputMappingContext* MenuMappingContext;
+
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
@@ -61,6 +64,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void ActivateInteractMappingContext();
 
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void ActivateMenuMappingContext();
+
 
 protected:
 
@@ -77,6 +83,10 @@ protected:
 	/** Called for pause game input */
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnPauseGame"))
 	void PauseGame();
+
+	/** Called for resume game input */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnResumeGame"))
+	void ResumeGame();
 
 
 protected:
