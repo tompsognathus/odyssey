@@ -36,7 +36,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> HUDWidgetAssetRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Alerts")
+	TSubclassOf<class UUserWidget> QuitGameAlertWidgetAssetRef;
 
+	// UI Wifget Functions
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayHUDWidgetOnly();
 
@@ -46,10 +49,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPauseMenuWidget();
 
-
-
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
+
+	// Alert Functions
+	UFUNCTION(BlueprintCallable, Category = "UI Functions|Alerts")
+	void OverlayQuitGameAlertWidget();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions|Alerts")
+	void HideAllAlerts();
 
 
 private:
@@ -68,6 +76,9 @@ private:
 	// Variable to hold the HUD Widget After Creating it
 	class UUserWidget* HUDWidgetInstance;
 
+	// Variable to hold the Quit Game Alert Widget After Creating it
+	class UUserWidget* QuitGameAlertWidgetInstance;
+
 	// Remember what the previous UI widget was
 	class UUserWidget* PreviousWidget = MainMenuWidgetInstance;
 
@@ -83,6 +94,5 @@ private:
 	void AddWidgetToWidgetSwitcher(UUserWidget* WidgetInstanceToAdd);
 
 	void BindToWidgets();
-
 
 };

@@ -3,7 +3,6 @@
 
 #include "WBP_PauseMenu.h"
 #include "UIManager.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 void UWBP_PauseMenu::NativeConstruct()
 {
@@ -28,22 +27,21 @@ void UWBP_PauseMenu::HandleContinueGameBtnClicked()
 
 }
 
-void UWBP_PauseMenu::HandleNewGameBtnClicked()
-{
-	UE_LOG(LogTemp, Display, TEXT("New game button clicked"));
-	UIManager->DisplayHUDWidgetOnly();
-
-}
-
 void UWBP_PauseMenu::HandleOptionsBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Options button clicked"));
 }
 
+void UWBP_PauseMenu::HandleMainMenuBtnClicked()
+{
+	UE_LOG(LogTemp, Display, TEXT("New game button clicked"));
+	UIManager->DisplayMainMenuWidget();
+
+}
+
+
 void UWBP_PauseMenu::HandleQuitGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
-	// Quit game
-	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, false);
 }
 

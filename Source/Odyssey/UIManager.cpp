@@ -67,6 +67,23 @@ void UUIManager::DisplayPauseMenuWidget()
 	DisplayWidget(PauseMenuWidgetInstance);
 }
 
+void UUIManager::OverlayQuitGameAlertWidget()
+{
+	if (QuitGameAlertWidgetInstance)
+	{
+		QuitGameAlertWidgetInstance->AddToViewport();
+
+	} else { UE_LOG(LogTemp, Warning, TEXT("QuitGameAlertWidgetInstance is null in UIManager, OverlayQuitGameAlertWidget")); }
+}
+
+void UUIManager::HideAllAlerts()
+{
+	if (QuitGameAlertWidgetInstance)
+	{
+		QuitGameAlertWidgetInstance->RemoveFromViewport();
+	}
+}
+
 void UUIManager::DisplayPreviousWidget()
 {
 	DisplayWidget(PreviousWidget);
@@ -87,10 +104,13 @@ void UUIManager::SetUpUIWidgets()
  */
 void UUIManager::CreateUIWidgets()
 {
+	// UI Widgets
 	MainMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetAssetRef);
 	PauseMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), PauseMenuWidgetAssetRef);
 	HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetAssetRef);
 
+	// Alert Widgets
+	QuitGameAlertWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), QuitGameAlertWidgetAssetRef);
 }
 
 /*

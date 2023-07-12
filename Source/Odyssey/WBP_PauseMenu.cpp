@@ -3,7 +3,6 @@
 
 #include "WBP_PauseMenu.h"
 #include "UIManager.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 void UWBP_PauseMenu::NativeConstruct()
 {
@@ -44,7 +43,7 @@ void UWBP_PauseMenu::HandleMainMenuBtnClicked()
 void UWBP_PauseMenu::HandleQuitGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
-	// Quit game
-	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, false);
+	UIManager->OverlayQuitGameAlertWidget();
+
 }
 
