@@ -11,19 +11,48 @@ ATreasureChest::ATreasureChest()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+// Called when the game starts or when spawned
+void ATreasureChest::BeginPlay()
+{
+	Super::BeginPlay();
 
-// Interaface Functions
-//void ATreasureChest::EnteredInteractionZone_Implementation()
-//{
-//	UE_LOG(LogTemp, Display, TEXT("Entered treasure interaction zone"));
-//
-//	
-//}
-//
-//void ATreasureChest::InteractRequest_Implementation()
-//{
-//	UE_LOG(LogTemp, Display, TEXT("Treasure clicked"));
-//
-//}
+	GetMeshesToOutline(StaticMeshesToOutline, SkeletalMeshesToOutline);
+}
 
+void ATreasureChest::SetIsInteractable(bool NewInteractable)
+{
+	IsInteractable = NewInteractable;
+}
 
+void ATreasureChest::Highlight_Implementation(bool IsHighlighted)
+{
+	//Set render custom depth to true for each static and skeletal mesh
+	for (UStaticMeshComponent* StaticMesh : StaticMeshesToOutline)
+	{
+		StaticMesh->SetRenderCustomDepth(IsHighlighted);
+	}
+	for (USkeletalMeshComponent* SkeletalMesh : SkeletalMeshesToOutline)
+	{
+		SkeletalMesh->SetRenderCustomDepth(IsHighlighted);
+	}
+}
+
+void ATreasureChest::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)
+{
+	// Get all components
+	TArray<UActorComponent*> Components;
+
+	for (UActorComponent* Component : GetComponents())
+	{
+		// If the component is a static mesh component, add it to the static mesh array
+		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(Component))
+		{
+			StaticMeshesToOutlineOUT.Add(StaticMeshComponent);
+		}
+		// If the component is a skeletal mesh component, add it to the skeletal mesh array
+		else if (USkeletalMeshComponent* SkeletalMeshComponent = Cast<USkeletalMeshComponent>(Component))
+		{
+			SkeletalMeshesToOutlineOUT.Add(SkeletalMeshComponent);
+		}
+	}
+}

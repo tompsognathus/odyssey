@@ -22,4 +22,7 @@ public:
 
     UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interactable")
     void InteractRequest();
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
+    void Highlight(bool IsHighlighted);
 };

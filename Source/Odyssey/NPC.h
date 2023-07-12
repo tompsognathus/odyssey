@@ -26,4 +26,23 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "NPC")
+	bool IsInteractable = true;
+
+	UFUNCTION(BlueprintCallable, Category = "NPC")
+	void SetIsInteractable(bool NewInteractable);
+
+	// Interface function overrides
+	//virtual void EnteredInteractionZone_Implementation() override;
+	//virtual void LeftInteractionZone_Implementation() override;
+	//virtual void InteractRequest_Implementation() override;
+	virtual void Highlight_Implementation(bool IsHighlighted) override;
+
+private:
+	TArray<UStaticMeshComponent*> StaticMeshesToOutline;
+	TArray<USkeletalMeshComponent*> SkeletalMeshesToOutline;
+
+	void GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT);
+
 };

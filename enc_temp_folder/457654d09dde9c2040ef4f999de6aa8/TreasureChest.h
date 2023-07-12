@@ -35,11 +35,11 @@ public:
 	bool IsOpen = false;
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "NPC")
-	bool IsInteractable = true;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "NPC")
+		bool IsInteractable = true;
 
 	UFUNCTION(BlueprintCallable, Category = "NPC")
-	void SetIsInteractable(bool NewInteractable);
+		void SetIsInteractable(bool NewInteractable);
 
 	// Interface function overrides
 	//virtual void EnteredInteractionZone_Implementation() override;
