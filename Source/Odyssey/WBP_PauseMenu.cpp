@@ -1,12 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainMenuWidget.h"
+#include "WBP_PauseMenu.h"
 #include "UIManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-
-void UMainMenuWidget::NativeConstruct()
+void UWBP_PauseMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -21,28 +20,31 @@ void UMainMenuWidget::NativeConstruct()
 	}
 }
 
-void UMainMenuWidget::HandleContinueGameBtnClicked()
+
+void UWBP_PauseMenu::HandleContinueGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Continue game button clicked"));
 	UIManager->DisplayHUDWidgetOnly();
 
 }
 
-void UMainMenuWidget::HandleNewGameBtnClicked()
-{
-	UE_LOG(LogTemp, Display, TEXT("New game button clicked"));
-	UIManager->DisplayHUDWidgetOnly();
-
-}
-
-void UMainMenuWidget::HandleOptionsBtnClicked()
+void UWBP_PauseMenu::HandleOptionsBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Options button clicked"));
 }
 
-void UMainMenuWidget::HandleQuitGameBtnClicked()
+void UWBP_PauseMenu::HandleMainMenuBtnClicked()
+{
+	UE_LOG(LogTemp, Display, TEXT("New game button clicked"));
+	UIManager->DisplayMainMenuWidget();
+
+}
+
+
+void UWBP_PauseMenu::HandleQuitGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
 	// Quit game
 	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, false);
 }
+
