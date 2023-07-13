@@ -124,8 +124,26 @@ void AOdysseyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FindLookedAtInteractTarget();
-	UpdateInputPromptVisibility();
 
+	if (PreviousInteractTarget)
+	{
+		// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
+		// to check again here
+		IInteractable::Execute_DisplayInputPrompt(PreviousInteractTarget, false);
+	}
+	if (InteractTarget)
+	{
+		// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
+		// to check again here
+		IInteractable::Execute_EnteredInteractionZone(InteractTarget);
+		IInteractable::Execute_DisplayInputPrompt(InteractTarget, true);
+		ActivateInteractMappingContext();
+	}
+	else
+	{
+		ActivateExploreMappingContext();
+		UE_LOG(LogTemp, Warning, TEXT("InteractTarget is null in else"));
+	}
 	
 }
 
@@ -154,28 +172,6 @@ void AOdysseyCharacter::FindLookedAtInteractTarget()
 				InteractTarget = CandidateTargetActor;
 			}
 		}
-	}
-}
-
-void AOdysseyCharacter::UpdateInputPromptVisibility()
-{
-	if (PreviousInteractTarget)
-	{
-		// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
-		// to check again here
-		IInteractable::Execute_DisplayInputPrompt(PreviousInteractTarget, false);
-	}
-	if (InteractTarget)
-	{
-		// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
-		// to check again here
-		IInteractable::Execute_EnteredInteractionZone(InteractTarget);
-		IInteractable::Execute_DisplayInputPrompt(InteractTarget, true);
-		ActivateInteractMappingContext();
-	}
-	else
-	{
-		ActivateExploreMappingContext();
 	}
 }
 

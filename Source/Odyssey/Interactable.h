@@ -25,4 +25,8 @@ public:
 
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
     void Highlight(bool IsHighlighted);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
+    void DisplayInputPrompt(bool IsVisible);
+
 };

@@ -2,7 +2,9 @@
 
 
 #include "TreasureChest.h"
-#include "Components/ArrowComponent.h"
+#include "Components/ActorComponent.h"
+#include "Components/WidgetComponent.h"
+
 
 // Sets default values
 ATreasureChest::ATreasureChest()
@@ -17,6 +19,20 @@ void ATreasureChest::BeginPlay()
 	Super::BeginPlay();
 
 	GetMeshesToOutline(StaticMeshesToOutline, SkeletalMeshesToOutline);
+
+	GetInputPromptWidgetComponent();
+
+}
+
+void ATreasureChest::GetInputPromptWidgetComponent()
+{
+	// Find the input prompt widget reference
+	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
+	if (InputPromptActorComponent)
+	{
+		InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, BeginPlay"), *GetName()); }
 }
 
 void ATreasureChest::SetIsInteractable(bool NewInteractable)
@@ -35,6 +51,17 @@ void ATreasureChest::Highlight_Implementation(bool IsHighlighted)
 	{
 		SkeletalMesh->SetRenderCustomDepth(IsHighlighted);
 	}
+}
+
+void ATreasureChest::DisplayInputPrompt_Implementation(bool IsVisible)
+{
+	// Set input prompt visibility
+	if (InputPromptWidgetComponent)
+	{
+		InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, DisplayInputPrompt"), *GetName()); }
+	
 }
 
 void ATreasureChest::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)

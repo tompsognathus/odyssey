@@ -80,7 +80,7 @@ void UUIManager::HideAllAlerts()
 {
 	if (QuitGameAlertWidgetInstance)
 	{
-		QuitGameAlertWidgetInstance->RemoveFromViewport();
+		QuitGameAlertWidgetInstance->RemoveFromParent();
 	}
 }
 

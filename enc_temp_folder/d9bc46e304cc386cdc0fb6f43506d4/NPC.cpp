@@ -2,8 +2,6 @@
 
 
 #include "NPC.h"
-#include "Components/ActorComponent.h"
-#include "Components/WidgetComponent.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -19,19 +17,6 @@ void ANPC::BeginPlay()
 	Super::BeginPlay();
 
 	GetMeshesToOutline(StaticMeshesToOutline, SkeletalMeshesToOutline);
-
-	GetInputPromptWidgetComponent();
-}
-
-void ANPC::GetInputPromptWidgetComponent()
-{
-	// Find the input prompt widget reference
-	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
-	if (InputPromptActorComponent)
-	{
-		InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
-	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, BeginPlay"), *GetName()); }
 }
 
 // Called every frame
@@ -59,17 +44,6 @@ void ANPC::Highlight_Implementation(bool IsHighlighted)
 	}
 }
 
-void ANPC::DisplayInputPrompt_Implementation(bool IsVisible)
-{
-	// Set input prompt visibility
-	if (InputPromptWidgetComponent)
-	{
-		InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
-	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in NPC, DisplayInputPrompt"), *GetName()); }
-
-}
-
 void ANPC::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)
 {
 	// Get all components
@@ -89,3 +63,4 @@ void ANPC::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutli
 		}
 	}
 }
+

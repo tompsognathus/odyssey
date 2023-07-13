@@ -22,11 +22,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void GetInputPromptWidgetComponent();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UWidgetComponent* InputPromptWidgetComponent;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "NPC")
 	bool IsInteractable = true;
 
@@ -38,6 +43,7 @@ public:
 	//virtual void LeftInteractionZone_Implementation() override;
 	//virtual void InteractRequest_Implementation() override;
 	virtual void Highlight_Implementation(bool IsHighlighted) override;
+	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
 
 private:
 	TArray<UStaticMeshComponent*> StaticMeshesToOutline;

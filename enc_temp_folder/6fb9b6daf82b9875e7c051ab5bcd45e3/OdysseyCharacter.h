@@ -75,8 +75,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	void FindLookedAtInteractTarget();
-
-	void UpdateInputPromptVisibility();
 	
 	// Collision component for detecting interactable actors in range
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input|InteractableDetection")
