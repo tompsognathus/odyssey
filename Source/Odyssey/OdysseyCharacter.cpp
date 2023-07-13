@@ -108,8 +108,6 @@ void AOdysseyCharacter::ActivateMenuMappingContext()
 
 void AOdysseyCharacter::HandleInteractRequest()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interact Requested"));
-
 	if (InteractTarget)
 	{
 		if (InteractTarget->Implements<UInteractable>())
@@ -123,10 +121,9 @@ void AOdysseyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Check for and handle interactable objects inside the detector sphere
 	FindLookedAtInteractTarget();
 	UpdateInputPromptVisibility();
-
-	
 }
 
 void AOdysseyCharacter::FindLookedAtInteractTarget()
@@ -167,11 +164,15 @@ void AOdysseyCharacter::UpdateInputPromptVisibility()
 	}
 	if (InteractTarget)
 	{
-		// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
-		// to check again here
-		IInteractable::Execute_EnteredInteractionZone(InteractTarget);
-		IInteractable::Execute_DisplayInputPrompt(InteractTarget, true);
-		ActivateInteractMappingContext();
+		bool TargetIsInteractable = IInteractable::Execute_GetIsInteractable(InteractTarget);
+		if (TargetIsInteractable)
+		{	
+			// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
+			// to check again here
+			IInteractable::Execute_EnteredInteractionZone(InteractTarget);
+			IInteractable::Execute_DisplayInputPrompt(InteractTarget, true);
+			ActivateInteractMappingContext();
+		}
 	}
 	else
 	{

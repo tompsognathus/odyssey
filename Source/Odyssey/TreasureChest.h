@@ -33,15 +33,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	float LidClosedAngle = 0.0f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool IsOpen = false;
-
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "NPC")
 	bool IsInteractable = true;
-
-	UFUNCTION(BlueprintCallable, Category = "NPC")
-	void SetIsInteractable(bool NewInteractable);
 
 	// Interface function overrides
 	//virtual void EnteredInteractionZone_Implementation() override;
@@ -49,6 +42,7 @@ public:
 	//virtual void InteractRequest_Implementation() override;
 	virtual void Highlight_Implementation(bool IsHighlighted) override;
 	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
+	virtual bool GetIsInteractable_Implementation() override;
 
 private:
 	bool IsRotating = false;

@@ -67,6 +67,11 @@ void UUIManager::DisplayPauseMenuWidget()
 	DisplayWidget(PauseMenuWidgetInstance);
 }
 
+void UUIManager::DisplayOptionsMenuWidget()
+{
+	DisplayWidget(OptionsMenuWidgetInstance);
+}
+
 void UUIManager::OverlayQuitGameAlertWidget()
 {
 	if (QuitGameAlertWidgetInstance)
@@ -107,6 +112,7 @@ void UUIManager::CreateUIWidgets()
 	// UI Widgets
 	MainMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetAssetRef);
 	PauseMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), PauseMenuWidgetAssetRef);
+	OptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), OptionsMenuWidgetAssetRef);
 	HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetAssetRef);
 
 	// Alert Widgets
@@ -121,6 +127,7 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 {
 	AddWidgetToWidgetSwitcher(MainMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(PauseMenuWidgetInstance);
+	AddWidgetToWidgetSwitcher(OptionsMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
 }
 

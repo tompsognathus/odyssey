@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainMenuWidget.h"
+#include "WBP_OptionsMenu.h"
+
 #include "UIManager.h"
 
 
-void UMainMenuWidget::NativeConstruct()
+void UWBP_OptionsMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -20,29 +21,26 @@ void UMainMenuWidget::NativeConstruct()
 	}
 }
 
-void UMainMenuWidget::HandleContinueGameBtnClicked()
+void UWBP_OptionsMenu::HandleAudioBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Continue game button clicked"));
-	UIManager->DisplayHUDWidgetOnly();
+	UE_LOG(LogTemp, Display, TEXT("Audio button clicked"));
 
 }
 
-void UMainMenuWidget::HandleNewGameBtnClicked()
+void UWBP_OptionsMenu::HandleVideoBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("New game button clicked"));
-	UIManager->DisplayHUDWidgetOnly();
+	UE_LOG(LogTemp, Display, TEXT("Video button clicked"));
 
 }
 
-void UMainMenuWidget::HandleOptionsBtnClicked()
+void UWBP_OptionsMenu::HandleGameplayBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Options button clicked"));
-	UIManager->DisplayOptionsMenuWidget();
 }
 
-void UMainMenuWidget::HandleQuitGameBtnClicked()
+void UWBP_OptionsMenu::HandleBackBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
 
-	UIManager->OverlayQuitGameAlertWidget();
+	UIManager->DisplayPreviousWidget();
 }

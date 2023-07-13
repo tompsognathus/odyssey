@@ -46,6 +46,11 @@ void ANPC::SetIsInteractable(bool NewInteractable)
 	IsInteractable = NewInteractable;
 }
 
+bool ANPC::GetIsInteractable_Implementation()
+{
+	return IsInteractable;
+}
+
 void ANPC::Highlight_Implementation(bool IsHighlighted)
 {
 	//Set render custom depth to true for each static and skeletal mesh

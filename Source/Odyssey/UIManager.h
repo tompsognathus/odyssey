@@ -34,6 +34,10 @@ public:
 	TSubclassOf<class UUserWidget> PauseMenuWidgetAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
+	TSubclassOf<class UUserWidget> OptionsMenuWidgetAssetRef;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> HUDWidgetAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Alerts")
@@ -48,6 +52,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPauseMenuWidget();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void DisplayOptionsMenuWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
@@ -72,6 +79,9 @@ private:
 
 	// Variable to hold the Pause Menu Widget After Creating it
 	class UUserWidget* PauseMenuWidgetInstance;
+
+	// Variable to hold the Options Menu Widget After Creating it
+	class UUserWidget* OptionsMenuWidgetInstance;
 
 	// Variable to hold the HUD Widget After Creating it
 	class UUserWidget* HUDWidgetInstance;

@@ -35,11 +35,6 @@ void ATreasureChest::GetInputPromptWidgetComponent()
 	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, BeginPlay"), *GetName()); }
 }
 
-void ATreasureChest::SetIsInteractable(bool NewInteractable)
-{
-	IsInteractable = NewInteractable;
-}
-
 void ATreasureChest::Highlight_Implementation(bool IsHighlighted)
 {
 	//Set render custom depth to true for each static and skeletal mesh
@@ -62,6 +57,11 @@ void ATreasureChest::DisplayInputPrompt_Implementation(bool IsVisible)
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, DisplayInputPrompt"), *GetName()); }
 	
+}
+
+bool ATreasureChest::GetIsInteractable_Implementation()
+{
+	return IsInteractable;
 }
 
 void ATreasureChest::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)

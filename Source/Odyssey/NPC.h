@@ -44,6 +44,7 @@ public:
 	//virtual void InteractRequest_Implementation() override;
 	virtual void Highlight_Implementation(bool IsHighlighted) override;
 	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
+	virtual bool GetIsInteractable_Implementation() override;
 
 private:
 	TArray<UStaticMeshComponent*> StaticMeshesToOutline;

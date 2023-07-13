@@ -30,7 +30,6 @@ void UWBP_PauseMenu::HandleContinueGameBtnClicked()
 void UWBP_PauseMenu::HandleOptionsBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Options button clicked"));
-	UIManager->DisplayOptionsMenuWidget();
 }
 
 void UWBP_PauseMenu::HandleMainMenuBtnClicked()
