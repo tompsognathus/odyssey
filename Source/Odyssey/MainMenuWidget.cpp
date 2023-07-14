@@ -3,6 +3,8 @@
 
 #include "MainMenuWidget.h"
 #include "UIManager.h"
+#include "GM.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void UMainMenuWidget::NativeConstruct()
@@ -30,7 +32,23 @@ void UMainMenuWidget::HandleContinueGameBtnClicked()
 void UMainMenuWidget::HandleNewGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("New game button clicked"));
-	UIManager->DisplayHUDWidgetOnly();
+
+	// Find GM by class
+	TArray<AActor*> FoundGMs;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGM::StaticClass(), FoundGMs);
+	if (FoundGMs.Num() > 1)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Found more than one instance of GM."));
+	}
+	else
+	{
+		AGM* GM = Cast<AGM>(FoundGMs[0]);
+		if (GM)
+		{
+			GM->StartPrologueDlg();
+		}
+		else { UE_LOG(LogTemp, Error, TEXT("Cannot get GM in MainMenuWidget, HandleNewGameBtnClicked.")); }
+	}
 
 }
 

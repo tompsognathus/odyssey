@@ -15,15 +15,23 @@ class ODYSSEY_API UWBP_Alert : public UUserWidget
 	GENERATED_BODY()
 	
 private:
-class UUIManager* UIManager;
+	class UUIManager* UIManager;
 
 protected:
-virtual void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
-UFUNCTION(BlueprintCallable, Category = "Alert Functions")
-void HandleYesBtnClicked();
+	/***** Quit Game *****/
+	UFUNCTION(BlueprintCallable, Category = "Alert Functions")
+	void HandleQuitGameYesBtnClicked();
 
-UFUNCTION(BlueprintCallable, Category = "Alert Functions")
-void HandleNoBtnClicked();
+	UFUNCTION(BlueprintCallable, Category = "Alert Functions")
+	void HandleQuitGameNoBtnClicked();
+
+	/***** New Game *****/
+	UFUNCTION(BlueprintCallable, Category = "Alert Functions")
+	void HandleNewGameYesBtnClicked();
+
+	UFUNCTION(BlueprintCallable, Category = "Alert Functions")
+	void HandleNewGameNoBtnClicked();
 
 };

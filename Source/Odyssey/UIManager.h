@@ -36,6 +36,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> OptionsMenuWidgetAssetRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
+	TSubclassOf<class UUserWidget> RPEncounterWidgetAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> HUDWidgetAssetRef;
@@ -43,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Alerts")
 	TSubclassOf<class UUserWidget> QuitGameAlertWidgetAssetRef;
 
-	// UI Wifget Functions
+	/***** UI Widget Functions *****/
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayHUDWidgetOnly();
 
@@ -57,14 +59,27 @@ public:
 	void DisplayOptionsMenuWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void DisplayRPEncounterWidget();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
 
-	// Alert Functions
+	/***** Alert Functions *****/
 	UFUNCTION(BlueprintCallable, Category = "UI Functions|Alerts")
 	void OverlayQuitGameAlertWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions|Alerts")
 	void HideAllAlerts();
+
+	/***** RP Encounter UI Widget *****/
+	UFUNCTION()
+		void SetRPEncounterBodyText(FText BodyText);
+
+	UFUNCTION()
+		void SetRPEncounterOptionText(int OptionNumber, FText NewOptionText);
+
+	UFUNCTION()
+		void SelectDialogueOption(int OptionNumber);
 
 
 private:
@@ -82,6 +97,9 @@ private:
 
 	// Variable to hold the Options Menu Widget After Creating it
 	class UUserWidget* OptionsMenuWidgetInstance;
+
+	// Variable to hold the Options Menu Widget After Creating it
+	class UUserWidget* RPEncounterWidgetInstance;
 
 	// Variable to hold the HUD Widget After Creating it
 	class UUserWidget* HUDWidgetInstance;

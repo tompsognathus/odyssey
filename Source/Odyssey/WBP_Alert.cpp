@@ -20,7 +20,7 @@ void UWBP_Alert::NativeConstruct()
 	}
 }
 
-void UWBP_Alert::HandleYesBtnClicked()
+void UWBP_Alert::HandleQuitGameYesBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Yes button clicked"));
 
@@ -28,9 +28,19 @@ void UWBP_Alert::HandleYesBtnClicked()
 	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, false);
 }
 
-void UWBP_Alert::HandleNoBtnClicked()
+void UWBP_Alert::HandleQuitGameNoBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("No button clicked"));
 	UIManager->HideAllAlerts();
 }
+
+void UWBP_Alert::HandleNewGameYesBtnClicked()
+{
+}
+
+void UWBP_Alert::HandleNewGameNoBtnClicked()
+{
+}
+
+
 

@@ -72,6 +72,11 @@ void UUIManager::DisplayOptionsMenuWidget()
 	DisplayWidget(OptionsMenuWidgetInstance);
 }
 
+void UUIManager::DisplayRPEncounterWidget()
+{
+	DisplayWidget(RPEncounterWidgetInstance);
+}
+
 void UUIManager::OverlayQuitGameAlertWidget()
 {
 	if (QuitGameAlertWidgetInstance)
@@ -87,6 +92,18 @@ void UUIManager::HideAllAlerts()
 	{
 		QuitGameAlertWidgetInstance->RemoveFromParent();
 	}
+}
+
+void UUIManager::SetRPEncounterBodyText(FText BodyText)
+{
+}
+
+void UUIManager::SetRPEncounterOptionText(int OptionNumber, FText NewOptionText)
+{
+}
+
+void UUIManager::SelectDialogueOption(int OptionNumber)
+{
 }
 
 void UUIManager::DisplayPreviousWidget()
@@ -109,10 +126,13 @@ void UUIManager::SetUpUIWidgets()
  */
 void UUIManager::CreateUIWidgets()
 {
-	// UI Widgets
+	// UI Screens
 	MainMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetAssetRef);
 	PauseMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), PauseMenuWidgetAssetRef);
 	OptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), OptionsMenuWidgetAssetRef);
+	RPEncounterWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), RPEncounterWidgetAssetRef);
+
+	// HUD only
 	HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetAssetRef);
 
 	// Alert Widgets
@@ -128,6 +148,7 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 	AddWidgetToWidgetSwitcher(MainMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(PauseMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(OptionsMenuWidgetInstance);
+	AddWidgetToWidgetSwitcher(RPEncounterWidgetInstance);
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
 }
 
