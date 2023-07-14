@@ -33,8 +33,6 @@ void ANPC::BeginPlay()
 		UIManager = PlayerCharacter->FindComponentByClass<UUIManager>();
 	}
 	else { UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found")); }
-
-	CheckIfIsInteractable();
 }
 
 void ANPC::GetInputPromptWidgetComponent()
@@ -106,15 +104,6 @@ void ANPC::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutli
 		{
 			SkeletalMeshesToOutlineOUT.Add(SkeletalMeshComponent);
 		}
-	}
-}
-
-void ANPC::CheckIfIsInteractable()
-{
-	// If the NPC has no dialogues attachted to them, they're not interactable
-	if (Dialogues.Num() == 0)
-	{
-		SetIsInteractable(false);
 	}
 }
 

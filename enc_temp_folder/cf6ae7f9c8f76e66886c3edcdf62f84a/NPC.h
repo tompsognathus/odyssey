@@ -114,8 +114,6 @@ private:
 
 	void GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT);
 
-	void CheckIfIsInteractable();
-
 	/*
 	 * Dialogue
 	 */
