@@ -82,6 +82,11 @@ void UUIManager::DisplayOptionsMenuWidget()
 	DisplayWidget(OptionsMenuWidgetInstance);
 }
 
+void UUIManager::DisplayAudioOptionsMenuWidget()
+{
+	DisplayWidget(AudioOptionsMenuWidgetInstance);
+}
+
 void UUIManager::DisplayRPEncounterWidget()
 {
 	DisplayWidget(RPEncounterWidgetInstance);
@@ -225,6 +230,7 @@ void UUIManager::CreateUIWidgets()
 	MainMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetAssetRef);
 	PauseMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), PauseMenuWidgetAssetRef);
 	OptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), OptionsMenuWidgetAssetRef);
+	AudioOptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), AudioOptionsMenuWidgetAssetRef);
 	RPEncounterWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), RPEncounterWidgetAssetRef);
 
 	// HUD only
@@ -245,6 +251,7 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 	AddWidgetToWidgetSwitcher(MainMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(PauseMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(OptionsMenuWidgetInstance);
+	AddWidgetToWidgetSwitcher(AudioOptionsMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(RPEncounterWidgetInstance);
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
 }

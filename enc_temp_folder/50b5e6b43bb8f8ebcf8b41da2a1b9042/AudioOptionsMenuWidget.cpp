@@ -1,12 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "WBP_OptionsMenu.h"
-
+#include "AudioOptionsMenuWidget.h"
+#include "Components/Button.h"
 #include "UIManager.h"
 
-
-void UWBP_OptionsMenu::NativeConstruct()
+void UAudioOptionsMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -21,25 +20,7 @@ void UWBP_OptionsMenu::NativeConstruct()
 	}
 }
 
-void UWBP_OptionsMenu::HandleAudioBtnClicked()
-{
-	UE_LOG(LogTemp, Display, TEXT("Audio button clicked"));
-	UIManager->DisplayAudioOptionsMenuWidget();
-
-}
-
-void UWBP_OptionsMenu::HandleVideoBtnClicked()
-{
-	UE_LOG(LogTemp, Display, TEXT("Video button clicked"));
-
-}
-
-void UWBP_OptionsMenu::HandleGameplayBtnClicked()
-{
-	UE_LOG(LogTemp, Display, TEXT("Options button clicked"));
-}
-
-void UWBP_OptionsMenu::HandleBackBtnClicked()
+void UAudioOptionsMenuWidget::HandleBackBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
 

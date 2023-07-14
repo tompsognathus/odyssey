@@ -85,13 +85,13 @@ public:
 
 	/***** RP Encounter UI Widget *****/
 	UFUNCTION()
-	void SetRPEncounterBodyText(FText BodyText);
+		void SetRPEncounterBodyText(FText BodyText);
 
 	UFUNCTION()
-	void SetRPEncounterOptionText(int OptionNumber, FText NewOptionText);
+		void SetRPEncounterOptionText(int OptionNumber, FText NewOptionText);
 
 	UFUNCTION()
-	void SelectDialogueOption(int OptionNumber);
+		void SelectDialogueOption(int OptionNumber);
 
 
 private:
