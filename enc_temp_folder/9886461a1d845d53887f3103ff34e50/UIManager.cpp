@@ -152,7 +152,7 @@ void UUIManager::CreateUIWidgets()
 
 	// Alert Widgets
 	QuitGameAlertWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), QuitGameAlertWidgetAssetRef);
-	NewGameAlertWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), NewGameAlertWidgetAssetRef);
+	QuitGameAlertWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), NewGameAlertWidgetAssetRef);
 
 }
 

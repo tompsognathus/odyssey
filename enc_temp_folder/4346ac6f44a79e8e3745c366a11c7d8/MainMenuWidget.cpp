@@ -45,5 +45,6 @@ void UMainMenuWidget::HandleOptionsBtnClicked()
 void UMainMenuWidget::HandleQuitGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
+
 	UIManager->OverlayQuitGameAlertWidget();
 }
