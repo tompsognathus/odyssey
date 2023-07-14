@@ -7,7 +7,8 @@
 #include "Components/WidgetSwitcher.h"
 #include "OdysseyCharacter.h"
 #include <Kismet/GameplayStatics.h>
-
+#include "RPEncounterWidget.h"
+#include "GM.h"
 
 // Sets default values for this component's properties
 UUIManager::UUIManager()
@@ -33,13 +34,22 @@ void UUIManager::BeginPlay()
 
 	// Create all widgets and add them to the widget switcher
 	SetUpUIWidgets();
-
-	// Bind to events in widgets - things like button presses
-	BindToWidgets();
+	SetUpUIWidgets();
 
 	// Start in the Main Menu
 	DisplayWidget(MainMenuWidgetInstance);
 
+	// Find GM
+	TArray<AActor*> FoundGMs;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGM::StaticClass(), FoundGMs);
+	if (FoundGMs.Num() > 1)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Found more than one instance of GM in WBP_Alert, NativeConstruct."));
+	}
+	else
+	{
+		GM = Cast<AGM>(FoundGMs[0]);
+	}
 }
 
 /*
@@ -109,16 +119,86 @@ void UUIManager::HideAllAlerts()
 	}
 }
 
+/*
+ * Update the main encounter text on the RP Encounter widget
+ *
+ * INPUT: FText MainText: The text to be displayed
+ */
 void UUIManager::SetRPEncounterBodyText(FText BodyText)
 {
+	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
+
+	if (RPEncounterWidget)
+	{
+		RPEncounterWidget->SetBodyText(BodyText);
+	}
+	else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found")); }
 }
 
+/*
+ * Update the option text on the RP Encounter widget
+ *
+ * INPUT: int OptionNumber: The option number to be updated
+ * INPUT: FText NewOptionText: The text to be displayed
+ */
 void UUIManager::SetRPEncounterOptionText(int OptionNumber, FText NewOptionText)
 {
+	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
+
+	if (RPEncounterWidget)
+	{
+		switch (OptionNumber)
+		{
+		case 1:
+			RPEncounterWidget->SetOptionText(1, NewOptionText);
+			break;
+		case 2:
+			RPEncounterWidget->SetOptionText(2, NewOptionText);
+			break;
+		case 3:
+			RPEncounterWidget->SetOptionText(3, NewOptionText);
+			break;
+		case 4:
+			RPEncounterWidget->SetOptionText(4, NewOptionText);
+			break;
+		default:
+			UE_LOG(LogTemp, Error, TEXT("Invalid option number in UIManager, SetRPEncounterOptionText"));
+			break;
+		}
+	}
+	else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, SetRPEncounterOptionText")); }
 }
 
+/*
+ * Select one of the available dialogue options and display the next portion of the dialogue
+ *
+ * INPUT: int OptionNumber: Index of the selected option (1-4)
+ */
 void UUIManager::SelectDialogueOption(int OptionNumber)
 {
+	if (OptionNumber < 0 || OptionNumber > 3)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid option number, must be between 1 and 4"));
+		return;
+	}
+
+	if (GM)
+	{
+		bool HasReachedEndOfDialogue = !(GM->SelectDialogueOption(OptionNumber));
+		UE_LOG(LogTemp, Display, TEXT("HasReachedEndOfDialogue: %s"), HasReachedEndOfDialogue ? TEXT("true") : TEXT("false"));
+		if (!HasReachedEndOfDialogue)
+		{
+			GM->PopulateDialogueBodyText();
+			GM->PopulateDialogueOptionsText();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Display, TEXT("Reached end of dialogue"));
+			DisplayWidget(HUDWidgetInstance);
+		}
+
+	}
+	else { UE_LOG(LogTemp, Error, TEXT("GM not found")); }
 }
 
 void UUIManager::DisplayPreviousWidget()
@@ -184,14 +264,6 @@ void UUIManager::AddWidgetToWidgetSwitcher(UUserWidget* WidgetInstanceToAdd)
 
 		} else { UE_LOG(LogTemp, Error, TEXT("WidgetSwitcher not found in UIManager, AddWidgetToWidgetSwitcher")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("%s not found in UIManager, AddWidgetToWidgetSwitcher"), *WidgetInstanceToAdd->GetName()); }
-}
-
-/*
- *
- */
-void UUIManager::BindToWidgets()
-{
-
 }
 
 /*

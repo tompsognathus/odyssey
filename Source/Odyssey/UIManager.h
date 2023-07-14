@@ -89,6 +89,8 @@ public:
 
 
 private:
+	class AGM* GM;
+
 	// Variable to hold the Parent UI Widget After Creating it
 	class UUserWidget* ParentUIWidgetInstance;
 
@@ -129,7 +131,5 @@ private:
 	void AddWidgetsToWidgetSwitcher();
 
 	void AddWidgetToWidgetSwitcher(UUserWidget* WidgetInstanceToAdd);
-
-	void BindToWidgets();
 
 };

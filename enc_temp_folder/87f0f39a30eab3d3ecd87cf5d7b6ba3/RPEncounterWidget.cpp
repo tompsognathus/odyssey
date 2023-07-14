@@ -30,19 +30,19 @@ void URPEncounterWidget::HandleOption1BtnClicked()
 void URPEncounterWidget::HandleOption2BtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Option 2 button clicked"));
-	UIManager->SelectDialogueOption(1);
+	UIManager->SelectDialogueOption(2);
 }
 
 void URPEncounterWidget::HandleOption3BtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Option 3 button clicked"));
-	UIManager->SelectDialogueOption(2);
+	UIManager->SelectDialogueOption(3);
 }
 
 void URPEncounterWidget::HandleOption4BtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Option 4 button clicked"));
-	UIManager->SelectDialogueOption(3);
+	UIManager->SelectDialogueOption(4);
 }
 
 void URPEncounterWidget::SetBodyText(FText NewAdventureText)

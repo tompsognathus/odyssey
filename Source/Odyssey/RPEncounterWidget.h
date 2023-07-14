@@ -20,15 +20,45 @@ private:
 protected:
 	virtual void NativeConstruct() override;
 
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-		void HandleOption1BtnClicked();
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UHUDWidget* HUDWidget;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* AdventureText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* OptionText1;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* OptionText2;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* OptionText3;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* OptionText4;
+
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-		void HandleOption2BtnClicked();
+	void HandleOption1BtnClicked();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-		void HandleOption3BtnClicked();
+	void HandleOption2BtnClicked();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-		void HandleOption4BtnClicked();
+	void HandleOption3BtnClicked();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void HandleOption4BtnClicked();
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Text Fields")
+	void SetBodyText(FText NewAdventureText);
+
+	UFUNCTION(BlueprintCallable, Category = "Text Fields")
+	void SetOptionText(int OptionNumber, FText NewOptionText);
+
+	UFUNCTION()
+	UHUDWidget* GetHUDWidget();
+
 };
