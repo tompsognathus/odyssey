@@ -16,7 +16,7 @@ void AGM::StartPrologueDlg()
 
 	if (UIManager)
 	{
-		UIManager->DisplayRPEncounterWidget();
+		UIManager->DisplayRPEncounterWidget(this);
 		PopulateDialogueBodyText();
 		PopulateDialogueOptionsText();
 

@@ -49,7 +49,7 @@ public:
 	// Interface function overrides
 	//virtual void EnteredInteractionZone_Implementation() override;
 	//virtual void LeftInteractionZone_Implementation() override;
-	//virtual void InteractRequest_Implementation() override;
+	//virtual void InteractRequest_Implementation(UObject* CallerParticipant) override; // Implemented in Blueprint
 	virtual void Highlight_Implementation(bool IsHighlighted) override;
 	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
 	virtual bool GetIsInteractable_Implementation() override;

@@ -106,15 +106,17 @@ void AOdysseyCharacter::ActivateMenuMappingContext()
 	}
 }
 
+// Triggered from the BP_ThirdPersonCharacter blueprint when the player presses the interact button
 void AOdysseyCharacter::HandleInteractRequest()
 {
 	if (InteractTarget)
 	{
 		if (InteractTarget->Implements<UInteractable>())
 		{
+			// Get UObject for this class
 			IInteractable::Execute_InteractRequest(InteractTarget);
-		}
-	}
+		} else { UE_LOG(LogTemp, Warning, TEXT("InteractTarget does not implement UInteractable in OddyseyCharacter, HandleInteractRequest")); }
+	} else { UE_LOG(LogTemp, Warning, TEXT("InteractTarget is null in OdysseyCharacter, HandleInteractRequest")); }
 }
 
 void AOdysseyCharacter::Tick(float DeltaTime)

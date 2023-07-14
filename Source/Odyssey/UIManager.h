@@ -68,7 +68,7 @@ public:
 	void DisplayAudioOptionsMenuWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayRPEncounterWidget();
+	void DisplayRPEncounterWidget(ANPC* DialogueOwner);
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
@@ -91,12 +91,10 @@ public:
 	void SetRPEncounterOptionText(int OptionNumber, FText NewOptionText);
 
 	UFUNCTION()
-	void SelectDialogueOption(int OptionNumber);
+	void SelectDialogueOption(int OptionNumber, ANPC* NPCDialogueOwner);
 
 
 private:
-	class AGM* GM;
-
 	// Variable to hold the Parent UI Widget After Creating it
 	class UUserWidget* ParentUIWidgetInstance;
 

@@ -152,6 +152,15 @@ void ANPC::PopulateDialogueOptionsText()
 bool ANPC::StartDialogue(UDlgDialogue* Dialogue, const TArray<UObject*>& DlgParticipants)
 {
 	DialogueContext = UDlgManager::StartDialogue(Dialogue, DlgParticipants);
+
+	if (UIManager)
+	{
+		UIManager->DisplayRPEncounterWidget(this);
+		PopulateDialogueBodyText();
+		PopulateDialogueOptionsText();
+
+	} else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
+
 	return DialogueContext != nullptr;
 }
 

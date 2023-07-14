@@ -38,18 +38,6 @@ void UUIManager::BeginPlay()
 
 	// Start in the Main Menu
 	DisplayWidget(MainMenuWidgetInstance);
-
-	// Find GM
-	TArray<AActor*> FoundGMs;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGM::StaticClass(), FoundGMs);
-	if (FoundGMs.Num() > 1)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Found more than one instance of GM in WBP_Alert, NativeConstruct."));
-	}
-	else
-	{
-		GM = Cast<AGM>(FoundGMs[0]);
-	}
 }
 
 /*
@@ -87,9 +75,16 @@ void UUIManager::DisplayAudioOptionsMenuWidget()
 	DisplayWidget(AudioOptionsMenuWidgetInstance);
 }
 
-void UUIManager::DisplayRPEncounterWidget()
+void UUIManager::DisplayRPEncounterWidget(ANPC* DialogueOwner)
 {
 	DisplayWidget(RPEncounterWidgetInstance);
+
+	// Cast to RPEncounterWidget and set the owner of the dialogue
+	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
+	if (RPEncounterWidget)
+	{
+		RPEncounterWidget->SetDialogueOwner(DialogueOwner);
+	} else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, DisplayRPEncounterWidget")); }
 }
 
 void UUIManager::OverlayQuitGameAlertWidget()
@@ -179,31 +174,31 @@ void UUIManager::SetRPEncounterOptionText(int OptionNumber, FText NewOptionText)
  *
  * INPUT: int OptionNumber: Index of the selected option (1-4)
  */
-void UUIManager::SelectDialogueOption(int OptionNumber)
+void UUIManager::SelectDialogueOption(int OptionNumber, ANPC* NPCDialogueOwner)
 {
 	if (OptionNumber < 0 || OptionNumber > 3)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid option number, must be between 1 and 4"));
+		UE_LOG(LogTemp, Error, TEXT("Invalid option number, must be between 1 and 4 in UIManager, SelectDialogueOption"));
 		return;
 	}
 
-	if (GM)
+	if (NPCDialogueOwner)
 	{
-		bool HasReachedEndOfDialogue = !(GM->SelectDialogueOption(OptionNumber));
+		bool HasReachedEndOfDialogue = !(NPCDialogueOwner->SelectDialogueOption(OptionNumber));
 		UE_LOG(LogTemp, Display, TEXT("HasReachedEndOfDialogue: %s"), HasReachedEndOfDialogue ? TEXT("true") : TEXT("false"));
 		if (!HasReachedEndOfDialogue)
 		{
-			GM->PopulateDialogueBodyText();
-			GM->PopulateDialogueOptionsText();
+			NPCDialogueOwner->PopulateDialogueBodyText();
+			NPCDialogueOwner->PopulateDialogueOptionsText();
 		}
 		else
 		{
-			UE_LOG(LogTemp, Display, TEXT("Reached end of dialogue"));
+			UE_LOG(LogTemp, Display, TEXT("Reached end of dialogue in UIManager, SelectDialogueOption"));
 			DisplayWidget(HUDWidgetInstance);
 		}
 
 	}
-	else { UE_LOG(LogTemp, Error, TEXT("GM not found")); }
+	else { UE_LOG(LogTemp, Error, TEXT("NPC not found in UIManager, SelectDialogueOption")); }
 }
 
 void UUIManager::DisplayPreviousWidget()
