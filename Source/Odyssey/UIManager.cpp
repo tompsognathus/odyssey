@@ -87,6 +87,11 @@ void UUIManager::DisplayRPEncounterWidget(ANPC* DialogueOwner)
 	} else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, DisplayRPEncounterWidget")); }
 }
 
+void UUIManager::DisplayInventoryWidget()
+{
+	DisplayWidget(InventoryWidgetInstance);
+}
+
 void UUIManager::OverlayQuitGameAlertWidget()
 {
 	if (QuitGameAlertWidgetInstance)
@@ -227,6 +232,7 @@ void UUIManager::CreateUIWidgets()
 	OptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), OptionsMenuWidgetAssetRef);
 	AudioOptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), AudioOptionsMenuWidgetAssetRef);
 	RPEncounterWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), RPEncounterWidgetAssetRef);
+	InventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetAssetRef);
 
 	// HUD only
 	HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetAssetRef);
@@ -249,6 +255,7 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 	AddWidgetToWidgetSwitcher(AudioOptionsMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(RPEncounterWidgetInstance);
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
+	AddWidgetToWidgetSwitcher(InventoryWidgetInstance);
 }
 
 /*
@@ -295,7 +302,7 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay)
 		// Switch to exploration controls
 		PlayerCharacter->ActivateExploreMappingContext();
 		// Resume game world
-		UGameplayStatics::SetGamePaused(GetWorld(), false);
+		//UGameplayStatics::SetGamePaused(GetWorld(), false);
 
 	}
 	// When leaving game and entering a menu or other UI screen
@@ -306,7 +313,7 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay)
 		// Switch to menu controls
 		PlayerCharacter->ActivateMenuMappingContext();
 		// Pause game world
-		UGameplayStatics::SetGamePaused(GetWorld(), true);
+		//UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
 }
 

@@ -24,6 +24,7 @@ protected:
 
 
 public:	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> ParentUIWidgetAssetRef;
 
@@ -45,6 +46,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> HUDWidgetAssetRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
+	TSubclassOf<class UUserWidget> InventoryWidgetAssetRef;
+
+	/* Alerts */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Alerts")
 	TSubclassOf<class UUserWidget> QuitGameAlertWidgetAssetRef;
 
@@ -69,6 +74,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayRPEncounterWidget(ANPC* DialogueOwner);
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void DisplayInventoryWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
@@ -118,6 +126,9 @@ private:
 
 	// Variable to hold the HUD Widget After Creating it
 	class UUserWidget* HUDWidgetInstance;
+
+	// Variable to hold the Quit Game Alert Widget After Creating it
+	class UUserWidget* InventoryWidgetInstance;
 
 	// Variable to hold the Quit Game Alert Widget After Creating it
 	class UUserWidget* QuitGameAlertWidgetInstance;

@@ -36,6 +36,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "NPC")
 	bool IsInteractable = true;
 
+	// Loot variables
+	
+
 	// Interface function overrides
 	//virtual void EnteredInteractionZone_Implementation() override;
 	//virtual void LeftInteractionZone_Implementation() override;
@@ -43,6 +46,8 @@ public:
 	virtual void Highlight_Implementation(bool IsHighlighted) override;
 	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
 	virtual bool GetIsInteractable_Implementation() override;
+	virtual TArray<UObject*> Loot_Implementation() override;
+
 
 private:
 	bool IsRotating = false;

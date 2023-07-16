@@ -47,13 +47,24 @@ class AOdysseyCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InteractAction;
 
-	/** Pause Input Action **/
+	/** Pause Game Input Action **/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* PauseGameAction;
 
-	/** Pause Input Action **/
+	/** ResumeGame Input Action **/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ResumeGameAction;
+
+	/** Show Inventory Input Action **/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ShowInventoryAction;
+
+	/** Hide Inventory Input Action **/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* HideInventoryAction;
+
+private:
+	class UUIManager* UIManager;
 
 public:
 	AOdysseyCharacter();
@@ -106,6 +117,13 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnResumeGame"))
 	void ResumeGame();
 
+	/** Called for show inventory input */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnShowInventory"))
+	void ShowInventory();
+
+	/** Called for hide inventory input */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnHideInventory"))
+	void HideInventory();
 
 protected:
 	// APawn interface

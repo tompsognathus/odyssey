@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "CharSheet.generated.h"
+#include "Inventory.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class ODYSSEY_API UCharSheet : public UActorComponent
+class ODYSSEY_API UInventory : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UCharSheet();
+	UInventory();
 
 protected:
 	// Called when the game starts
@@ -24,10 +24,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-
 private:
-	int Gold;
-	int Health;
-	int MaxHealth;
-	TArray<UObject*> Inventory;
+	int NumSlotRows;
+	int NumSlotColumns;
+
+
 };

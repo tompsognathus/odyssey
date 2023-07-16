@@ -183,12 +183,13 @@ void AOdysseyCharacter::UpdateInputPromptVisibility()
 //		ActivateExploreMappingContext();
 //	}
 
-// If the current interact target is the same as the previous one, there's nothing to do
-	if (InteractTarget == PreviousInteractTarget) { return; }
-
     // If we have an interact target now and it's different from the previous interact target, we need to display the new input prompt and hide the old one
 	if (InteractTarget)
 	{
+		// If the current interact target is the same as the previous one, there's nothing to do
+		if (InteractTarget == PreviousInteractTarget) { return; }
+
+		// If the current interact target is different from the previous one, we need to:
 		// Hide the old prompt
 		if (PreviousInteractTarget)
 		{
@@ -196,27 +197,20 @@ void AOdysseyCharacter::UpdateInputPromptVisibility()
 		}
 
 		// Display the new prompt
+		if (InteractTarget)
+		{
+			bool TargetIsInteractable = IInteractable::Execute_GetIsInteractable(InteractTarget);
+			if (TargetIsInteractable)
+			{
+				// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
+				// to check again here
+				IInteractable::Execute_EnteredInteractionZone(InteractTarget);
+				IInteractable::Execute_DisplayInputPrompt(InteractTarget, true);
+				ActivateInteractMappingContext();
+			}
+		}
+	}
 
-		bool TargetIsInteractable = IInteractable::Execute_GetIsInteractable(InteractTarget);
-		if (TargetIsInteractable)
-		{
-			// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
-			// to check again here
-			IInteractable::Execute_EnteredInteractionZone(InteractTarget);
-			IInteractable::Execute_DisplayInputPrompt(InteractTarget, true);
-			ActivateInteractMappingContext();
-		}
-	}
-	// Now the case when we've left the area of the last interact target
-	else
-	{
-		// If there is no current interact target, but there is a previous interact target, hide the old prompt and activate the explore mapping context
-		if (PreviousInteractTarget)
-		{
-			IInteractable::Execute_DisplayInputPrompt(PreviousInteractTarget, false);
-		}
-		ActivateExploreMappingContext();
-	}
 }
 
 
