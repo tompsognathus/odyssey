@@ -44,16 +44,16 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 bool UInventory::AddToInventory(UInventoryItem Item)
 {
 	// if number of items in inventory is less than inventory size then add item to inventory
-	if (Inventory.Num() >= InventorySize)
+	if (InventoryItems.Num() >= InventorySize)
 	{
 		UE_LOG(LogTemp, Display, TEXT("Inventory full. Cannot add item. See Inventory, AddItem"));
 		return false;
 	}
 
 	// If the inventory is empty, just create a new item
-	if (Inventory.Num() == 0)
+	if (InventoryItems.Num() == 0)
 	{
-		Inventory.Add(&Item);
+		InventoryItems.Add(&Item);
 		return true;
 	}
 
@@ -61,18 +61,18 @@ bool UInventory::AddToInventory(UInventoryItem Item)
 	bool IsStackable = Item.MaxStackSize > 1;
 
 	// Add item to the first matching slot that isn't maxed out
-	for (int idx = 0; idx < Inventory.Num(); idx++)
+	for (int idx = 0; idx < InventoryItems.Num(); idx++)
 	{
 		// If the item already exists in the inventory and isn't maxed out, add to it
-		if (Inventory[idx]->ItemName == Item.ItemName && Inventory[idx]->Quantity < Item.MaxStackSize)
+		if (InventoryItems[idx]->ItemName == Item.ItemName && InventoryItems[idx]->Quantity < Item.MaxStackSize)
 		{
-			Inventory[idx]->Quantity += 1;
+			InventoryItems[idx]->Quantity += 1;
 			return true;
 		}
 		// Otherwise add a new item slot to the inventory
 		else
 		{
-			Inventory.Add(&Item);
+			InventoryItems.Add(&Item);
 			return true;
 		}
 	}
@@ -85,20 +85,20 @@ bool UInventory::AddToInventory(UInventoryItem Item)
 void UInventory::RemoveFromInventory(UInventoryItem Item)
 {
 	// Find item in inventory and remove it
-	for (int idx = 0; idx < Inventory.Num(); idx++)
+	for (int idx = 0; idx < InventoryItems.Num(); idx++)
 	{
-		if (Inventory[idx]->ItemName == Item.ItemName)
+		if (InventoryItems[idx]->ItemName == Item.ItemName)
 		{
 			// If there's more than one of said item, remove one (by reducing the quantity)
-			if (Inventory[idx]->Quantity > 1)
+			if (InventoryItems[idx]->Quantity > 1)
 			{
-				Inventory[idx]->Quantity -= 1;
+				InventoryItems[idx]->Quantity -= 1;
 				return;
 			}
 			// Otherwise remove the entire item from the inventory
 			else
 			{
-				Inventory.RemoveAt(idx);
+				InventoryItems.RemoveAt(idx);
 				return;
 			}
 		}

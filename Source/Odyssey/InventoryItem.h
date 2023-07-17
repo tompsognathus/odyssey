@@ -25,13 +25,13 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "InventoryItem")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InventoryItem")
 	int MaxStackSize = 1;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "InventoryItem")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InventoryItem")
 	int Quantity = 1;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "InventoryItem")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InventoryItem")
 	FString ItemName = "";
 
 };
