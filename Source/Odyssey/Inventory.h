@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
 #include "Inventory.generated.h"
 
 
@@ -24,9 +25,21 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void AddToInventory();
+
+	void RemoveFromInventory();
+
+	int GetInventorySize();
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int InventorySize = 60;
+
+
 private:
-	int NumSlotRows;
-	int NumSlotColumns;
+	TArray<struct F_InventorySlot*> InventorySlots;
+
+	void CreateInventory();
 
 
 };

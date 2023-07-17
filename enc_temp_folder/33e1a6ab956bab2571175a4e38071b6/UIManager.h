@@ -49,7 +49,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> InventoryWidgetAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TSubclassOf<class UUserWidget> InventorySlotAssetRef;
 
 	/* Alerts */
