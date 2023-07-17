@@ -29,5 +29,5 @@ private:
 	int Gold;
 	int Health;
 	int MaxHealth;
-	TArray<UObject*> Inventory;
+
 };

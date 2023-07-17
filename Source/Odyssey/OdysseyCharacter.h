@@ -66,6 +66,8 @@ class AOdysseyCharacter : public ACharacter
 private:
 	class UUIManager* UIManager;
 
+	TArray<struct F_InventoryItem*> AvailableLootItems;
+
 public:
 	AOdysseyCharacter();
 	

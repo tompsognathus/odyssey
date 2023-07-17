@@ -53,4 +53,8 @@ private:
 	class UUIManager* UIManager;
 	class UInventory* Inventory;
 
+	int SelectedItemIdx = 0;
+	
+	void SelectItem(int ItemIdx);
+
 };

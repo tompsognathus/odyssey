@@ -33,7 +33,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float LidClosedAngle = 0.0f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "NPC")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TreasureChest")
 	bool IsInteractable = true;
 
 	// Loot variables

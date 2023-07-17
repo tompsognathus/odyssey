@@ -2,7 +2,8 @@
 
 
 #include "Inventory.h"
-#include "F_InventorySlot.h"
+#include "InventoryItem.h"
+
 
 // Sets default values for this component's properties
 UInventory::UInventory()
@@ -11,7 +12,6 @@ UInventory::UInventory()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	CreateInventory();
 }
 
 
@@ -33,14 +33,76 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	
 }
 
-void UInventory::AddToInventory()
+/*
+ * Tries to add an item to the inventory as long as there's available space.
+ * If the item is stackable and already in the inventory then add to the quantity,
+ * otherwise add a new item slot to the inventory.
+ * 
+ * @param Item - The item to add to the inventory
+ * @return bool - Whether or not the item was added to the inventory
+ */
+bool UInventory::AddToInventory(UInventoryItem Item)
 {
+	// if number of items in inventory is less than inventory size then add item to inventory
+	if (Inventory.Num() >= InventorySize)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Inventory full. Cannot add item. See Inventory, AddItem"));
+		return false;
+	}
 
+	// If the inventory is empty, just create a new item
+	if (Inventory.Num() == 0)
+	{
+		Inventory.Add(&Item);
+		return true;
+	}
+
+	// If the item is stackable and already in the inventory then just increase the quantity
+	bool IsStackable = Item.MaxStackSize > 1;
+
+	// Add item to the first matching slot that isn't maxed out
+	for (int idx = 0; idx < Inventory.Num(); idx++)
+	{
+		// If the item already exists in the inventory and isn't maxed out, add to it
+		if (Inventory[idx]->ItemName == Item.ItemName && Inventory[idx]->Quantity < Item.MaxStackSize)
+		{
+			Inventory[idx]->Quantity += 1;
+			return true;
+		}
+		// Otherwise add a new item slot to the inventory
+		else
+		{
+			Inventory.Add(&Item);
+			return true;
+		}
+	}
+
+	// Technically we should never reach this point, but if we have then something went wrong
+	UE_LOG(LogTemp, Error, TEXT("Something went wrong trying to add item to inventory. See Inventory, AddItem"));
+	return false;
 }
 
-void UInventory::RemoveFromInventory()
+void UInventory::RemoveFromInventory(UInventoryItem Item)
 {
-
+	// Find item in inventory and remove it
+	for (int idx = 0; idx < Inventory.Num(); idx++)
+	{
+		if (Inventory[idx]->ItemName == Item.ItemName)
+		{
+			// If there's more than one of said item, remove one (by reducing the quantity)
+			if (Inventory[idx]->Quantity > 1)
+			{
+				Inventory[idx]->Quantity -= 1;
+				return;
+			}
+			// Otherwise remove the entire item from the inventory
+			else
+			{
+				Inventory.RemoveAt(idx);
+				return;
+			}
+		}
+	}
 }
 
 int UInventory::GetInventorySize()
@@ -48,14 +110,4 @@ int UInventory::GetInventorySize()
 	return InventorySize;
 }
 
-void UInventory::CreateInventory()
-{
-	for (int idx = 0; idx < InventorySize; idx++)
-	{
-		F_InventorySlot* InventorySlot = new F_InventorySlot();
-		InventorySlot->ItemName = "";
-		InventorySlot->Quantity = 0;
-		InventorySlots.Add(InventorySlot);
-	}
-}
 

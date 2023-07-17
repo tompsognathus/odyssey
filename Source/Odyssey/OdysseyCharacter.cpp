@@ -117,6 +117,7 @@ void AOdysseyCharacter::HandleInteractRequest()
 		{
 			// Get UObject for this class
 			IInteractable::Execute_InteractRequest(InteractTarget);
+
 		} else { UE_LOG(LogTemp, Warning, TEXT("InteractTarget does not implement UInteractable in OddyseyCharacter, HandleInteractRequest")); }
 	} else { UE_LOG(LogTemp, Warning, TEXT("InteractTarget is null in OdysseyCharacter, HandleInteractRequest")); }
 }

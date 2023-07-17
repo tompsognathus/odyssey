@@ -4,18 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-
-#include "Inventory.generated.h"
+#include "InventoryItem.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class ODYSSEY_API UInventory : public UActorComponent
+class ODYSSEY_API UInventoryItem : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UInventory();
+	UInventoryItem();
 
 protected:
 	// Called when the game starts
@@ -25,20 +24,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	bool AddToInventory(class UInventoryItem Item);
-
-	void RemoveFromInventory(class UInventoryItem Item);
-
-	int GetInventorySize();
-
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	TArray<class UInventoryItem*> Inventory;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "InventoryItem")
+	int MaxStackSize = 1;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "InventoryItem")
+	int Quantity = 1;
 
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int InventorySize = 60;
-
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "InventoryItem")
+	FString ItemName = "";
 
 };

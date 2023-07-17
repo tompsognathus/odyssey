@@ -55,3 +55,17 @@ void UInventoryWidget::DisplayItem(int ItemIdx)
 {
 
 }
+
+void UInventoryWidget::SelectItem(int ItemIdx)
+{
+	if (ItemIdx >= Inventory->Inventory.Num()) { 
+		UE_LOG(LogTemp, Error, TEXT("ItemIdx exceeds number of slots in Inventory. See InventoryWidget, SelectItem"));
+		return;
+	}
+
+	// Get inventory slot
+
+	// Set item name text
+
+
+}
