@@ -26,7 +26,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LootBox")
 	int GoldAmount = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LootBox")
