@@ -32,4 +32,6 @@ public:
     UFUNCTION (BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
     bool GetIsInteractable();
 
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
+    TArray<UObject*> Loot();
 };

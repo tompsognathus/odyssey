@@ -24,32 +24,30 @@ protected:
 
 
 public:	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> ParentUIWidgetAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Menus")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> MainMenuWidgetAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Menus")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> PauseMenuWidgetAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Menus")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> OptionsMenuWidgetAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Menus")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> AudioOptionsMenuWidgetAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Gameplay")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> RPEncounterWidgetAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Gameplay")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> HUDWidgetAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> InventoryWidgetAssetRef;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
-	TSubclassOf<class UUserWidget> TradingInventoryWidgetAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
 	TSubclassOf<class UUserWidget> InventorySlotAssetRef;
@@ -82,9 +80,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayInventoryWidget();
-
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayTradingInventoryWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
@@ -137,9 +132,6 @@ private:
 
 	// Variable to hold the Quit Game Alert Widget After Creating it
 	class UUserWidget* InventoryWidgetInstance;
-
-	// Variable to hold the Quit Game Alert Widget After Creating it
-	class UUserWidget* TradingInventoryWidgetInstance;
 
 	// Variable to hold the Quit Game Alert Widget After Creating it
 	class UUserWidget* QuitGameAlertWidgetInstance;

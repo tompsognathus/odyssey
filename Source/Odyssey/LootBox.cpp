@@ -52,3 +52,4 @@ void ULootBox::SpawnLootableItems()
 		} else UE_LOG(LogTemp, Warning, TEXT("Failed to get lootable item class. See LootBox, SpawnLootableItems"));
 	};
 }
+

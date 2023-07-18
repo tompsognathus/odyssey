@@ -119,7 +119,7 @@ void AOdysseyCharacter::HandleInteractRequest()
 			IInteractable::Execute_InteractRequest(InteractTarget);
 
 
-				
+			
 
 
 		} else { UE_LOG(LogTemp, Warning, TEXT("InteractTarget does not implement UInteractable in OddyseyCharacter, HandleInteractRequest")); }
@@ -150,17 +150,14 @@ void AOdysseyCharacter::FindLookedAtInteractTarget()
 	{
 		if (CandidateTargetActor->Implements<UInteractable>())
 		{
-			bool TargetIsInteractable = IInteractable::Execute_GetIsInteractable(CandidateTargetActor);
-			if (TargetIsInteractable) {
-				// Calculate angular distance between OddysseyCharacter's forward vector and the actor
-				FVector CharacterForwardVector = GetActorForwardVector();
-				FVector CharacterToActorVector = CandidateTargetActor->GetActorLocation() - GetActorLocation();
-				float AngularDistance = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(CharacterForwardVector, CharacterToActorVector.GetSafeNormal())));
-				if (AngularDistance < MinAngularDistance)
-				{
-					MinAngularDistance = AngularDistance;
-					InteractTarget = CandidateTargetActor;
-				}
+			// Calculate angular distance between OddysseyCharacter's forward vector and the actor
+			FVector CharacterForwardVector = GetActorForwardVector();
+			FVector CharacterToActorVector = CandidateTargetActor->GetActorLocation() - GetActorLocation();
+			float AngularDistance = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(CharacterForwardVector, CharacterToActorVector.GetSafeNormal())));
+			if (AngularDistance < MinAngularDistance)
+			{
+				MinAngularDistance = AngularDistance;
+				InteractTarget = CandidateTargetActor;
 			}
 		}
 	}
@@ -168,7 +165,30 @@ void AOdysseyCharacter::FindLookedAtInteractTarget()
 
 void AOdysseyCharacter::UpdateInputPromptVisibility()
 {
-	// If the current interact target is the same as the previous one, there's nothing to do
+//	if (PreviousInteractTarget)
+//	{
+//		// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
+//		// to check again here
+//		IInteractable::Execute_DisplayInputPrompt(PreviousInteractTarget, false);
+//	}
+//	if (InteractTarget)
+//	{
+//		bool TargetIsInteractable = IInteractable::Execute_GetIsInteractable(InteractTarget);
+//		if (TargetIsInteractable)
+//		{	
+//			// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
+//			// to check again here
+//			IInteractable::Execute_EnteredInteractionZone(InteractTarget);
+//			IInteractable::Execute_DisplayInputPrompt(InteractTarget, true);
+//			ActivateInteractMappingContext();
+//		}
+//	}
+//	else
+//	{
+//		ActivateExploreMappingContext();
+//	}
+
+// If the current interact target is the same as the previous one, there's nothing to do
 	if (InteractTarget == PreviousInteractTarget) { return; }
 
     // If we have an interact target now and it's different from the previous interact target, we need to display the new input prompt and hide the old one

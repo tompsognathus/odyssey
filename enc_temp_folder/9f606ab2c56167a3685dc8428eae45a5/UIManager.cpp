@@ -92,11 +92,6 @@ void UUIManager::DisplayInventoryWidget()
 	DisplayWidget(InventoryWidgetInstance);
 }
 
-void UUIManager::DisplayTradingInventoryWidget()
-{
-	DisplayWidget(TradingInventoryWidgetInstance);
-}
-
 void UUIManager::OverlayQuitGameAlertWidget()
 {
 	if (QuitGameAlertWidgetInstance)
@@ -238,7 +233,6 @@ void UUIManager::CreateUIWidgets()
 	AudioOptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), AudioOptionsMenuWidgetAssetRef);
 	RPEncounterWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), RPEncounterWidgetAssetRef);
 	InventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetAssetRef);
-	TradingInventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), TradingInventoryWidgetAssetRef);
 
 	// HUD only
 	HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetAssetRef);
@@ -262,8 +256,6 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 	AddWidgetToWidgetSwitcher(RPEncounterWidgetInstance);
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
 	AddWidgetToWidgetSwitcher(InventoryWidgetInstance);
-	AddWidgetToWidgetSwitcher(TradingInventoryWidgetInstance);
-
 }
 
 /*

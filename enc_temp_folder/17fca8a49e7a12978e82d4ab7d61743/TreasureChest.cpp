@@ -64,6 +64,10 @@ bool ATreasureChest::GetIsInteractable_Implementation()
 	return IsInteractable;
 }
 
+TArray<UObject*> ATreasureChest::Loot_Implementation()
+{
+	return TArray<UObject*>(); // Return empty array
+}
 
 void ATreasureChest::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)
 {

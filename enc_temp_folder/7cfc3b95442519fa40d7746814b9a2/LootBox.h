@@ -35,5 +35,4 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LootBox")
 	TArray<AActor*> LootableItems;
 
-
 };
