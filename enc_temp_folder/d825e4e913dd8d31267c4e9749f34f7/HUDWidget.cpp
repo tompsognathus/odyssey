@@ -25,7 +25,7 @@ void UHUDWidget::NativeConstruct()
 if (CharSheet)
 	{
 		CharSheet->OnGoldChangedDelegate.AddDynamic(this, &UHUDWidget::SetGpText);
-		CharSheet->OnHpChangedDelegate.AddDynamic(this, &UHUDWidget::SetHpBar);
+		//CharSheet->OnHpChangedDelegate.AddDynamic(this, &UHUDWidget::SetHpBar);
 	}
 	else
 	{
@@ -37,13 +37,9 @@ if (CharSheet)
 void UHUDWidget::SetHpBar(float Percent)
 {
 	HpBar->SetPercent(Percent);
-
-	UE_LOG(LogTemp, Display, TEXT("HpBar set to %f"), Percent);
 }
 
 void UHUDWidget::SetGpText(int32 Gp)
 {
 	GpText->SetText(FText::FromString(FString::FromInt(Gp)));
-
-	UE_LOG(LogTemp, Display, TEXT("GpText set to %i"), Gp);
 }

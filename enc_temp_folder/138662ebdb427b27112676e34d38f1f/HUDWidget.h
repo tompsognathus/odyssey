@@ -27,10 +27,7 @@ private:
 	class UCharSheet* CharSheet;
 	class AOdysseyCharacter* Player;
 
-	UFUNCTION()
 	void SetHpBar(float Percent);
-	
-	UFUNCTION()
 	void SetGpText(int32 Gp);
 
 };

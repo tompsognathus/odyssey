@@ -181,10 +181,10 @@ void AOdysseyCharacter::UpdateInputPromptVisibility()
 		}
 
 		// Display the new prompt
-
 		bool TargetIsInteractable = IInteractable::Execute_GetIsInteractable(InteractTarget);
 		if (TargetIsInteractable)
 		{
+	
 			// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
 			// to check again here
 			IInteractable::Execute_EnteredInteractionZone(InteractTarget);

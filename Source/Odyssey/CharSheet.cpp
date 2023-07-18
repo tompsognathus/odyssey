@@ -10,11 +10,6 @@ UCharSheet::UCharSheet()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-
-
-
-
-
 }
 
 
@@ -23,8 +18,8 @@ void UCharSheet::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	OnGoldChangedDelegate.Broadcast(Gold);
+	OnHpChangedDelegate.Broadcast(100);
 }
 
 
@@ -34,6 +29,26 @@ void UCharSheet::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UCharSheet::AddGold(int GoldAmount)
+{
+	Gold += GoldAmount;
+
+	// Request HUD update
+	OnGoldChangedDelegate.Broadcast(Gold);
+}
+
+void UCharSheet::AddHp(int HpAmount)
+{
+	Hp += HpAmount;
+
+	Hp = std::min(Hp, MaxHp);
+	Hp = std::max(Hp, 0);
+
+	float HpPercentage =  (int32)((float)Hp / (float)MaxHp * 100.0f);
+	// Request HUD update
+	OnHpChangedDelegate.Broadcast(HpPercentage);
 }
 
 

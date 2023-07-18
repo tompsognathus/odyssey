@@ -7,6 +7,9 @@
 #include "CharSheet.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChangedSignature, int32, NewGoldAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHpChangedSignature, float, NewHpPercent);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ODYSSEY_API UCharSheet : public UActorComponent
 {
@@ -24,10 +27,22 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable, Category = "CharSheet")
+	void AddGold(int GoldAmount);
+
+	UFUNCTION(BlueprintCallable, Category = "CharSheet")
+	void AddHp(int HpAmount);
+
+	// Delegates
+	UPROPERTY(BlueprintAssignable, Category = "CharSheet")
+	FOnGoldChangedSignature OnGoldChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "CharSheet")
+	FOnHpChangedSignature OnHpChangedDelegate;
 
 private:
-	int Gold;
-	int Health;
-	int MaxHealth;
+	int Gold = 50;
+	int Hp = 100;
+	int MaxHp = 100;
 
 };
