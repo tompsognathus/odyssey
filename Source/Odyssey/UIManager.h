@@ -84,7 +84,7 @@ public:
 	void DisplayInventoryWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayTradingInventoryWidget();
+	void DisplayTradingInventoryWidget(class ULootBox* LootBox);
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
@@ -108,6 +108,10 @@ public:
 
 	UFUNCTION()
 	void SelectDialogueOption(int OptionNumber, ANPC* NPCDialogueOwner);
+
+	/***** Trading Inventory UI Widget *****/
+	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
+	void UpdateTradingInventoryWidgetContent(class ULootBox* LootBox);
 
 
 private:

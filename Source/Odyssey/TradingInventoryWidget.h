@@ -26,9 +26,17 @@ protected:
 
 	/* VARIABLES */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	int NumInventoryCols = 4;
+	int NumInventoryCols = 5;
 
 private:
 	class UUIManager* UIManager;
 	class UInventory* Inventory;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void UpdatePlayerInventoryUIContents();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void UpdateAvailableLootUIContents(class ULootBox* LootBox);
+
 };

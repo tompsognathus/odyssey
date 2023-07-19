@@ -16,8 +16,6 @@ public:
 	// Sets default values for this component's properties
 	ULootBox();
 
-	void SpawnLootableItems();
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -26,14 +24,13 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	TArray<class UDA_Item*> GetLootableItemRefArray() const { return LootableItemRefArray; }
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	int GoldAmount = 0;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LootBox")
-	TArray<TSubclassOf<AActor>> LootableItemsRefs;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LootBox")
-	TArray<AActor*> LootableItems;
-
-
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
+	TArray<class UDA_Item*> LootableItemRefArray;
 };

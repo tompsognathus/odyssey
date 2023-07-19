@@ -18,7 +18,6 @@ void ULootBox::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnLootableItems();
 
 
 }
@@ -29,27 +28,5 @@ void ULootBox::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-}
-
-void ULootBox::SpawnLootableItems()
-{
-	// Spawn lootable items
-	for (int idx = 0; idx < LootableItemsRefs.Num(); idx++)
-	{
-		TSubclassOf<AActor> LootableItemActorClass = LootableItemsRefs[idx];
-		if (LootableItemActorClass)
-		{
-			AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(LootableItemActorClass, GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation());
-			if (SpawnedActor)
-			{
-				// Print name of spawned actor
-				LootableItems.Add(SpawnedActor);
-
-				// Attach to loot box's actor as child
-				SpawnedActor->AttachToActor(GetOwner(), FAttachmentTransformRules::KeepWorldTransform);
-
-			} else UE_LOG(LogTemp, Warning, TEXT("Failed to spawn lootable item %d. See LootBox, SpawnLootableItems"), idx);
-		} else UE_LOG(LogTemp, Warning, TEXT("Failed to get lootable item class. See LootBox, SpawnLootableItems"));
-	};
 }
 

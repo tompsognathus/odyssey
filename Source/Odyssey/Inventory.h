@@ -2,8 +2,12 @@
 
 #pragma once
 
+//#include "ItemNames.h"
+
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
+#include "ItemNames.h"
 
 #include "Inventory.generated.h"
 
@@ -25,20 +29,23 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	bool AddToInventory(class UInventoryItem Item);
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	bool AddToInventory(class UDA_Item* ItemToAdd);
 
-	void RemoveFromInventory(class UInventoryItem Item);
+	void RemoveFromInventory(UDA_Item* ItemToRemove);
 
 	int GetInventorySize();
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
-	TArray<class UInventoryItem*> InventoryItems;
+	TArray<AActor*> InventoryItemActors;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	int InventorySize = 60;
+	int MaxInventorySize = 60;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<struct FInventorySlot> InventorySlots;
 
 
 };

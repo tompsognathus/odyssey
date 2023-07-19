@@ -8,7 +8,10 @@
 #include "OdysseyCharacter.h"
 #include <Kismet/GameplayStatics.h>
 #include "RPEncounterWidget.h"
+#include "TradingInventoryWidget.h"
 #include "GM.h"
+#include "LootBox.h"
+
 
 // Sets default values for this component's properties
 UUIManager::UUIManager()
@@ -92,9 +95,11 @@ void UUIManager::DisplayInventoryWidget()
 	DisplayWidget(InventoryWidgetInstance);
 }
 
-void UUIManager::DisplayTradingInventoryWidget()
+void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
 {
+	UE_LOG(LogTemp, Warning, TEXT("DisplayTradingInventoryWidget called"));
 	DisplayWidget(TradingInventoryWidgetInstance);
+	UpdateTradingInventoryWidgetContent(LootBox);
 }
 
 void UUIManager::OverlayQuitGameAlertWidget()
@@ -209,6 +214,24 @@ void UUIManager::SelectDialogueOption(int OptionNumber, ANPC* NPCDialogueOwner)
 
 	}
 	else { UE_LOG(LogTemp, Error, TEXT("NPC not found in UIManager, SelectDialogueOption")); }
+}
+
+void UUIManager::UpdateTradingInventoryWidgetContent(ULootBox* LootBox)
+{
+	UE_LOG(LogTemp, Warning, TEXT("UpdateTradingInventoryWidgetContent"));
+
+	if (TradingInventoryWidgetInstance)
+	{
+		// Cast to TradingInventoryWidget and update the content
+		UTradingInventoryWidget* TradingInventoryWidget = Cast<UTradingInventoryWidget>(TradingInventoryWidgetInstance);
+
+		if (TradingInventoryWidget)
+		{
+			TradingInventoryWidget->UpdatePlayerInventoryUIContents();
+			TradingInventoryWidget->UpdateAvailableLootUIContents(LootBox);
+
+		} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidget not found in UIManager, UpdateTradingInventoryWidgetContent")); }
+	} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidgetInstance is null in UIManager, UpdateTradingInventoryWidgetContent")); }
 }
 
 void UUIManager::DisplayPreviousWidget()

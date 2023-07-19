@@ -55,7 +55,7 @@ void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)
 	if (NumLootableItems % NumInventoryCols != 0) { NumLootableItemRows++; }
 
 	// Populate available loot grid with inventory slot widgets
-	for (int idx = 0; idx < NumLootableItemRows * NumInventoryCols; idx++)
+	for (int idx = 0; idx < NumLootableItems; idx++)
 	{
 		UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
 		// Add to grid

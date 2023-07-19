@@ -35,7 +35,8 @@ void UCharSheet::AddGold(int GoldAmount)
 {
 	Gold += GoldAmount;
 
-	// Request HUD update
+	// Request HUD update 
+
 	OnGoldChangedDelegate.Broadcast(Gold);
 }
 
