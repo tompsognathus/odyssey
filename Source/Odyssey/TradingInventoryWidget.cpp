@@ -6,6 +6,8 @@
 #include "UIManager.h"
 #include "Inventory.h"
 #include "LootBox.h"
+#include "DA_Item.h"
+#include "WBP_InventorySlot.h"
 
 
 void UTradingInventoryWidget::NativeConstruct()
@@ -58,7 +60,36 @@ void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)
 	for (int idx = 0; idx < NumLootableItemRows * NumInventoryCols; idx++)
 	{
 		UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
+
 		// Add to grid
 		AvailableLootGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
+	}
+
+	// Populate available loot grid with lootable item info
+	for (int idx = 0; idx < NumLootableItems; idx++)
+	{
+		UDA_Item* Item = LootableItemRefs[idx];
+		
+		// Get item info
+		EItemNames ItemName = Item->Name;
+		FString ItemDisplayName = Item->DisplayName;
+		FString ItemDescription = Item->Description;
+		UTexture2D* ItemIcon = Item->Icon;
+		int MaxStackSize = Item->MaxStackSize;
+
+		// Get inventory slot
+		UWidget* InventorySlotWidget = AvailableLootGrid->GetChildAt(idx);
+		if (InventorySlotWidget)
+		{
+			// Cast to inventory slot widget
+			UWBP_InventorySlot* InventorySlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
+
+			if (InventorySlot)
+			{
+				// Populate inventory slot info
+				InventorySlot->SetItemImg(ItemIcon);
+
+			} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast inventory slot widget in TradingInventoryWidget, UpdateAvailableLootUIContents")); }
+		} else { UE_LOG(LogTemp, Error, TEXT("Cannot get inventory slot child from grid in TradingInventoryWidget, UpdateAvailableLootUIContents")); }
 	}
 }

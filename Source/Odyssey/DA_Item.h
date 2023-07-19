@@ -19,13 +19,19 @@ class ODYSSEY_API UDA_Item : public UPrimaryDataAsset
 
 	public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TSubclassOf<AActor> ItemActorRef;
+	TSubclassOf<AActor> ActorRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	EItemNames ItemName;
+	EItemNames Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	FString ItemDescription;
+	FString DisplayName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	FString Description;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UTexture2D* Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int MaxStackSize;

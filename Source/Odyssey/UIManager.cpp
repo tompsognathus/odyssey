@@ -97,7 +97,6 @@ void UUIManager::DisplayInventoryWidget()
 
 void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
 {
-	UE_LOG(LogTemp, Warning, TEXT("DisplayTradingInventoryWidget called"));
 	DisplayWidget(TradingInventoryWidgetInstance);
 	UpdateTradingInventoryWidgetContent(LootBox);
 }
@@ -218,8 +217,6 @@ void UUIManager::SelectDialogueOption(int OptionNumber, ANPC* NPCDialogueOwner)
 
 void UUIManager::UpdateTradingInventoryWidgetContent(ULootBox* LootBox)
 {
-	UE_LOG(LogTemp, Warning, TEXT("UpdateTradingInventoryWidgetContent"));
-
 	if (TradingInventoryWidgetInstance)
 	{
 		// Cast to TradingInventoryWidget and update the content

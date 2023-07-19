@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 
 #include "ItemNames.h"
+#include "DA_Item.h"
 
 #include "InventorySlot.generated.h"
 
@@ -11,18 +12,11 @@ struct FInventorySlot
 {
     GENERATED_BODY()
 
-    // Blueprint reference to actor
-    AActor* ItemActorRef;
-
-    // Item name. To create a new name, you'll have to add an entry to the EItemNames enum in ItemNames.h
-    EItemNames ItemName;
-
-    // Item description
-    FString ItemDescription;
+public:
+    // Reference to Item data asset
+    UDA_Item* DA_ItemRef;
 
     // The amount of this item in the inventory
-    int CurrentStackSize;
+    int Quantity;
 
-    // The maximum amount of this item in the inventory
-    int MaxStackSize;
 };
