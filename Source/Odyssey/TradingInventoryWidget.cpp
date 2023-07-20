@@ -51,6 +51,7 @@ void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)
 
 	// Figure out how many items are available and how many rows of slots we need
 	TArray<class UDA_Item*> LootableItemRefs = LootBox->GetLootableItemRefArray();
+	TArray<int> LootableItemStackSizes = LootBox->GetLootableItemStackSizes();
 
 	int NumLootableItems = LootableItemRefs.Num();
 	int NumLootableItemRows = NumLootableItems / NumInventoryCols;
@@ -69,6 +70,7 @@ void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)
 	for (int idx = 0; idx < NumLootableItems; idx++)
 	{
 		UDA_Item* Item = LootableItemRefs[idx];
+		int ItemStackSize = LootableItemStackSizes[idx];
 		
 		// Get item info
 		EItemNames ItemName = Item->Name;
@@ -78,16 +80,17 @@ void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)
 		int MaxStackSize = Item->MaxStackSize;
 
 		// Get inventory slot
-		UWidget* InventorySlotWidget = AvailableLootGrid->GetChildAt(idx);
-		if (InventorySlotWidget)
+		UWidget* InventorySlotWidgetParent = AvailableLootGrid->GetChildAt(idx);
+		if (InventorySlotWidgetParent)
 		{
 			// Cast to inventory slot widget
-			UWBP_InventorySlot* InventorySlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
+			UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(InventorySlotWidgetParent);
 
-			if (InventorySlot)
+			if (InventorySlotWidget)
 			{
 				// Populate inventory slot info
-				InventorySlot->SetItemImg(ItemIcon);
+				InventorySlotWidget->SetItemImg(ItemIcon);
+				InventorySlotWidget->SetStackSizeText(FText::FromString(FString::FromInt(ItemStackSize)));
 
 			} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast inventory slot widget in TradingInventoryWidget, UpdateAvailableLootUIContents")); }
 		} else { UE_LOG(LogTemp, Error, TEXT("Cannot get inventory slot child from grid in TradingInventoryWidget, UpdateAvailableLootUIContents")); }

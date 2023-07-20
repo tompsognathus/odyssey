@@ -21,7 +21,14 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* ItemImg;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* StackSizeText;
+
 public:
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetItemImg(UTexture2D* NewItemImg);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void SetStackSizeText(FText NewStackSizeText);
 
 };

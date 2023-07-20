@@ -18,8 +18,12 @@ void ULootBox::BeginPlay()
 {
 	Super::BeginPlay();
 
-
-
+	// Check if the item and count arrays have the same size as we need a count for each item
+	if (LootableItemRefArray.Num() != LootableItemCountArray.Num())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Item and ItemCount arrays are not the same size!"));
+		return;		
+	}
 }
 
 

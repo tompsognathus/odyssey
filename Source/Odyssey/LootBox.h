@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
+#include "InventorySlot.h"
+
 #include "LootBox.generated.h"
 
 
@@ -26,6 +29,8 @@ public:
 
 	TArray<class UDA_Item*> GetLootableItemRefArray() const { return LootableItemRefArray; }
 
+	TArray<int> GetLootableItemStackSizes() const { return LootableItemCountArray; }
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	int GoldAmount = 0;
 
@@ -33,4 +38,8 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	TArray<class UDA_Item*> LootableItemRefArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
+	TArray<int> LootableItemCountArray;
+
 };

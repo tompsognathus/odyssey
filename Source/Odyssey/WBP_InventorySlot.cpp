@@ -14,3 +14,8 @@ void UWBP_InventorySlot::SetItemImg(UTexture2D* NewItemImg)
 {
 	ItemImg->SetBrushFromTexture(NewItemImg);
 }
+
+void UWBP_InventorySlot::SetStackSizeText(FText NewStackSizeText)
+{
+	StackSizeText->SetText(NewStackSizeText);
+}
