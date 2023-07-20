@@ -139,11 +139,5 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inputs")
-	bool bIsInputEnabled = true;
-
-	UFUNCTION(BlueprintCallable, Category = "Inputs")
-	void SetInputEnabled(bool bIsEnabled);
 };
 

@@ -46,10 +46,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	int MaxInventorySize = 60;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "LootBox")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	TArray<class UDA_Item*> ItemRefArray;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "LootBox")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	TArray<int> ItemCountArray;
 
 };

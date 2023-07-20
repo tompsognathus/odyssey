@@ -216,6 +216,11 @@ void AOdysseyCharacter::BeginPlay()
 	UIManager = FindComponentByClass<UUIManager>();
 }
 
+void AOdysseyCharacter::SetInputEnabled(bool bIsEnabled)
+{
+	bIsInputEnabled = bIsEnabled;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -290,6 +295,8 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 
 void AOdysseyCharacter::Move(const FInputActionValue& Value)
 {
+	if (!bIsInputEnabled) { return; }
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -313,6 +320,8 @@ void AOdysseyCharacter::Move(const FInputActionValue& Value)
 
 void AOdysseyCharacter::Look(const FInputActionValue& Value)
 {
+	if (!bIsInputEnabled) { return; }
+	
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 

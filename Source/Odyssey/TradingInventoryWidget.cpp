@@ -42,6 +42,9 @@ void UTradingInventoryWidget::UpdatePlayerInventoryUIContents()
 		// Add to grid
 		InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
 	}
+
+	// Populate inventory grid with items in inventory
+
 }
 
 void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)

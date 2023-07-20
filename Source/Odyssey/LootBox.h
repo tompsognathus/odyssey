@@ -4,9 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-
-#include "InventorySlot.h"
-
 #include "LootBox.generated.h"
 
 
