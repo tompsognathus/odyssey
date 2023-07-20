@@ -31,19 +31,7 @@ void UTradingInventoryWidget::NativeConstruct()
 
 void UTradingInventoryWidget::UpdatePlayerInventoryUIContents()
 {
-	// Clear inventory grid
-	InventoryGrid->ClearChildren();
-
-	// Populate inventory grid with inventory slot widgets
-	int InventorySize = Inventory->GetInventorySize();
-	for (int idx = 0; idx < InventorySize; idx++)
-	{
-		UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
-		// Add to grid
-		InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
-	}
-
-	// Populate inventory grid with items in inventory
+//TODO
 
 }
 

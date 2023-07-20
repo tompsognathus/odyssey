@@ -27,12 +27,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* ItemImg;
 
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UUniformGridPanel* InventoryGrid;
-
-	/* VARIABLES */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	int NumInventoryCols = 4;
 
 	/* FUNCTIONS */
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
@@ -49,12 +43,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void DisplayItem(int ItemIdx);
 
-private:
-	class UUIManager* UIManager;
-	class UInventory* Inventory;
-
-	int SelectedItemIdx = 0;
 	
-	void SelectItem(int ItemIdx);
 
 };

@@ -4,36 +4,12 @@
 #include "InventoryWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
-#include "Components/UniformGridPanel.h"
 
 #include "UIManager.h"
-#include "Inventory.h"
 
 void UInventoryWidget::NativeConstruct()
 {
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
-	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
 
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in InventoryWidget, NativeConstruct")); }
-	
-		// Get inventory component
-		Inventory = Cast<UInventory>(PlayerPawn->GetComponentByClass(UInventory::StaticClass()));
-
-		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
-	}
-
-	// Populate grid with inventory slot widgets
-	int InventorySize = Inventory->GetInventorySize();
-	for (int idx = 0; idx < InventorySize; idx++)
-	{
-		UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
-		// Add to grid
-		InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
-	}
 }
 
 void UInventoryWidget::SetItemNameText(FText NewItemNameText)
@@ -56,16 +32,4 @@ void UInventoryWidget::DisplayItem(int ItemIdx)
 
 }
 
-void UInventoryWidget::SelectItem(int ItemIdx)
-{
-	if (ItemIdx >= Inventory->InventoryItemActors.Num()) {
-		UE_LOG(LogTemp, Error, TEXT("ItemIdx exceeds number of slots in Inventory. See InventoryWidget, SelectItem"));
-		return;
-	}
 
-	// Get inventory slot
-
-	// Set item name text
-
-
-}
