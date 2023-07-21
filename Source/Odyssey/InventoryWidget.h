@@ -27,6 +27,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* ItemImg;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
 
 	/* FUNCTIONS */
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
@@ -41,8 +43,6 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void DisplayItem(int ItemIdx);
-
-	
+	void UpdateInventoryUIContents();
 
 };

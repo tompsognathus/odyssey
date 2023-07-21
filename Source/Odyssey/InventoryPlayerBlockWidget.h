@@ -21,14 +21,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UUniformGridPanel* InventoryGrid;
 
+
 	/* VARIABLES */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int NumInventoryCols = 6;
 
+public:
+	void UpdateGridContents();
+
 private:
 	class UUIManager* UIManager;
 	class UInventory* Inventory;
-
-
-
 };

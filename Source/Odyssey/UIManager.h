@@ -113,6 +113,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
 	void UpdateTradingInventoryWidgetContent(class ULootBox* LootBox);
 
+	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
+	void UpdateInventoryWidgetContent();
+
 
 private:
 	// Variable to hold the Parent UI Widget After Creating it

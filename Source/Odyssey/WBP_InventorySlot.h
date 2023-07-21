@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "WBP_InventorySlot.generated.h"
 
+#include "ItemNames.h"
+
+#include "WBP_InventorySlot.generated.h"
 /**
  * 
  */
@@ -17,6 +19,8 @@ class ODYSSEY_API UWBP_InventorySlot : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 	
+	EItemNames ItemName = EItemNames::VE_None;
+
 	/* WIDGET BINDINGS */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* ItemImg;
@@ -24,11 +28,19 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* StackSizeText;
 
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetItemImg(UTexture2D* NewItemImg);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetStackSizeText(FText NewStackSizeText);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void SetItemName(EItemNames NewItemName);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	EItemNames GetItemName() { return ItemName; }
+
 
 };

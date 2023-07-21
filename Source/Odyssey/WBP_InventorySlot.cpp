@@ -19,3 +19,8 @@ void UWBP_InventorySlot::SetStackSizeText(FText NewStackSizeText)
 {
 	StackSizeText->SetText(NewStackSizeText);
 }
+
+void UWBP_InventorySlot::SetItemName(EItemNames NewItemName)
+{
+	ItemName = NewItemName;
+}

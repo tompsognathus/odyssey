@@ -21,6 +21,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UUniformGridPanel* AvailableLootGrid;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
+
 	/* VARIABLES */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int NumInventoryCols = 5;

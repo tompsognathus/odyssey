@@ -8,6 +8,7 @@
 #include "LootBox.h"
 #include "DA_Item.h"
 #include "WBP_InventorySlot.h"
+#include "InventoryPlayerBlockWidget.h"
 
 
 void UTradingInventoryWidget::NativeConstruct()
@@ -31,8 +32,11 @@ void UTradingInventoryWidget::NativeConstruct()
 
 void UTradingInventoryWidget::UpdatePlayerInventoryUIContents()
 {
-//TODO
+	if (WBP_InventoryPlayerBlock)
+	{
+		WBP_InventoryPlayerBlock->UpdateGridContents();
 
+	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in TradingInventoryWidget, UpdatePlayerInventoryUIContents")); }
 }
 
 void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)

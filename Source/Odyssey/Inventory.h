@@ -38,18 +38,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	int GetInventorySize();
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	TArray<class UDA_Item*> GetItemRefArray() const { return ItemRefArray; }
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	TArray<int> GetItemStackSizes() const { return ItemCountArray; }
+
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
-	TArray<AActor*> InventoryItemActors;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	int MaxInventorySize = 60;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "LootBox")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
 	TArray<class UDA_Item*> ItemRefArray;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "LootBox")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	TArray<int> ItemCountArray;
-
 };

@@ -9,6 +9,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "RPEncounterWidget.h"
 #include "TradingInventoryWidget.h"
+#include "InventoryWidget.h"
 #include "GM.h"
 #include "LootBox.h"
 
@@ -93,6 +94,8 @@ void UUIManager::DisplayRPEncounterWidget(ANPC* DialogueOwner)
 void UUIManager::DisplayInventoryWidget()
 {
 	DisplayWidget(InventoryWidgetInstance);
+	UpdateInventoryWidgetContent();
+	
 }
 
 void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
@@ -229,6 +232,21 @@ void UUIManager::UpdateTradingInventoryWidgetContent(ULootBox* LootBox)
 
 		} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidget not found in UIManager, UpdateTradingInventoryWidgetContent")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidgetInstance is null in UIManager, UpdateTradingInventoryWidgetContent")); }
+}
+
+void UUIManager::UpdateInventoryWidgetContent()
+{
+	if (InventoryWidgetInstance)
+	{
+		// Cast to InventoryWidget and update the content
+		UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(InventoryWidgetInstance);
+
+		if (InventoryWidget)
+		{
+			InventoryWidget->UpdateInventoryUIContents();
+
+		} else { UE_LOG(LogTemp, Error, TEXT("InventoryWidget not found in UIManager, UpdateInventoryWidgetContent")); }
+	} else { UE_LOG(LogTemp, Error, TEXT("InventoryWidgetInstance is null in UIManager, UpdateInventoryWidgetContent")); }
 }
 
 void UUIManager::DisplayPreviousWidget()
