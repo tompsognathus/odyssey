@@ -39,11 +39,11 @@ void UInventoryWidget::SetItemImg(UTexture2D* NewItemImg)
 	} else { UE_LOG(LogTemp, Warning, TEXT("Cannot find ItemImg in InventoryWidget, SetItemImg")) }
 }
 
-void UInventoryWidget::UpdateInventoryUIContents()
+void UInventoryWidget::LoadInventoryUIContents()
 {
 	if (WBP_InventoryPlayerBlock)
 	{
-		WBP_InventoryPlayerBlock->UpdateGridContents();
+		WBP_InventoryPlayerBlock->PopulateGridWithSlots();
 
 	} else { UE_LOG(LogTemp, Warning, TEXT("Cannot find WBP_InventoryPlayerBlock in InventoryWidget, UpdateInventoryUIContents")) }
 }

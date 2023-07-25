@@ -94,14 +94,14 @@ void UUIManager::DisplayRPEncounterWidget(ANPC* DialogueOwner)
 void UUIManager::DisplayInventoryWidget()
 {
 	DisplayWidget(InventoryWidgetInstance);
-	UpdateInventoryWidgetContent();
+	LoadInventoryWidgetContent();
 	
 }
 
 void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
 {
 	DisplayWidget(TradingInventoryWidgetInstance);
-	UpdateTradingInventoryWidgetContent(LootBox);
+	LoadTradingInventoryWidgetContent(LootBox);
 }
 
 void UUIManager::OverlayQuitGameAlertWidget()
@@ -218,7 +218,7 @@ void UUIManager::SelectDialogueOption(int OptionNumber, ANPC* NPCDialogueOwner)
 	else { UE_LOG(LogTemp, Error, TEXT("NPC not found in UIManager, SelectDialogueOption")); }
 }
 
-void UUIManager::UpdateTradingInventoryWidgetContent(ULootBox* LootBox)
+void UUIManager::LoadTradingInventoryWidgetContent(ULootBox* LootBox)
 {
 	if (TradingInventoryWidgetInstance)
 	{
@@ -227,14 +227,14 @@ void UUIManager::UpdateTradingInventoryWidgetContent(ULootBox* LootBox)
 
 		if (TradingInventoryWidget)
 		{
-			TradingInventoryWidget->UpdatePlayerInventoryUIContents();
-			TradingInventoryWidget->UpdateAvailableLootUIContents(LootBox);
+			TradingInventoryWidget->LoadAvailableLootUIContents(LootBox);
+			TradingInventoryWidget->LoadPlayerInventoryUIContents();
 
 		} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidget not found in UIManager, UpdateTradingInventoryWidgetContent")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidgetInstance is null in UIManager, UpdateTradingInventoryWidgetContent")); }
 }
 
-void UUIManager::UpdateInventoryWidgetContent()
+void UUIManager::LoadInventoryWidgetContent()
 {
 	if (InventoryWidgetInstance)
 	{
@@ -243,7 +243,7 @@ void UUIManager::UpdateInventoryWidgetContent()
 
 		if (InventoryWidget)
 		{
-			InventoryWidget->UpdateInventoryUIContents();
+			InventoryWidget->LoadInventoryUIContents();
 
 		} else { UE_LOG(LogTemp, Error, TEXT("InventoryWidget not found in UIManager, UpdateInventoryWidgetContent")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("InventoryWidgetInstance is null in UIManager, UpdateInventoryWidgetContent")); }

@@ -24,6 +24,11 @@ protected:
 
 
 public:	
+	// Acceptable delay between clicks to count as a double click
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
+	float DoubleClickTime = 0.25f;
+
+	/***** UI Widget Assets *****/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	TSubclassOf<class UUserWidget> ParentUIWidgetAssetRef;
 
@@ -111,10 +116,10 @@ public:
 
 	/***** Trading Inventory UI Widget *****/
 	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
-	void UpdateTradingInventoryWidgetContent(class ULootBox* LootBox);
+	void LoadTradingInventoryWidgetContent(class ULootBox* LootBox);
 
 	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
-	void UpdateInventoryWidgetContent();
+	void LoadInventoryWidgetContent();
 
 
 private:

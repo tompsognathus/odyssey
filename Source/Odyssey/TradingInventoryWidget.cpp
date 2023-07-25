@@ -28,18 +28,19 @@ void UTradingInventoryWidget::NativeConstruct()
 		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
 	}
 
+
 }
 
-void UTradingInventoryWidget::UpdatePlayerInventoryUIContents()
+void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
 {
 	if (WBP_InventoryPlayerBlock)
 	{
-		WBP_InventoryPlayerBlock->UpdateGridContents();
+		WBP_InventoryPlayerBlock->PopulateGridWithSlots();
 
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in TradingInventoryWidget, UpdatePlayerInventoryUIContents")); }
 }
 
-void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)
+void UTradingInventoryWidget::LoadAvailableLootUIContents(ULootBox* LootBox)
 {
 	// Clear inventory grid
 	AvailableLootGrid->ClearChildren();
@@ -52,42 +53,75 @@ void UTradingInventoryWidget::UpdateAvailableLootUIContents(ULootBox* LootBox)
 	int NumLootableItemRows = NumLootableItems / NumInventoryCols;
 	if (NumLootableItems % NumInventoryCols != 0) { NumLootableItemRows++; }
 
+	NumSlots = NumLootableItemRows * NumInventoryCols;
+
 	// Populate available loot grid with inventory slot widgets
-	for (int idx = 0; idx < NumLootableItemRows * NumInventoryCols; idx++)
+	for (int idx = 0; idx < NumSlots; idx++)
 	{
 		UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
 
 		// Add to grid
 		AvailableLootGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
+
+		// Bind functions to On Double Clicked event in inventory slot widget
+		UWBP_InventorySlot* LootableSlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
+		if (LootableSlot)
+		{
+			LootableSlot->OnDoubleClicked.AddDynamic(this, &UTradingInventoryWidget::OnLootableSlotDoubleClicked);
+
+		} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, CreateGridContent")); }
 	}
 
 	// Populate available loot grid with lootable item info
 	for (int idx = 0; idx < NumLootableItems; idx++)
 	{
 		UDA_Item* Item = LootableItemRefs[idx];
-		int ItemStackSize = LootableItemStackSizes[idx];
-		
-		// Get item info
-		EItemNames ItemName = Item->Name;
-		FString ItemDisplayName = Item->DisplayName;
-		FString ItemDescription = Item->Description;
-		UTexture2D* ItemIcon = Item->Icon;
+		int ItemCount = LootableItemStackSizes[idx];
 		int MaxStackSize = Item->MaxStackSize;
 
-		// Get inventory slot
-		UWidget* InventorySlotWidgetParent = AvailableLootGrid->GetChildAt(idx);
-		if (InventorySlotWidgetParent)
+		// Calculate the number of slots this item will take up
+		int NumSlotsToFill = FMath::CeilToInt((float)ItemCount / (float)MaxStackSize);
+
+		// print num slots to fill
+UE_LOG(LogTemp, Warning, TEXT("NumSlotsToFill: %d"), NumSlotsToFill);
+
+		while (NumSlotsToFill > 0)
 		{
-			// Cast to inventory slot widget
-			UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(InventorySlotWidgetParent);
-
-			if (InventorySlotWidget)
+			// Get the next available inventory slot
+			for (int slotIdx = 0; slotIdx < NumSlots; slotIdx++)
 			{
-				// Populate inventory slot info
-				InventorySlotWidget->SetItemImg(ItemIcon);
-				InventorySlotWidget->SetStackSizeText(FText::FromString(FString::FromInt(ItemStackSize)));
+				// Get inventory slot widget
+				UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(AvailableLootGrid->GetChildAt(slotIdx));
 
-			} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast inventory slot widget in TradingInventoryWidget, UpdateAvailableLootUIContents")); }
-		} else { UE_LOG(LogTemp, Error, TEXT("Cannot get inventory slot child from grid in TradingInventoryWidget, UpdateAvailableLootUIContents")); }
+				// Check if slot is empty
+				if (InventorySlotWidget->GetItem() == nullptr)
+				{
+					// If we're breaking up the item into multiple stacks, all but the last one will be full
+					if (NumSlotsToFill > 1)
+					{
+						InventorySlotWidget->SetItem(Item, MaxStackSize);
+						ItemCount -= MaxStackSize;
+					}
+					else
+					{
+						InventorySlotWidget->SetItem(Item, ItemCount);
+					}
+
+					// Make the slot clickable
+					InventorySlotWidget->SetSlotIsEnabled(true);
+
+					NumSlotsToFill--;
+					// Break out of loop as we've now populated the next available slot
+					break;
+				}
+			}
+		}
 	}
+}
+
+
+void UTradingInventoryWidget::OnLootableSlotDoubleClicked(UDA_Item* Item, int StackSize)
+{
+	Inventory->AddToInventory(Item, StackSize);
+	UE_LOG(LogTemp, Warning, TEXT("Double clicked lootable slot"));
 }

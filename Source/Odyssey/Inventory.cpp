@@ -43,25 +43,28 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
  * @param Item - The item to add to the inventory
  * @return bool - Whether or not the item was added to the inventory
  */
-bool UInventory::AddToInventory(UDA_Item* ItemToAdd)
+bool UInventory::AddToInventory(UDA_Item* ItemToAdd, int ItemCount)
 {
+	// If the item doesn't exist in the inventory then add it
+	if (!ItemRefArray.Contains(ItemToAdd))
+	{
+		ItemRefArray.Add(ItemToAdd);
+		UE_LOG(LogTemp, Display, TEXT("New item added to inventory in Inventory, AddToInventory"));
+	}
+	// Otherwise find it and add to its count
+	else
+	{
+		for (int idx = 0; idx < ItemRefArray.Num(); idx++)
+		{
+			if (ItemRefArray[idx] == ItemToAdd)
+			{
+				ItemCountArray[idx] += ItemCount;
+			}
+		}
+		UE_LOG(LogTemp, Display, TEXT("Item count increased in Inventory, AddToInventory"));
+	}
 
-
-	//TODO
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	OnInventoryUpdated.Broadcast();
 
 	return false;
 }
@@ -71,9 +74,14 @@ void UInventory::RemoveFromInventory(UDA_Item* ItemToRemove)
 
 }
 
-int UInventory::GetInventorySize()
+int UInventory::GetMaxInventorySize()
 {
 	return MaxInventorySize;
+}
+
+int UInventory::GetNumItems()
+{
+	return ItemRefArray.Num();
 }
 
 

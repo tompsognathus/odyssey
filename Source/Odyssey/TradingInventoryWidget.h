@@ -32,11 +32,18 @@ private:
 	class UUIManager* UIManager;
 	class UInventory* Inventory;
 
+	int NumSlots = 0;
+
+	UFUNCTION()
+	void OnLootableSlotDoubleClicked(UDA_Item* Item, int StackSize);
+
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void UpdatePlayerInventoryUIContents();
+	void LoadPlayerInventoryUIContents();
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void UpdateAvailableLootUIContents(class ULootBox* LootBox);
+	void LoadAvailableLootUIContents(class ULootBox* LootBox);
+
 
 };

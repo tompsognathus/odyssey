@@ -6,9 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "InventoryPlayerBlockWidget.generated.h"
 
-/**
- * 
- */
+
+
 UCLASS()
 class ODYSSEY_API UInventoryPlayerBlockWidget : public UUserWidget
 {
@@ -27,9 +26,21 @@ protected:
 	int NumInventoryCols = 6;
 
 public:
-	void UpdateGridContents();
+
+	void PopulateGridWithSlots();
+
+	void FillGridWithContentsFromInventory();
+
 
 private:
 	class UUIManager* UIManager;
 	class UInventory* Inventory;
+
+	int NumInventorySlots;
+
+	UFUNCTION()
+	void OnInventorySlotDoubleClicked(UDA_Item* Item, int StackSize);
+
+	UFUNCTION()
+	void OnInventoryUpdated();
 };

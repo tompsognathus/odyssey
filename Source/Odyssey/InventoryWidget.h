@@ -43,6 +43,6 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void UpdateInventoryUIContents();
+	void LoadInventoryUIContents();
 
 };
