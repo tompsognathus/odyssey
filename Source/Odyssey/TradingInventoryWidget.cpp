@@ -42,6 +42,7 @@ void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
 
 void UTradingInventoryWidget::LoadAvailableLootUIContents(ULootBox* LootBox)
 {
+	CurrentLootBox = LootBox;
 	// Clear inventory grid
 	AvailableLootGrid->ClearChildren();
 
@@ -53,23 +54,12 @@ void UTradingInventoryWidget::LoadAvailableLootUIContents(ULootBox* LootBox)
 	int NumLootableItemRows = NumLootableItems / NumInventoryCols;
 	if (NumLootableItems % NumInventoryCols != 0) { NumLootableItemRows++; }
 
-	NumSlots = NumLootableItemRows * NumInventoryCols;
+	NumLootBoxSlots = NumLootableItemRows * NumInventoryCols;
 
 	// Populate available loot grid with inventory slot widgets
-	for (int idx = 0; idx < NumSlots; idx++)
+	for (int idx = 0; idx < NumLootBoxSlots; idx++)
 	{
-		UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
-
-		// Add to grid
-		AvailableLootGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
-
-		// Bind functions to On Double Clicked event in inventory slot widget
-		UWBP_InventorySlot* LootableSlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
-		if (LootableSlot)
-		{
-			LootableSlot->OnDoubleClicked.AddDynamic(this, &UTradingInventoryWidget::OnLootableSlotDoubleClicked);
-
-		} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, CreateGridContent")); }
+		AddInventorySlotToGrid(idx);
 	}
 
 	// Populate available loot grid with lootable item info
@@ -82,13 +72,10 @@ void UTradingInventoryWidget::LoadAvailableLootUIContents(ULootBox* LootBox)
 		// Calculate the number of slots this item will take up
 		int NumSlotsToFill = FMath::CeilToInt((float)ItemCount / (float)MaxStackSize);
 
-		// print num slots to fill
-UE_LOG(LogTemp, Warning, TEXT("NumSlotsToFill: %d"), NumSlotsToFill);
-
 		while (NumSlotsToFill > 0)
 		{
 			// Get the next available inventory slot
-			for (int slotIdx = 0; slotIdx < NumSlots; slotIdx++)
+			for (int slotIdx = 0; slotIdx < NumLootBoxSlots; slotIdx++)
 			{
 				// Get inventory slot widget
 				UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(AvailableLootGrid->GetChildAt(slotIdx));
@@ -119,9 +106,81 @@ UE_LOG(LogTemp, Warning, TEXT("NumSlotsToFill: %d"), NumSlotsToFill);
 	}
 }
 
+void UTradingInventoryWidget::AddInventorySlotToGrid(int idx)
+{
+	UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
+
+	// Add to grid
+	AvailableLootGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
+
+	// Bind functions to On Double Clicked event in inventory slot widget
+	UWBP_InventorySlot* LootableSlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
+	if (LootableSlot)
+	{
+		LootableSlot->OnDoubleClicked.AddDynamic(this, &UTradingInventoryWidget::OnLootableSlotDoubleClicked);
+
+	}
+	else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, CreateGridContent")); }
+}
+
+void UTradingInventoryWidget::RemoveSlotContents(UDA_Item* ItemToRemove, int NumToRemove)
+{
+	// Remove the item from the LootBox itself
+	if (CurrentLootBox)
+	{
+		CurrentLootBox->RemoveItem(ItemToRemove, NumToRemove);
+	}
+
+	// Remove the item from the UI
+	
+	// Search from end of array to beginning to find the item to remove
+	for (int idx = NumLootBoxSlots - 1; idx >= 0; idx--)
+	{
+		// print idx
+		UE_LOG(LogTemp, Warning, TEXT("idx: %d"), idx);
+		// Get the slot widget at idx
+		UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(AvailableLootGrid->GetChildAt(idx));
+		if (InventorySlotWidget)
+		{
+			UDA_Item* ItemInSlot = InventorySlotWidget->GetItem();
+
+			if (ItemInSlot == nullptr)
+			{
+				// If the slot is empty, continue to the next one
+				continue;
+			}
+
+			bool bNamesMatch = ItemInSlot->Name == ItemToRemove->Name;
+
+			if (bNamesMatch)
+			{
+
+				int ItemStackSize = InventorySlotWidget->GetStackSize();
+
+				// If there are fewer items to remove than there are in the slot, simply reduce the stack size of the slot
+				if (NumToRemove < ItemStackSize)
+				{
+					InventorySlotWidget->SetStackSize(InventorySlotWidget->GetStackSize() - NumToRemove);
+					break;
+				}
+				// If the number of items to remove matches the number of items in the slot, remove the entire slot and add a new one
+				// in its place
+				else if (NumToRemove == ItemStackSize)
+				{
+					// Remove the slot from the grid
+					AvailableLootGrid->RemoveChildAt(idx);
+					
+					// Add a new slot to replace it
+					AddInventorySlotToGrid(idx);
+				}
+			}
+		} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, RemoveItem")); }
+	}
+}
 
 void UTradingInventoryWidget::OnLootableSlotDoubleClicked(UDA_Item* Item, int StackSize)
 {
-	Inventory->AddToInventory(Item, StackSize);
+	RemoveSlotContents(Item, StackSize);
+	//Inventory->AddToInventory(Item, StackSize);
 	UE_LOG(LogTemp, Warning, TEXT("Double clicked lootable slot"));
 }

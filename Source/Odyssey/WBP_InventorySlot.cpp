@@ -34,14 +34,28 @@ void UWBP_InventorySlot::SetItem(UDA_Item* NewItem, int NewItemCount)
 	if (Item)
 	{
 		SetItemImg(Item->Icon);
-		SetStackSizeText(FText::FromString(FString::FromInt(NewItemCount)));
+		SetStackSize(NewItemCount);
 		SetItemName(Item->Name);
 	}
 	else
 	{
 		SetItemImg(nullptr);
-		SetStackSizeText(FText::FromString(""));
+		SetStackSize(0);
 		SetItemName(EItemNames::VE_None);
+	}
+}
+
+void UWBP_InventorySlot::SetStackSize(int NewStackSize)
+{
+	StackSize = NewStackSize;
+
+	if (StackSize > 0)
+	{
+		SetStackSizeText(FText::FromString(FString::FromInt(StackSize)));
+	}	
+	else
+	{
+		SetStackSizeText(FText::FromString(""));
 	}
 }
 

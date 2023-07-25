@@ -53,6 +53,12 @@ public:
 	UDA_Item* GetItem() { return Item; }
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	int GetStackSize() { return StackSize; }
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void SetStackSize(int NewStackSize);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetSlotIsEnabled(bool bNewIsEnabled);
 
 

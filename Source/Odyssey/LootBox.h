@@ -28,6 +28,8 @@ public:
 
 	TArray<int> GetLootableItemStackSizes() const { return LootableItemCountArray; }
 
+	void RemoveItem(class UDA_Item* ItemToRemove, int AmountToRemove);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	int GoldAmount = 0;
 
