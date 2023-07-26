@@ -44,6 +44,9 @@ public:
 	int GetNumItems();
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	TArray<class UDA_Item*> GetItemRefArray() const { return ItemRefArray; }
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")

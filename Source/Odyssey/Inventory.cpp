@@ -80,4 +80,17 @@ int UInventory::GetNumItems()
 	return ItemRefArray.Num();
 }
 
+void UInventory::RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove)
+{
+	// Find item in inventory
+	int IndexOfItemToRemove = ItemRefArray.Find(ItemToRemove);
+
+	// If the item is in the inventory, remove it and its count from the count array
+	if (IndexOfItemToRemove != INDEX_NONE)
+	{
+		ItemRefArray.RemoveAt(IndexOfItemToRemove);
+		ItemCountArray.RemoveAt(IndexOfItemToRemove);
+	}
+}
+
 

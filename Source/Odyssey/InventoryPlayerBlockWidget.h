@@ -30,11 +30,16 @@ public:
 
 	void AddInventorySlotToGrid(int idx);
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void RemoveSlotContents(UWBP_InventorySlot* InventorySlot);
+
 private:
 	class UUIManager* UIManager;
 	class UInventory* Inventory;
 
 	int NumInventorySlots;
+
+	void PopulateGridSlotsWithItems(TArray<class UDA_Item*>& InventoryItemRefs, FJsonSerializableArrayInt& InventoryItemStackSizes, int NumSlotsNeeded);
 
 	UFUNCTION()
 	void OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);

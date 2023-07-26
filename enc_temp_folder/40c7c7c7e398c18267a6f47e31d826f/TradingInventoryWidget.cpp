@@ -158,9 +158,6 @@ void UTradingInventoryWidget::RemoveSlotContents(UWBP_InventorySlot* InventorySl
 
 	// Clear slot
 	InventorySlot->SetItem(nullptr, 0);
-
-	// Make the slot non interactable again
-	InventorySlot->SetSlotIsEnabled(false);
 }
 
 void UTradingInventoryWidget::OnLootableSlotDoubleClicked(UWBP_InventorySlot* InventorySlot)

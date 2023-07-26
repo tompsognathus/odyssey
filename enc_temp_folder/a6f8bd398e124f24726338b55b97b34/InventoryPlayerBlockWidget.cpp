@@ -160,9 +160,6 @@ void UInventoryPlayerBlockWidget::RemoveSlotContents(UWBP_InventorySlot* Invento
 
 	// Clear slot
 	InventorySlot->SetItem(nullptr, 0);
-
-	// Make the slot non interactable again
-	InventorySlot->SetSlotIsEnabled(false);
 }
 
 
