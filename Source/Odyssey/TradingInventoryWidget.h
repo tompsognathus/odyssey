@@ -37,7 +37,7 @@ private:
 	int NumLootBoxSlots = 0;
 
 	UFUNCTION()
-	void OnLootableSlotDoubleClicked(UDA_Item* Item, int StackSize);
+	void OnLootableSlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
 
 
 public:
@@ -50,7 +50,7 @@ public:
 	void AddInventorySlotToGrid(int idx);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void RemoveSlotContents(UDA_Item* Item, int NumToRemove);
+	void RemoveSlotContents(UWBP_InventorySlot* InventorySlot);
 
 
 };

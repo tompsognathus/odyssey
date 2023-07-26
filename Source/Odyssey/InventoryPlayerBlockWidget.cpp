@@ -114,7 +114,7 @@ void UInventoryPlayerBlockWidget::FillGridWithContentsFromInventory()
 
 
 
-void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UDA_Item* Item, int StackSize)
+void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Double clicked inventory slot"));
 	//Inventory->AddToInventory(Item, StackSize);

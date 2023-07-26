@@ -39,7 +39,7 @@ private:
 	int NumInventorySlots;
 
 	UFUNCTION()
-	void OnInventorySlotDoubleClicked(UDA_Item* Item, int StackSize);
+	void OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
 
 	UFUNCTION()
 	void OnInventoryUpdated();

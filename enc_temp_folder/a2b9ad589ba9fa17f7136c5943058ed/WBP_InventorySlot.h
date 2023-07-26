@@ -32,9 +32,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UButton* Btn;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	UTexture2D* EmptySlotTexture;
-
 	UPROPERTY()
 	class UDA_Item* Item;
 
@@ -64,9 +61,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetSlotIsEnabled(bool bNewIsEnabled);
 
+
 private:
-	class UTexture2D* EmptySlotImg;
-	
 	void SetItemImg(UTexture2D* NewItemImg);
 
 	void SetStackSizeText(FText NewStackSizeText);

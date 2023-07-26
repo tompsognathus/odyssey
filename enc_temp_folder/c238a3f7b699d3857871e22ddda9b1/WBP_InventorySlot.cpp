@@ -39,7 +39,7 @@ void UWBP_InventorySlot::SetItem(UDA_Item* NewItem, int NewItemCount)
 	}
 	else
 	{
-		SetItemImg(EmptySlotTexture);
+		SetItemImg(nullptr);
 		SetStackSize(0);
 		SetItemName(EItemNames::VE_None);
 	}

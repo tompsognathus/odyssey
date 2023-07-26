@@ -129,19 +129,18 @@ void UTradingInventoryWidget::RemoveSlotContents(UWBP_InventorySlot* InventorySl
 	UDA_Item* ItemToRemove = InventorySlot->GetItem();
 	int NumToRemove = InventorySlot->GetStackSize();
 
-	/***** Remove the item from the LootBox itself *****/
+	// Remove the item from the LootBox itself
 	if (CurrentLootBox)
 	{
 		CurrentLootBox->RemoveItem(ItemToRemove, NumToRemove);
 	}
 
-	/***** Remove the item from the UI *****/
+	// Remove the item from the UI
 	
 	// Find slot in grid
 	int SlotIndex = AvailableLootGrid->GetChildIndex(InventorySlot);
 
-	// Clear slot
-	InventorySlot->SetItem(nullptr, 0);
+	UE_LOG(LogTemp, Warning, TEXT("Slot index: %d"), SlotIndex);
 }
 
 void UTradingInventoryWidget::OnLootableSlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
