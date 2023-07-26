@@ -26,11 +26,9 @@ protected:
 	int NumInventoryCols = 6;
 
 public:
+	void LoadInventoryGridContents();
 
-	void PopulateGridWithSlots();
-
-	void FillGridWithContentsFromInventory();
-
+	void AddInventorySlotToGrid(int idx);
 
 private:
 	class UUIManager* UIManager;

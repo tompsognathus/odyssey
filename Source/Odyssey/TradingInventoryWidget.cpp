@@ -27,15 +27,13 @@ void UTradingInventoryWidget::NativeConstruct()
 
 		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
 	}
-
-
 }
 
 void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
 {
 	if (WBP_InventoryPlayerBlock)
 	{
-		WBP_InventoryPlayerBlock->PopulateGridWithSlots();
+		WBP_InventoryPlayerBlock->LoadInventoryGridContents();
 
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in TradingInventoryWidget, UpdatePlayerInventoryUIContents")); }
 }
@@ -43,6 +41,7 @@ void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
 void UTradingInventoryWidget::LoadAvailableLootUIContents(ULootBox* LootBox)
 {
 	CurrentLootBox = LootBox;
+
 	// Clear inventory grid
 	AvailableLootGrid->ClearChildren();
 
@@ -50,18 +49,11 @@ void UTradingInventoryWidget::LoadAvailableLootUIContents(ULootBox* LootBox)
 	TArray<class UDA_Item*> LootableItemRefs = LootBox->GetLootableItemRefArray();
 	TArray<int> LootableItemStackSizes = LootBox->GetLootableItemStackSizes();
 
-	int NumRequiredSlots = 0;
-
 	// Calculate how many slots we need once items have been broken into stacks of max size
+	int NumRequiredSlots = 0;
 	for (int idx = 0; idx < LootableItemRefs.Num(); idx++)
 	{
-		int NumItem = LootableItemStackSizes[idx];
-		int MaxStackSize = LootableItemRefs[idx]->MaxStackSize;
-
-		// Calculate the number of slots this item will take up
-		int NumSlotsToFill = FMath::CeilToInt((float)NumItem / (float)MaxStackSize);
-
-		NumRequiredSlots += NumSlotsToFill;
+		NumRequiredSlots += FMath::CeilToInt((float)LootableItemStackSizes[idx] / (float)LootableItemRefs[idx]->MaxStackSize);
 	}
 
 	// Calculate how many rows of slots we need
@@ -70,8 +62,6 @@ void UTradingInventoryWidget::LoadAvailableLootUIContents(ULootBox* LootBox)
 
 	// Calculate how many slots we need, including empty slots to fill the last row
 	NumLootBoxSlots = NumLootableItemRows * NumInventoryCols;
-
-	UE_LOG(LogTemp, Warning, TEXT("NumLootBoxSlots = %d"), NumLootBoxSlots);
 
 	// Populate available loot grid with inventory slot widgets
 	for (int idx = 0; idx < NumLootBoxSlots; idx++)
@@ -82,6 +72,7 @@ void UTradingInventoryWidget::LoadAvailableLootUIContents(ULootBox* LootBox)
 	// Populate available loot grid with lootable item info
 	for (int idx = 0; idx < LootableItemRefs.Num(); idx++)
 	{
+		// Get item and stack size
 		UDA_Item* Item = LootableItemRefs[idx];
 		int ItemCount = LootableItemStackSizes[idx];
 		int MaxStackSize = Item->MaxStackSize;
@@ -129,8 +120,6 @@ void UTradingInventoryWidget::AddInventorySlotToGrid(int idx)
 
 	int SlotRow = idx / NumInventoryCols;
 	int SlotCol = idx % NumInventoryCols;
-
-	UE_LOG(LogTemp, Warning, TEXT("Adding slot to row %d, col %d"), SlotRow, SlotCol);
 
 	// Add to grid
 	AvailableLootGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);

@@ -43,7 +43,7 @@ void UInventoryWidget::LoadInventoryUIContents()
 {
 	if (WBP_InventoryPlayerBlock)
 	{
-		WBP_InventoryPlayerBlock->PopulateGridWithSlots();
+		WBP_InventoryPlayerBlock->LoadInventoryGridContents();
 
 	} else { UE_LOG(LogTemp, Warning, TEXT("Cannot find WBP_InventoryPlayerBlock in InventoryWidget, UpdateInventoryUIContents")) }
 }

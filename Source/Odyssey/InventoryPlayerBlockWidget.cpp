@@ -32,7 +32,7 @@ void UInventoryPlayerBlockWidget::NativeConstruct()
 	Inventory->OnInventoryUpdated.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventoryUpdated);
 }
 
-void UInventoryPlayerBlockWidget::PopulateGridWithSlots()
+void UInventoryPlayerBlockWidget::LoadInventoryGridContents()
 {
 	// Clear inventory grid
 	InventoryGrid->ClearChildren();
@@ -44,50 +44,46 @@ void UInventoryPlayerBlockWidget::PopulateGridWithSlots()
 	// Populate grid with empty inventory slot widgets
 	NumInventorySlots = Inventory->GetMaxInventorySize();
 
+	// Populate available loot grid with inventory slot widgets
 	for (int idx = 0; idx < NumInventorySlots; idx++)
 	{
-		UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
-
-		// Add to grid
-		InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
-
-		// Bind functions to On Double Clicked event in inventory slot widget
-		UWBP_InventorySlot* InventorySlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
-		if (InventorySlot)
-		{
-			InventorySlot->OnDoubleClicked.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked);
-
-		} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, CreateGridContent")); }
+		AddInventorySlotToGrid(idx);
 	}
 
-	// Fill grid with contents from inventory
-
-}
-
-void UInventoryPlayerBlockWidget::FillGridWithContentsFromInventory()
-{
-	// Get the number of items in the inventory
-	int NumItems = Inventory->GetNumItems();
-	TArray<class UDA_Item*> InventoryItemRefs = Inventory->GetItemRefArray();
-	TArray<int> InventoryItemStackSizes = Inventory->GetItemStackSizes();
-
-	// Update inventory slot widgets with item data
-	for (int idx = 0; idx < NumItems; idx++)
+	// Calculate how many slots we need once items have been broken into stacks of max size
+	int NumSlotsNeeded = 0;
+	for (int idx = 0; idx < InventoryItemRefs.Num(); idx++)
 	{
+		NumSlotsNeeded += FMath::CeilToInt((float)InventoryItemStackSizes[idx] / (float)InventoryItemRefs[idx]->MaxStackSize);
+	}
+
+	// Populate slots with items
+	for (int idx = 0; idx < InventoryItemRefs.Num(); idx++)
+	{
+		// Get item and stack size
 		UDA_Item* Item = InventoryItemRefs[idx];
-		int ItemStackSize = InventoryItemStackSizes[idx];
+		int ItemCount = InventoryItemStackSizes[idx];
 		int MaxStackSize = Item->MaxStackSize;
 
 		// Calculate the number of slots this item will take up
-		int NumSlotsToFill = FMath::CeilToInt((float)ItemStackSize / (float)MaxStackSize);
+		int NumSlotsToFill = FMath::CeilToInt((float)ItemCount / (float)MaxStackSize);
 
+		// Fill slots with this item
 		while (NumSlotsToFill > 0)
 		{
 			// Get the next available inventory slot
-			for (int slotIdx = 0; slotIdx < NumInventorySlots; slotIdx++)
+			for (int slotIdx = 0; slotIdx < NumSlotsNeeded; slotIdx++)
 			{
 				// Get inventory slot widget
 				UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(slotIdx));
+
+				// If we've reached the end of the inventory grid, warn and break. This shouldn't happen as
+				// the inventory should never contain more content than it can hold.
+				if (!InventorySlotWidget)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Inventory contains more items than it can hold! This should NOT happen. See InventoryPlayerBlockWidget, LoadInventoryGridContents"));
+					return;
+				}
 
 				// Check if slot is empty
 				if (InventorySlotWidget->GetItem() == nullptr)
@@ -96,12 +92,11 @@ void UInventoryPlayerBlockWidget::FillGridWithContentsFromInventory()
 					if (NumSlotsToFill > 1)
 					{
 						InventorySlotWidget->SetItem(Item, MaxStackSize);
+						ItemCount -= MaxStackSize;
 					}
 					else
 					{
-						// Compute remainder of stack size
-						int StackRemainder = ItemStackSize % MaxStackSize;
-						InventorySlotWidget->SetItem(Item, StackRemainder);
+						InventorySlotWidget->SetItem(Item, ItemCount);
 					}
 
 					// Make the slot clickable
@@ -116,6 +111,25 @@ void UInventoryPlayerBlockWidget::FillGridWithContentsFromInventory()
 	}
 }
 
+void UInventoryPlayerBlockWidget::AddInventorySlotToGrid(int idx)
+{
+	UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
+
+	int SlotRow = idx / NumInventoryCols;
+	int SlotCol = idx % NumInventoryCols;
+
+	// Add to grid
+	InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
+
+	// Bind functions to On Double Clicked event in inventory slot widget
+	UWBP_InventorySlot* LootableSlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
+	if (LootableSlot)
+	{
+		LootableSlot->OnDoubleClicked.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked);
+
+	}
+	else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, CreateGridContent")); }
+}
 
 
 void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
@@ -127,5 +141,4 @@ void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlo
 void UInventoryPlayerBlockWidget::OnInventoryUpdated()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Inventory updated"));
-	FillGridWithContentsFromInventory();
 }
