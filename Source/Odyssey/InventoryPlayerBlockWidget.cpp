@@ -41,8 +41,9 @@ void UInventoryPlayerBlockWidget::PopulateGridWithSlots()
 	TArray<class UDA_Item*> InventoryItemRefs = Inventory->GetItemRefArray();
 	TArray<int> InventoryItemStackSizes = Inventory->GetItemStackSizes();
 
-	// Populate grid with inventory slot widgets
+	// Populate grid with empty inventory slot widgets
 	NumInventorySlots = Inventory->GetMaxInventorySize();
+
 	for (int idx = 0; idx < NumInventorySlots; idx++)
 	{
 		UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
@@ -58,6 +59,9 @@ void UInventoryPlayerBlockWidget::PopulateGridWithSlots()
 
 		} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, CreateGridContent")); }
 	}
+
+	// Fill grid with contents from inventory
+
 }
 
 void UInventoryPlayerBlockWidget::FillGridWithContentsFromInventory()

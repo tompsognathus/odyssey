@@ -3,8 +3,7 @@
 
 #include "Inventory.h"
 #include "DA_Item.h"
-
-
+#include "WBP_InventorySlot.h"
 
 // Sets default values for this component's properties
 UInventory::UInventory()
@@ -43,25 +42,22 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
  * @param Item - The item to add to the inventory
  * @return bool - Whether or not the item was added to the inventory
  */
-bool UInventory::AddToInventory(UDA_Item* ItemToAdd, int ItemCount)
+bool UInventory::AddToInventory(UWBP_InventorySlot* InventorySlot)
 {
+	UDA_Item* ItemToAdd = InventorySlot->GetItem();
+	int NumToAdd = InventorySlot->GetStackSize();
+
 	// If the item doesn't exist in the inventory then add it
 	if (!ItemRefArray.Contains(ItemToAdd))
 	{
 		ItemRefArray.Add(ItemToAdd);
 		UE_LOG(LogTemp, Display, TEXT("New item added to inventory in Inventory, AddToInventory"));
+		return true;
 	}
 	// Otherwise find it and add to its count
 	else
 	{
-		for (int idx = 0; idx < ItemRefArray.Num(); idx++)
-		{
-			if (ItemRefArray[idx] == ItemToAdd)
-			{
-				ItemCountArray[idx] += ItemCount;
-			}
-		}
-		UE_LOG(LogTemp, Display, TEXT("Item count increased in Inventory, AddToInventory"));
+
 	}
 
 	OnInventoryUpdated.Broadcast();
