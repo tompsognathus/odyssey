@@ -73,7 +73,17 @@ int UInventory::AddSlotContentsToInventory(UWBP_InventorySlot* &InventorySlot)
 		// Add as many of the item as there is space for on existing and empty slots
 		NumAdded = FMath::Min(NumToAdd, AvailableSpaceOnExistingStacks + AvailableSpaceOnEmptySlots);
 
-		ItemCountArray[IndexOfItem] += NumAdded;
+		// if the item is already in the inventory, add to the count of that item
+		if (IndexOfItem != INDEX_NONE)
+		{
+			ItemCountArray[IndexOfItem] += NumAdded;
+		}
+		// otherwise add a new item slot to the inventory
+		else
+		{
+			ItemRefArray.Add(ItemToAdd);
+			ItemCountArray.Add(NumAdded);
+		}
 
 	} else { UE_LOG(LogTemp, Warning, TEXT("ItemToAdd is null. See Inventory, AddSlotContentsToInventory")); }
 
