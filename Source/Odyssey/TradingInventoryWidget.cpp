@@ -27,6 +27,14 @@ void UTradingInventoryWidget::NativeConstruct()
 
 		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
 	}
+
+	// bind delegate to double clicking slots
+	if (WBP_InventoryPlayerBlock)
+	{
+		WBP_InventoryPlayerBlock->OnInventorySlotDoubleClickedDelegate.AddDynamic(this, &UTradingInventoryWidget::OnInventorySlotDoubleClicked);
+
+	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in TradingInventoryWidget, NativeConstruct")); }
+
 }
 
 void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
@@ -35,6 +43,7 @@ void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
 	{
 		WBP_InventoryPlayerBlock->LoadInventoryGridContents();
 
+		
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in TradingInventoryWidget, UpdatePlayerInventoryUIContents")); }
 }
 
@@ -170,12 +179,28 @@ void UTradingInventoryWidget::OnLootableSlotDoubleClicked(UWBP_InventorySlot* In
 	// First make sure the slot isn't empty
 	if (InventorySlot->GetItem() == nullptr) { return; }
 
-	// Remove slot contents from loot box grid
-	RemoveSlotContents(InventorySlot);
 
-	// And add it to the inventory
-	//Inventory->AddToInventory(InventorySlot);
+	// Add it to the inventory
+	Inventory->AddSlotContentsToInventory(InventorySlot);
 
 	// And add it to the inventory grid
+	WBP_InventoryPlayerBlock->AddSlotContentsToInventoryGrid(InventorySlot);
+
+	// Remove slot contents from loot box grid
+	RemoveSlotContents(InventorySlot);
+}
+
+void UTradingInventoryWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Double clicked inventory slot"));
+
+	// First make sure the slot isn't empty
+	if (InventorySlot->GetItem() == nullptr) { return; }
+
+	// Add it to the loot box
+
+	// Add it to the loot box grid
+
+	// Remove slot contents from inventory grid
 
 }

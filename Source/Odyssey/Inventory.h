@@ -12,8 +12,6 @@
 #include "Inventory.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ODYSSEY_API UInventory : public UActorComponent
 {
@@ -32,10 +30,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	bool AddToInventory(UWBP_InventorySlot* InventorySlot);
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void RemoveFromInventory(UDA_Item* ItemToRemove);
+	int AddSlotContentsToInventory(UWBP_InventorySlot* &InventorySlot);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	int GetMaxInventorySize();
@@ -52,10 +47,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	TArray<int> GetItemStackSizes() const { return ItemCountArray; }
 
-public:
-	UPROPERTY(BlueprintAssignable, Category = "Inventory")
-	FOnInventoryUpdated OnInventoryUpdated;
-
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	int MaxInventorySize = 60;
@@ -65,4 +56,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	TArray<int> ItemCountArray;
+
+private:
+	int GetNumEmptyInventorySlots();
+
 };

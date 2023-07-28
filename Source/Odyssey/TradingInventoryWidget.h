@@ -39,6 +39,9 @@ private:
 	UFUNCTION()
 	void OnLootableSlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
 
+	UFUNCTION()
+	void OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
+
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")

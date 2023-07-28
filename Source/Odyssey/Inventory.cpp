@@ -42,32 +42,59 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
  * @param Item - The item to add to the inventory
  * @return bool - Whether or not the item was added to the inventory
  */
-bool UInventory::AddToInventory(UWBP_InventorySlot* InventorySlot)
+int UInventory::AddSlotContentsToInventory(UWBP_InventorySlot* &InventorySlot)
 {
+	int NumAdded = 0;
+
 	UDA_Item* ItemToAdd = InventorySlot->GetItem();
 	int NumToAdd = InventorySlot->GetStackSize();
+	int NumEmptySlots = GetNumEmptyInventorySlots();
 
-	// If the item doesn't exist in the inventory then add it
-	if (!ItemRefArray.Contains(ItemToAdd))
+	// Try to find the index of the item in the inventory
+	int IndexOfItem = ItemRefArray.Find(ItemToAdd);
+
+	// Find all instances of the item in the inventory and count them
+	int NumAlreadyInInventory = 0;
+	for (int idx = 0; idx < ItemRefArray.Num(); idx++)
 	{
-		ItemRefArray.Add(ItemToAdd);
-		UE_LOG(LogTemp, Display, TEXT("New item added to inventory in Inventory, AddToInventory"));
-		return true;
+		if (ItemRefArray[idx] == ItemToAdd)
+		{
+			NumAlreadyInInventory += ItemCountArray[idx];
+		}
 	}
-	// Otherwise find it and add to its count
-	else
+
+	// Based on the max stack size for this item, determine how many more items can be added to the stacks already in the inventory
+	if (ItemToAdd)
 	{
+		int AvailableSpaceOnExistingStacks = NumAlreadyInInventory % ItemToAdd->MaxStackSize;
 
-	}
+		int AvailableSpaceOnEmptySlots = NumEmptySlots * ItemToAdd->MaxStackSize;
 
-	OnInventoryUpdated.Broadcast();
+		// Add as many of the item as there is space for on existing and empty slots
+		NumAdded = FMath::Min(NumToAdd, AvailableSpaceOnExistingStacks + AvailableSpaceOnEmptySlots);
 
-	return false;
+		ItemCountArray[IndexOfItem] += NumAdded;
+
+	} else { UE_LOG(LogTemp, Warning, TEXT("ItemToAdd is null. See Inventory, AddSlotContentsToInventory")); }
+
+	// Enable the slot so it's clickable again
+	InventorySlot->SetSlotIsEnabled(true);
+
+	return NumAdded;
 }
 
-void UInventory::RemoveFromInventory(UDA_Item* ItemToRemove)
+int UInventory::GetNumEmptyInventorySlots()
 {
+	int NumSlotsTaken = 0;
 
+	for (int idx = 0; idx < ItemRefArray.Num(); idx++)
+	{
+		NumSlotsTaken += FMath::CeilToInt((float)ItemCountArray[idx] / (float)ItemRefArray[idx]->MaxStackSize);
+	}
+
+	int NumSlotsAvailable = MaxInventorySize - NumSlotsTaken;
+
+	return NumSlotsAvailable;
 }
 
 int UInventory::GetMaxInventorySize()

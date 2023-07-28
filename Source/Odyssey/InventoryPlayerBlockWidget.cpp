@@ -27,9 +27,6 @@ void UInventoryPlayerBlockWidget::NativeConstruct()
 
 		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
 	}
-
-	// Bind to inventory update event
-	Inventory->OnInventoryUpdated.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventoryUpdated);
 }
 
 void UInventoryPlayerBlockWidget::LoadInventoryGridContents()
@@ -136,6 +133,62 @@ void UInventoryPlayerBlockWidget::AddInventorySlotToGrid(int idx)
 	else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, CreateGridContent")); }
 }
 
+int UInventoryPlayerBlockWidget::AddSlotContentsToInventoryGrid(UWBP_InventorySlot* InventorySlot)
+{
+	int NumAdded = 0;
+	// First get details about the item
+	UDA_Item* ItemToAdd = InventorySlot->GetItem();
+	int StackSizeToAdd = InventorySlot->GetStackSize();
+
+	// Go through the inventory
+	for (int idx = 0; idx < NumInventorySlots; idx++)
+	{
+		// Get slot
+		UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(idx));
+
+		if (InventorySlotWidget)
+		{
+			// Get the item in the slot
+			UDA_Item* ItemInSlot = InventorySlotWidget->GetItem();
+
+			// First fill up slots already containing said item
+			if (ItemToAdd == ItemInSlot && StackSizeToAdd > 0)
+			{
+				// if there's room in the slot, add to it (up to max stack size)
+				if (InventorySlotWidget->GetStackSize() < ItemInSlot->MaxStackSize)
+				{
+					// Calculate how much we can add to the slot
+					int AvailableNumInSlot = ItemInSlot->MaxStackSize - InventorySlotWidget->GetStackSize();
+					int NumToAdd = FMath::Min(StackSizeToAdd, AvailableNumInSlot);
+
+					// Add to slot
+					InventorySlotWidget->SetStackSize(InventorySlotWidget->GetStackSize() + NumToAdd);
+
+					StackSizeToAdd -= NumToAdd;
+					NumAdded += NumToAdd;
+				}
+
+			}
+			// Otherwise if there are empty slots available, add to those
+			else if (ItemInSlot == nullptr && StackSizeToAdd > 0)
+			{
+				// Calculate how much we can add to the slot
+				int NumToAdd = FMath::Min(StackSizeToAdd, ItemToAdd->MaxStackSize);
+
+				// Add to slot
+				InventorySlotWidget->SetItem(ItemToAdd, NumToAdd);
+
+				StackSizeToAdd -= NumToAdd;
+
+				// Enable the slot so it's clickable
+				InventorySlotWidget->SetSlotIsEnabled(true);
+			}
+		}
+	}
+
+	return NumAdded;
+}
+
 void UInventoryPlayerBlockWidget::RemoveSlotContents(UWBP_InventorySlot* InventorySlot)
 {
 	// Get slot contents
@@ -165,21 +218,12 @@ void UInventoryPlayerBlockWidget::RemoveSlotContents(UWBP_InventorySlot* Invento
 	InventorySlot->SetSlotIsEnabled(false);
 }
 
-
 void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Double clicked inventory slot"));
+	UE_LOG(LogTemp, Warning, TEXT("Double clicked inventory slot (in Inventory Player Grid Widget, which broadcasts another delegate)"));
 
-	// First make sure the slot isn't empty
-	if (InventorySlot->GetItem() == nullptr) { return; }
-
-	// Remove slot contents from the inventory grid
-	RemoveSlotContents(InventorySlot);
-
-	//Inventory->AddToInventory(Item, StackSize);
+	// broadcast event
+	OnInventorySlotDoubleClickedDelegate.Broadcast(InventorySlot);
 }
 
-void UInventoryPlayerBlockWidget::OnInventoryUpdated()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Inventory updated"));
-}
+ 
