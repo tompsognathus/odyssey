@@ -25,6 +25,7 @@ void ULootBox::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Item and ItemCount arrays are not the same size!"));
 		return;		
 	}
+
 }
 
 

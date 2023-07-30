@@ -178,7 +178,7 @@ int UInventoryPlayerBlockWidget::AddSlotContentsToInventoryGrid(UWBP_InventorySl
 	return NumAdded;
 }
 
-void UInventoryPlayerBlockWidget::RemoveSlotContents(UWBP_InventorySlot* InventorySlot)
+void UInventoryPlayerBlockWidget::RemoveSlotContentsFromInventoryGrid(UWBP_InventorySlot* InventorySlot)
 {
 	// Get slot contents
 	UDA_Item* ItemToRemove = InventorySlot->GetItem();

@@ -33,7 +33,7 @@ public:
 	int AddSlotContentsToInventoryGrid(UWBP_InventorySlot* InventorySlot);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void RemoveSlotContents(UWBP_InventorySlot* InventorySlot);
+	void RemoveSlotContentsFromInventoryGrid(UWBP_InventorySlot* InventorySlot);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	UUniformGridPanel* GetInventoryGrid() { return InventoryGrid; }

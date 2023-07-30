@@ -40,7 +40,6 @@ void UTradingInventoryWidget::NativeConstruct()
 		WBP_InventoryLootBoxBlock->OnInventorySlotDoubleClickedDelegate.AddDynamic(this, &UTradingInventoryWidget::OnInventorySlotDoubleClicked);
 
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryLootBoxBlock in TradingInventoryWidget, NativeConstruct")); }
-
 }
 
 void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
@@ -58,6 +57,8 @@ void UTradingInventoryWidget::LoadLootBoxInventoryUIContents(ULootBox* LootBox)
 {
 	if (WBP_InventoryLootBoxBlock)
 	{
+		CurrentLootBox = LootBox;
+
 		// Populate inventory grid with loot box contents
 		WBP_InventoryLootBoxBlock->LoadInventoryGridContents(LootBox->GetItemRefArray(), LootBox->GetItemCountArray(), LootBox->GetMaxInventorySize());
 
@@ -71,26 +72,62 @@ void UTradingInventoryWidget::OnInventorySlotDoubleClicked(UInventoryPlayerBlock
 
 	// First make sure the slot isn't empty
 	if (Item == nullptr) { return; }
+	if (CurrentLootBox == nullptr) { 
+		UE_LOG(LogTemp, Error, TEXT("CurrentLootBox is null. See TradingInventoryWidget, OnInventorySlotDoubleClicked. Did you get a reference when opening the UI?"));
+		return;
+	}
 
 	// Figure out whether the clicked slot is in the player inventory or the loot box inventory
 	if (InventoryBlockWidget == WBP_InventoryPlayerBlock)
 	{
-		OnPlayerInventorySlotDoubleClicked();
+		OnPlayerInventorySlotDoubleClicked(InventorySlot);
 	}
 	else if (InventoryBlockWidget == WBP_InventoryLootBoxBlock)
 	{
-		OnLootBoxInventorySlotDoubleClicked();
+		OnLootBoxInventorySlotDoubleClicked(InventorySlot);
 
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find InventoryGrid in TradingInventoryWidget, OnInventorySlotDoubleClicked")); }
 
 }
 
-void UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked()
+void UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Player inventory slot double clicked"));
+
+	UDA_Item* Item = InventorySlot->GetItem();
+
+
+
+
+
+
+
 }
 
-void UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked()
+void UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Loot box inventory slot double clicked"));
+
+	UDA_Item* Item = InventorySlot->GetItem();
+
+	// Offer item to inventory
+	int NumAdded = Inventory->AddSlotContentsToInventory(InventorySlot);
+
+	if (NumAdded > 0)
+	{
+		// Add item to player inventory
+		Inventory->AddSlotContentsToInventory(InventorySlot);
+
+		// Update Inventory UI grid
+		WBP_InventoryPlayerBlock->AddSlotContentsToInventoryGrid(InventorySlot);
+
+		// Remove item from loot box grid
+		WBP_InventoryLootBoxBlock->RemoveSlotContentsFromInventoryGrid(InventorySlot);
+
+		// Remove item from loot box
+		CurrentLootBox->RemoveItem(Item, NumAdded);
+
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("Cannot add item to inventory. Perhaps it's full? See TradingInventoryWidget, OnLootBoxInventorySlotDoubleClicked")); }
+
 }

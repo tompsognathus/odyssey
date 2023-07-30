@@ -45,10 +45,10 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
-	TArray<class UDA_Item*> LootableItemRefArray;
+	TArray<class UDA_Item*> LootableItemRefArray = TArray<UDA_Item*>();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
-	TArray<int> LootableItemCountArray;
+	TArray<int> LootableItemCountArray = TArray<int>();
 
 
 

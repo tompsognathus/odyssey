@@ -40,9 +40,9 @@ private:
 	UFUNCTION()
 	void OnInventorySlotDoubleClicked(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
 
-	void OnPlayerInventorySlotDoubleClicked();
+	void OnPlayerInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
 
-	void OnLootBoxInventorySlotDoubleClicked();
+	void OnLootBoxInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
 
 
 public:
