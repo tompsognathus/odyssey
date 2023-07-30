@@ -21,25 +21,14 @@ void UInventoryPlayerBlockWidget::NativeConstruct()
 		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
 
 		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in InventoryWidget, NativeConstruct")); }
-
-		// Get inventory component
-		Inventory = Cast<UInventory>(PlayerPawn->GetComponentByClass(UInventory::StaticClass()));
-
-		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
 	}
 }
 
-void UInventoryPlayerBlockWidget::LoadInventoryGridContents()
+void UInventoryPlayerBlockWidget::LoadInventoryGridContents(TArray<class UDA_Item*> ItemRefArray, TArray<int> ItemCountArray, int NumSlots)
 {
 	// Clear inventory grid
 	InventoryGrid->ClearChildren();
-
-	// Get actual inventory contents from inventory
-	TArray<class UDA_Item*> InventoryItemRefs = Inventory->GetItemRefArray();
-	TArray<int> InventoryItemStackSizes = Inventory->GetItemStackSizes();
-
-	// Populate grid with empty inventory slot widgets
-	NumInventorySlots = Inventory->GetMaxInventorySize();
+	NumInventorySlots = NumSlots;
 
 	// Populate available loot grid with inventory slot widgets
 	for (int idx = 0; idx < NumInventorySlots; idx++)
@@ -49,22 +38,22 @@ void UInventoryPlayerBlockWidget::LoadInventoryGridContents()
 
 	// Calculate how many slots we need once items have been broken into stacks of max size
 	int NumSlotsNeeded = 0;
-	for (int idx = 0; idx < InventoryItemRefs.Num(); idx++)
+	for (int idx = 0; idx < ItemRefArray.Num(); idx++)
 	{
-		NumSlotsNeeded += FMath::CeilToInt((float)InventoryItemStackSizes[idx] / (float)InventoryItemRefs[idx]->MaxStackSize);
+		NumSlotsNeeded += FMath::CeilToInt((float)ItemCountArray[idx] / (float)ItemRefArray[idx]->MaxStackSize);
 	}
 
 	// Populate slots with items
-	PopulateGridSlotsWithItems(InventoryItemRefs, InventoryItemStackSizes, NumSlotsNeeded);
+	PopulateGridSlotsWithItems(ItemRefArray, ItemCountArray, NumSlotsNeeded);
 }
 
-void UInventoryPlayerBlockWidget::PopulateGridSlotsWithItems(TArray<UDA_Item*>& InventoryItemRefs, FJsonSerializableArrayInt& InventoryItemStackSizes, int NumSlotsNeeded)
+void UInventoryPlayerBlockWidget::PopulateGridSlotsWithItems(TArray<UDA_Item*>& ItemRefArray, FJsonSerializableArrayInt& ItemCountArray, int NumSlotsNeeded)
 {
-	for (int idx = 0; idx < InventoryItemRefs.Num(); idx++)
+	for (int idx = 0; idx < ItemRefArray.Num(); idx++)
 	{
 		// Get item and stack size
-		UDA_Item* Item = InventoryItemRefs[idx];
-		int ItemCount = InventoryItemStackSizes[idx];
+		UDA_Item* Item = ItemRefArray[idx];
+		int ItemCount = ItemCountArray[idx];
 		int MaxStackSize = Item->MaxStackSize;
 
 		// Calculate the number of slots this item will take up
@@ -195,17 +184,6 @@ void UInventoryPlayerBlockWidget::RemoveSlotContents(UWBP_InventorySlot* Invento
 	UDA_Item* ItemToRemove = InventorySlot->GetItem();
 	int NumToRemove = InventorySlot->GetStackSize();
 
-	/***** Remove the item from the inventory itself *****/
-	if (Inventory)
-	{
-		Inventory->RemoveItem(ItemToRemove, NumToRemove);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory and therefore cannot remove slot contents in InventoryWidget, RemoveSlotContents"));
-		return;
-	}
-
 	/***** Remove the item from the UI *****/
 
 	// Find slot in grid
@@ -220,10 +198,9 @@ void UInventoryPlayerBlockWidget::RemoveSlotContents(UWBP_InventorySlot* Invento
 
 void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Double clicked inventory slot (in Inventory Player Grid Widget, which broadcasts another delegate)"));
-
 	// broadcast event
-	OnInventorySlotDoubleClickedDelegate.Broadcast(InventorySlot);
+	OnInventorySlotDoubleClickedDelegate.Broadcast(this, InventorySlot);
+
 }
 
  

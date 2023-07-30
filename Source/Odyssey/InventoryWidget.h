@@ -45,4 +45,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void LoadInventoryUIContents();
 
+private:
+	class UInventory* Inventory;
 };

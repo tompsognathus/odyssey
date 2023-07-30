@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "InventoryPlayerBlockWidget.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventorySlotDoubleClicked, UWBP_InventorySlot*, InventorySlot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotDoubleClicked, UInventoryPlayerBlockWidget*, InventoryBlockWidget, UWBP_InventorySlot*, InventorySlot);
 
 UCLASS()
 class ODYSSEY_API UInventoryPlayerBlockWidget : public UUserWidget
@@ -26,7 +26,7 @@ protected:
 
 
 public:
-	void LoadInventoryGridContents();
+	void LoadInventoryGridContents(TArray<class UDA_Item*> ItemRefArray, TArray<int> ItemCountArray, int NumSlots);
 
 	void AddInventorySlotToGrid(int idx);
 
@@ -35,12 +35,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void RemoveSlotContents(UWBP_InventorySlot* InventorySlot);
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	UUniformGridPanel* GetInventoryGrid() { return InventoryGrid; }
+
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnInventorySlotDoubleClicked OnInventorySlotDoubleClickedDelegate;
 
 private:
 	class UUIManager* UIManager;
-	class UInventory* Inventory;
 
 	int NumInventorySlots = 0;
 

@@ -94,7 +94,7 @@ void UUIManager::DisplayRPEncounterWidget(ANPC* DialogueOwner)
 void UUIManager::DisplayInventoryWidget()
 {
 	DisplayWidget(InventoryWidgetInstance);
-	LoadInventoryWidgetContent();
+	LoadPlayerInventoryWidgetContent();
 	
 }
 
@@ -227,14 +227,14 @@ void UUIManager::LoadTradingInventoryWidgetContent(ULootBox* LootBox)
 
 		if (TradingInventoryWidget)
 		{
-			TradingInventoryWidget->LoadAvailableLootUIContents(LootBox);
+			TradingInventoryWidget->LoadLootBoxInventoryUIContents(LootBox);
 			TradingInventoryWidget->LoadPlayerInventoryUIContents();
 
 		} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidget not found in UIManager, UpdateTradingInventoryWidgetContent")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidgetInstance is null in UIManager, UpdateTradingInventoryWidgetContent")); }
 }
 
-void UUIManager::LoadInventoryWidgetContent()
+void UUIManager::LoadPlayerInventoryWidgetContent()
 {
 	if (InventoryWidgetInstance)
 	{

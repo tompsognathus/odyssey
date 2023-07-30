@@ -24,15 +24,24 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	TArray<class UDA_Item*> GetLootableItemRefArray() const { return LootableItemRefArray; }
+	TArray<class UDA_Item*> GetItemRefArray() const { return LootableItemRefArray; }
 
-	TArray<int> GetLootableItemStackSizes() const { return LootableItemCountArray; }
+	TArray<int> GetItemCountArray() const { return LootableItemCountArray; }
 
 	void RemoveItem(class UDA_Item* ItemToRemove, int AmountToRemove);
+
+	int AddSlotContentsToLootBoxGrid(class UWBP_InventorySlot* InventorySlot);
+
+	int GetMaxInventorySize() const { return MaxLootBoxSize; }
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	int GoldAmount = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
+	int MaxLootBoxSize = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
+	int NumSlotColumns = 5;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
@@ -40,5 +49,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	TArray<int> LootableItemCountArray;
+
+
 
 };

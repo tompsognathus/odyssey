@@ -5,11 +5,21 @@
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "InventoryPlayerBlockWidget.h"
-#include "UIManager.h"
+#include "Inventory.h"
 
 void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	// Get player pawn
+	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+	if (PlayerPawn)
+	{
+		// Get inventory component
+		Inventory = Cast<UInventory>(PlayerPawn->GetComponentByClass(UInventory::StaticClass()));
+
+		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
+	}
 }
 
 void UInventoryWidget::SetItemNameText(FText NewItemNameText)
@@ -43,7 +53,7 @@ void UInventoryWidget::LoadInventoryUIContents()
 {
 	if (WBP_InventoryPlayerBlock)
 	{
-		WBP_InventoryPlayerBlock->LoadInventoryGridContents();
+		WBP_InventoryPlayerBlock->LoadInventoryGridContents(Inventory->GetItemRefArray(), Inventory->GetItemCountArray(), Inventory->GetMaxInventorySize());
 
 	} else { UE_LOG(LogTemp, Warning, TEXT("Cannot find WBP_InventoryPlayerBlock in InventoryWidget, UpdateInventoryUIContents")) }
 }

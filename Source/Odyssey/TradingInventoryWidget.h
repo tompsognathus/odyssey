@@ -19,7 +19,7 @@ protected:
 	
 	/* WIDGET BINDINGS */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UUniformGridPanel* AvailableLootGrid;
+	class UInventoryPlayerBlockWidget* WBP_InventoryLootBoxBlock;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
@@ -27,6 +27,7 @@ protected:
 	/* VARIABLES */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int NumInventoryCols = 5;
+
 
 private:
 	class UUIManager* UIManager;
@@ -37,10 +38,11 @@ private:
 	int NumLootBoxSlots = 0;
 
 	UFUNCTION()
-	void OnLootableSlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
+	void OnInventorySlotDoubleClicked(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
 
-	UFUNCTION()
-	void OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
+	void OnPlayerInventorySlotDoubleClicked();
+
+	void OnLootBoxInventorySlotDoubleClicked();
 
 
 public:
@@ -48,12 +50,5 @@ public:
 	void LoadPlayerInventoryUIContents();
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void LoadAvailableLootUIContents(class ULootBox* LootBox);
-
-	void AddInventorySlotToGrid(int idx);
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void RemoveSlotContents(UWBP_InventorySlot* InventorySlot);
-
-
+	void LoadLootBoxInventoryUIContents(class ULootBox* LootBox);
 };

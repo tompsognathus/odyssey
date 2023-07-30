@@ -67,4 +67,5 @@ void UWBP_InventorySlot::SetSlotIsEnabled(bool bNewIsEnabled)
 void UWBP_InventorySlot::DispatchOnDoubleClicked()
 {
 	OnDoubleClicked.Broadcast(this);
+
 }

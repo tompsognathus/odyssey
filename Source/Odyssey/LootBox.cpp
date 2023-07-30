@@ -2,6 +2,7 @@
 
 
 #include "LootBox.h"
+#include "WBP_InventorySlot.h"
 
 // Sets default values for this component's properties
 ULootBox::ULootBox()
@@ -65,5 +66,17 @@ void ULootBox::RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove)
 	{
 		LootableItemCountArray[ItemIndex] -= AmountToRemove;
 	}
+}
+
+int ULootBox::AddSlotContentsToLootBoxGrid(UWBP_InventorySlot* InventorySlot)
+{
+	int NumAdded = 0;
+
+	UDA_Item* ItemToAdd = InventorySlot->GetItem();
+	int NumToAdd = InventorySlot->GetStackSize();
+	
+	// Figure out how many slots the loot box needs 
+
+	return NumAdded;
 }
 

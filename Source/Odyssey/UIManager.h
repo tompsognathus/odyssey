@@ -119,7 +119,7 @@ public:
 	void LoadTradingInventoryWidgetContent(class ULootBox* LootBox);
 
 	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
-	void LoadInventoryWidgetContent();
+	void LoadPlayerInventoryWidgetContent();
 
 
 private:

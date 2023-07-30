@@ -45,7 +45,7 @@ public:
 	TArray<class UDA_Item*> GetItemRefArray() const { return ItemRefArray; }
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	TArray<int> GetItemStackSizes() const { return ItemCountArray; }
+	TArray<int> GetItemCountArray() const { return ItemCountArray; }
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
