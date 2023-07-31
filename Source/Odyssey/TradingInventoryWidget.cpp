@@ -47,7 +47,7 @@ void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
 	if (WBP_InventoryPlayerBlock)
 	{
 		// Populate inventory grid with player inventory contents
-		WBP_InventoryPlayerBlock->LoadInventoryGridContents(Inventory->GetItemRefArray(), Inventory->GetItemCountArray(), Inventory->GetMaxInventorySize());
+		WBP_InventoryPlayerBlock->LoadInventoryGridContents(Inventory->GetItemRefArray(), Inventory->GetItemCountArray());
 
 		
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in TradingInventoryWidget, UpdatePlayerInventoryUIContents")); }
@@ -60,7 +60,7 @@ void UTradingInventoryWidget::LoadLootBoxInventoryUIContents(ULootBox* LootBox)
 		CurrentLootBox = LootBox;
 
 		// Populate inventory grid with loot box contents
-		WBP_InventoryLootBoxBlock->LoadInventoryGridContents(LootBox->GetItemRefArray(), LootBox->GetItemCountArray(), LootBox->GetMaxInventorySize());
+		WBP_InventoryLootBoxBlock->LoadInventoryGridContents(LootBox->GetItemRefArray(), LootBox->GetItemCountArray());
 
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryLootBoxBlock in TradingInventoryWidget, UpdateAvailableLootUIContents")); }
 }
@@ -95,13 +95,19 @@ void UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked(UWBP_InventoryS
 	UE_LOG(LogTemp, Warning, TEXT("Player inventory slot double clicked"));
 
 	UDA_Item* Item = InventorySlot->GetItem();
+	int NumItems = InventorySlot->GetNumItems();
 
+	// Add item to loot box
+	CurrentLootBox->AddItem(Item, NumItems);
 
+	// Update Loot Box UI grid
+	WBP_InventoryLootBoxBlock->AddItemToGrid(Item, NumItems);
 
+	// Remove item from player inventory grid
+	WBP_InventoryPlayerBlock->RemoveItemFromGrid(Item, NumItems);
 
-
-
-
+	// Remove item from player inventory
+	Inventory->RemoveItem(Item, NumItems);
 }
 
 void UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
@@ -109,25 +115,18 @@ void UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked(UWBP_Inventory
 	UE_LOG(LogTemp, Warning, TEXT("Loot box inventory slot double clicked"));
 
 	UDA_Item* Item = InventorySlot->GetItem();
+	int NumItems = InventorySlot->GetNumItems();
 
-	// Offer item to inventory
-	int NumAdded = Inventory->AddSlotContentsToInventory(InventorySlot);
+	// Add item to inventory
+	Inventory->AddItem(Item, NumItems);
 
-	if (NumAdded > 0)
-	{
-		// Add item to player inventory
-		Inventory->AddSlotContentsToInventory(InventorySlot);
+	// Update Inventory UI grid
+	WBP_InventoryPlayerBlock->AddItemToGrid(Item, NumItems);
 
-		// Update Inventory UI grid
-		WBP_InventoryPlayerBlock->AddSlotContentsToInventoryGrid(InventorySlot);
+	// Remove item from loot box grid
+	WBP_InventoryLootBoxBlock->RemoveItemFromGrid(Item, NumItems);
 
-		// Remove item from loot box grid
-		WBP_InventoryLootBoxBlock->RemoveSlotContentsFromInventoryGrid(InventorySlot);
-
-		// Remove item from loot box
-		CurrentLootBox->RemoveItem(Item, NumAdded);
-
-	}
-	else { UE_LOG(LogTemp, Warning, TEXT("Cannot add item to inventory. Perhaps it's full? See TradingInventoryWidget, OnLootBoxInventorySlotDoubleClicked")); }
+	// Remove item from loot box
+	CurrentLootBox->RemoveItem(Item, NumItems);
 
 }

@@ -56,13 +56,11 @@ public:
 	UDA_Item* GetItem() { return Item; }
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	int GetStackSize() { return StackSize; }
+	int GetNumItems() { return StackSize; }
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetStackSize(int NewStackSize);
 
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void SetSlotIsEnabled(bool bNewIsEnabled);
 
 private:
 	class UTexture2D* EmptySlotImg;

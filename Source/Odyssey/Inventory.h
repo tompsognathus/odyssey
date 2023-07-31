@@ -21,22 +21,12 @@ public:
 	// Sets default values for this component's properties
 	UInventory();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	int AddSlotContentsToInventory(UWBP_InventorySlot* &InventorySlot);
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	int GetMaxInventorySize();
-
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	int GetNumItems();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void AddItem(UDA_Item* ItemToAdd, int NumToAdd);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove);
@@ -57,7 +47,5 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	TArray<int> ItemCountArray;
 
-private:
-	int GetNumEmptyInventorySlots();
 
 };

@@ -32,8 +32,4 @@ class ODYSSEY_API UDA_Item : public UPrimaryDataAsset
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	UTexture2D* Icon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	int MaxStackSize;
-
 };

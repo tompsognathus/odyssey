@@ -26,14 +26,14 @@ protected:
 
 
 public:
-	void LoadInventoryGridContents(TArray<class UDA_Item*> ItemRefArray, TArray<int> ItemCountArray, int NumSlots);
-
-	void AddInventorySlotToGrid(int idx);
-
-	int AddSlotContentsToInventoryGrid(UWBP_InventorySlot* InventorySlot);
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void LoadInventoryGridContents(TArray<class UDA_Item*> ItemRefArray, TArray<int> ItemCountArray);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void RemoveSlotContentsFromInventoryGrid(UWBP_InventorySlot* InventorySlot);
+	void AddItemToGrid(UDA_Item* ItemToAdd, int ItemCount);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void RemoveItemFromGrid(UDA_Item* ItemToAdd, int ItemCount);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	UUniformGridPanel* GetInventoryGrid() { return InventoryGrid; }
@@ -43,10 +43,6 @@ public:
 
 private:
 	class UUIManager* UIManager;
-
-	int NumInventorySlots = 0;
-
-	void PopulateGridSlotsWithItems(TArray<class UDA_Item*>& InventoryItemRefs, FJsonSerializableArrayInt& InventoryItemStackSizes, int NumSlotsNeeded);
 
 	UFUNCTION()
 	void OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);

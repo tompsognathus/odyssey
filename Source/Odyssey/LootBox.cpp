@@ -20,7 +20,7 @@ void ULootBox::BeginPlay()
 	Super::BeginPlay();
 
 	// Check if the item and count arrays have the same size as we need a count for each item
-	if (LootableItemRefArray.Num() != LootableItemCountArray.Num())
+	if (ItemRefArray.Num() != ItemCountArray.Num())
 	{
 		UE_LOG(LogTemp, Error, TEXT("Item and ItemCount arrays are not the same size!"));
 		return;		
@@ -38,46 +38,42 @@ void ULootBox::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void ULootBox::RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove)
 {
-	// Find the index of the item to remove
-	int ItemIndex = LootableItemRefArray.Find(ItemToRemove);
+	// Try to find the index of the item in the loot box
+	int IndexOfItem = ItemRefArray.Find(ItemToRemove);
 
-	// If the item is not in the array, return
-	if (ItemIndex == INDEX_NONE)
+	// Check if the item actually exists in the loot box
+	if (IndexOfItem != INDEX_NONE)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Item not found in LootableItemRefArray in LootBox, RemoveItem!"));
-		return;
-	}
-	// If the amount to remove is greater than the amount in the array, warn and remove what's actually in the array
-	else if (AmountToRemove > LootableItemCountArray[ItemIndex])
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AmountToRemove is greater than the amount of items in the array, removing all items! See LootBox, RemovItem"));
-		// Remove the item from the arrays
-		LootableItemRefArray.RemoveAt(ItemIndex);
-		LootableItemCountArray.RemoveAt(ItemIndex);
-	}
-	// If the amount to remove is equal to the amount in the array, remove the item from the array
-	else if (AmountToRemove == LootableItemCountArray[ItemIndex])
-	{
-		// Remove the item from the arrays
-		LootableItemRefArray.RemoveAt(ItemIndex);
-		LootableItemCountArray.RemoveAt(ItemIndex);
-	}
-	// Otherwise decrease the counter for said item
-	else
-	{
-		LootableItemCountArray[ItemIndex] -= AmountToRemove;
+		// If we're removing less than the total count of the item, just subtract the amount
+		if (AmountToRemove < ItemCountArray[IndexOfItem])
+		{
+			ItemCountArray[IndexOfItem] -= AmountToRemove;
+		}
+		// Otherwise remove the whole item from the loot box
+		else
+		{
+			ItemRefArray.RemoveAt(IndexOfItem);
+			ItemCountArray.RemoveAt(IndexOfItem);
+		}
 	}
 }
 
-int ULootBox::AddSlotContentsToLootBoxGrid(UWBP_InventorySlot* InventorySlot)
+void ULootBox::AddItem(UDA_Item* ItemToAdd, int NumToAdd)
 {
-	int NumAdded = 0;
+	// Try to find the index of the item in the loot box
+	int IndexOfItem = ItemRefArray.Find(ItemToAdd);
 
-	UDA_Item* ItemToAdd = InventorySlot->GetItem();
-	int NumToAdd = InventorySlot->GetStackSize();
-	
-	// Figure out how many slots the loot box needs 
-
-	return NumAdded;
+	// Check if the item already exists in the loot box
+	if (IndexOfItem != INDEX_NONE)
+	{
+		// If it does, just add the amount to the existing count
+		ItemCountArray[IndexOfItem] += NumToAdd;
+	}
+	// Otherwise add the item to the loot box
+	else
+	{
+		ItemRefArray.Add(ItemToAdd);
+		ItemCountArray.Add(NumToAdd);
+	}
 }
 

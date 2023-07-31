@@ -24,176 +24,89 @@ void UInventoryPlayerBlockWidget::NativeConstruct()
 	}
 }
 
-void UInventoryPlayerBlockWidget::LoadInventoryGridContents(TArray<class UDA_Item*> ItemRefArray, TArray<int> ItemCountArray, int NumSlots)
+void UInventoryPlayerBlockWidget::LoadInventoryGridContents(TArray<class UDA_Item*> ItemRefArray, TArray<int> ItemCountArray)
 {
 	// Clear inventory grid
 	InventoryGrid->ClearChildren();
-	NumInventorySlots = NumSlots;
+
+	int NumSlots = ItemRefArray.Num();
+	UDA_Item* ItemToAdd = nullptr;
+	int ItemCount = 0;
+
+	UE_LOG(LogTemp, Warning, TEXT("NumSlots: %d"), NumSlots);
 
 	// Populate available loot grid with inventory slot widgets
-	for (int idx = 0; idx < NumInventorySlots; idx++)
+	for (int idx = 0; idx < NumSlots; idx++)
 	{
-		AddInventorySlotToGrid(idx);
-	}
+		ItemToAdd = ItemRefArray[idx];
+		ItemCount = ItemCountArray[idx];
 
-	// Calculate how many slots we need once items have been broken into stacks of max size
-	int NumSlotsNeeded = 0;
-	for (int idx = 0; idx < ItemRefArray.Num(); idx++)
-	{
-		NumSlotsNeeded += FMath::CeilToInt((float)ItemCountArray[idx] / (float)ItemRefArray[idx]->MaxStackSize);
+		AddItemToGrid(ItemToAdd, ItemCount);
 	}
-
-	// Populate slots with items
-	PopulateGridSlotsWithItems(ItemRefArray, ItemCountArray, NumSlotsNeeded);
 }
 
-void UInventoryPlayerBlockWidget::PopulateGridSlotsWithItems(TArray<UDA_Item*>& ItemRefArray, FJsonSerializableArrayInt& ItemCountArray, int NumSlotsNeeded)
+void UInventoryPlayerBlockWidget::AddItemToGrid(UDA_Item* ItemToAdd, int ItemCount)
 {
-	for (int idx = 0; idx < ItemRefArray.Num(); idx++)
+	UWBP_InventorySlot* InventorySlot = nullptr;
+
+	// If the item already exists in the grid, find it and add to the count
+	for (int idx = 0; idx < InventoryGrid->GetChildrenCount(); idx++)
 	{
-		// Get item and stack size
-		UDA_Item* Item = ItemRefArray[idx];
-		int ItemCount = ItemCountArray[idx];
-		int MaxStackSize = Item->MaxStackSize;
-
-		// Calculate the number of slots this item will take up
-		int NumSlotsToFill = FMath::CeilToInt((float)ItemCount / (float)MaxStackSize);
-
-		// Fill slots with this item
-		while (NumSlotsToFill > 0)
+		InventorySlot = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(idx));
+		if (InventorySlot->GetItem() == ItemToAdd)
 		{
-			// Get the next available inventory slot
-			for (int slotIdx = 0; slotIdx < NumSlotsNeeded; slotIdx++)
-			{
-				// Get inventory slot widget
-				UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(slotIdx));
+			InventorySlot->SetStackSize(InventorySlot->GetNumItems() + ItemCount);
+			break;
+		}
+	}
+	// Otherwise create a new slot
+	UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
+	InventorySlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
 
-				// If we've reached the end of the inventory grid, warn and break. This shouldn't happen as
-				// the inventory should never contain more content than it can hold.
-				if (!InventorySlotWidget)
+	if (InventorySlot)
+	{
+		// Compute index for this new slot
+		int idx = InventoryGrid->GetChildrenCount();
+
+		// Compute its row/column
+		int SlotRow = idx / NumInventoryCols;
+		int SlotCol = idx % NumInventoryCols;
+	
+		// Add to grid
+		InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
+		InventorySlot->SetItem(ItemToAdd, ItemCount);
+
+		// Bind functions to On Double Clicked event in inventory slot widget
+		InventorySlot->OnDoubleClicked.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked);
+
+	} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, AddItemToGrid")); }
+}
+
+void UInventoryPlayerBlockWidget::RemoveItemFromGrid(UDA_Item* ItemToRemove, int NumToRemove)
+{
+	// Find slot in grid
+	for (int idx = 0; idx < InventoryGrid->GetChildrenCount(); idx++)
+	{
+		UWBP_InventorySlot* InventorySlot = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(idx));
+		if (InventorySlot)
+		{
+			if (InventorySlot->GetItem() == ItemToRemove)
+			{
+				// If we are removing less than the total number of items in the slot, remove that many but keep the slot
+				if (NumToRemove < InventorySlot->GetNumItems())
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Inventory contains more items than it can hold! This should NOT happen. See InventoryPlayerBlockWidget, LoadInventoryGridContents"));
+					InventorySlot->SetItem(ItemToRemove, InventorySlot->GetNumItems() - NumToRemove);
 					return;
 				}
-
-				// Check if slot is empty
-				if (InventorySlotWidget->GetItem() == nullptr)
+				// Otherwise remove the whole slot
+				else
 				{
-					// If we're breaking up the item into multiple stacks, all but the last one will be full
-					if (NumSlotsToFill > 1)
-					{
-						InventorySlotWidget->SetItem(Item, MaxStackSize);
-						ItemCount -= MaxStackSize;
-					}
-					else
-					{
-						InventorySlotWidget->SetItem(Item, ItemCount);
-					}
-
-					// Make the slot clickable
-					InventorySlotWidget->SetSlotIsEnabled(true);
-
-					NumSlotsToFill--;
-					// Break out of loop as we've now populated the next available slot
-					break;
+					InventoryGrid->RemoveChildAt(idx);
+					return;
 				}
 			}
-		}
+		} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, RemoveItemFromGrid")); }
 	}
-}
-
-void UInventoryPlayerBlockWidget::AddInventorySlotToGrid(int idx)
-{
-	UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
-
-	int SlotRow = idx / NumInventoryCols;
-	int SlotCol = idx % NumInventoryCols;
-
-	// Add to grid
-	InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
-
-	// Bind functions to On Double Clicked event in inventory slot widget
-	UWBP_InventorySlot* LootableSlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
-	if (LootableSlot)
-	{
-		LootableSlot->OnDoubleClicked.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked);
-
-	}
-	else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, CreateGridContent")); }
-}
-
-int UInventoryPlayerBlockWidget::AddSlotContentsToInventoryGrid(UWBP_InventorySlot* InventorySlot)
-{
-	int NumAdded = 0;
-	// First get details about the item
-	UDA_Item* ItemToAdd = InventorySlot->GetItem();
-	int StackSizeToAdd = InventorySlot->GetStackSize();
-
-	// Go through the inventory
-	for (int idx = 0; idx < NumInventorySlots; idx++)
-	{
-		// Get slot
-		UWBP_InventorySlot* InventorySlotWidget = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(idx));
-
-		if (InventorySlotWidget)
-		{
-			// Get the item in the slot
-			UDA_Item* ItemInSlot = InventorySlotWidget->GetItem();
-
-			// First fill up slots already containing said item
-			if (ItemToAdd == ItemInSlot && StackSizeToAdd > 0)
-			{
-				// if there's room in the slot, add to it (up to max stack size)
-				if (InventorySlotWidget->GetStackSize() < ItemInSlot->MaxStackSize)
-				{
-					// Calculate how much we can add to the slot
-					int AvailableNumInSlot = ItemInSlot->MaxStackSize - InventorySlotWidget->GetStackSize();
-					int NumToAdd = FMath::Min(StackSizeToAdd, AvailableNumInSlot);
-
-					// Add to slot
-					InventorySlotWidget->SetStackSize(InventorySlotWidget->GetStackSize() + NumToAdd);
-
-					StackSizeToAdd -= NumToAdd;
-					NumAdded += NumToAdd;
-				}
-
-			}
-			// Otherwise if there are empty slots available, add to those
-			else if (ItemInSlot == nullptr && StackSizeToAdd > 0)
-			{
-				// Calculate how much we can add to the slot
-				int NumToAdd = FMath::Min(StackSizeToAdd, ItemToAdd->MaxStackSize);
-
-				// Add to slot
-				InventorySlotWidget->SetItem(ItemToAdd, NumToAdd);
-
-				StackSizeToAdd -= NumToAdd;
-
-				// Enable the slot so it's clickable
-				InventorySlotWidget->SetSlotIsEnabled(true);
-			}
-		}
-	}
-
-	return NumAdded;
-}
-
-void UInventoryPlayerBlockWidget::RemoveSlotContentsFromInventoryGrid(UWBP_InventorySlot* InventorySlot)
-{
-	// Get slot contents
-	UDA_Item* ItemToRemove = InventorySlot->GetItem();
-	int NumToRemove = InventorySlot->GetStackSize();
-
-	/***** Remove the item from the UI *****/
-
-	// Find slot in grid
-	int SlotIndex = InventoryGrid->GetChildIndex(InventorySlot);
-
-	// Clear slot
-	InventorySlot->SetItem(nullptr, 0);
-
-	// Make the slot non interactable again
-	InventorySlot->SetSlotIsEnabled(false);
 }
 
 void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)

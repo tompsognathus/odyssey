@@ -24,31 +24,26 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	TArray<class UDA_Item*> GetItemRefArray() const { return LootableItemRefArray; }
+	TArray<class UDA_Item*> GetItemRefArray() const { return ItemRefArray; }
 
-	TArray<int> GetItemCountArray() const { return LootableItemCountArray; }
+	TArray<int> GetItemCountArray() const { return ItemCountArray; }
 
 	void RemoveItem(class UDA_Item* ItemToRemove, int AmountToRemove);
 
-	int AddSlotContentsToLootBoxGrid(class UWBP_InventorySlot* InventorySlot);
-
-	int GetMaxInventorySize() const { return MaxLootBoxSize; }
+	void AddItem(class UDA_Item* ItemToAdd, int NumToAdd);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	int GoldAmount = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
-	int MaxLootBoxSize = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	int NumSlotColumns = 5;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
-	TArray<class UDA_Item*> LootableItemRefArray = TArray<UDA_Item*>();
+	TArray<class UDA_Item*> ItemRefArray = TArray<UDA_Item*>();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
-	TArray<int> LootableItemCountArray = TArray<int>();
+	TArray<int> ItemCountArray = TArray<int>();
 
 
 
