@@ -32,9 +32,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UButton* Btn;
 
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class USizeBox* SizeBox;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UTexture2D* EmptySlotTexture;
 
@@ -64,7 +61,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetStackSize(int NewStackSize);
 
-	int GetWidth();
 
 private:
 	class UTexture2D* EmptySlotImg;

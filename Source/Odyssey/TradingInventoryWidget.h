@@ -16,6 +16,8 @@ class ODYSSEY_API UTradingInventoryWidget : public UUserWidget
 
 protected:
 	virtual void NativeConstruct() override;
+
+	void SetWidthForInventoryGrids();
 	
 	/* WIDGET BINDINGS */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
@@ -24,18 +26,21 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class USizeBox* PlayerInventorySizeBox;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class USizeBox* LootInventorySizeBox;
+
 	/* VARIABLES */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int NumInventoryCols = 5;
-
 
 private:
 	class UUIManager* UIManager;
 	class UInventory* Inventory;
 
 	class ULootBox* CurrentLootBox;
-
-	int NumLootBoxSlots = 0;
 
 	UFUNCTION()
 	void OnInventorySlotDoubleClicked(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);

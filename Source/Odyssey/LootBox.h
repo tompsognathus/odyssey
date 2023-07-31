@@ -32,9 +32,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	int GoldAmount = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
-	int NumSlotColumns = 5;
-
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	TArray<class UDA_Item*> ItemRefArray = TArray<UDA_Item*>();

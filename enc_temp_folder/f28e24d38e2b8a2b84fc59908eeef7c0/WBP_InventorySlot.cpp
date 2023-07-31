@@ -5,7 +5,6 @@
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Components/Button.h"
-#include "Components/SizeBox.h"
 #include "DA_Item.h"
 
 void UWBP_InventorySlot::NativeConstruct()
@@ -58,11 +57,6 @@ void UWBP_InventorySlot::SetStackSize(int NewStackSize)
 	{
 		SetStackSizeText(FText::FromString(""));
 	}
-}
-
-int UWBP_InventorySlot::GetWidth()
-{
-	return SizeBox->GetWidthOverride();
 }
 
 void UWBP_InventorySlot::DispatchOnDoubleClicked()

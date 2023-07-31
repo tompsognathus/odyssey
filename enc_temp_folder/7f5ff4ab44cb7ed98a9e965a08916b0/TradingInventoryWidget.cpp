@@ -46,28 +46,31 @@ void UTradingInventoryWidget::NativeConstruct()
 
 void UTradingInventoryWidget::SetWidthForInventoryGrids()
 {
-	int InventorySlotWidth = 100;
+	int InventorySlotWidth = 0;
 	// Create an empty slot widget to get its size
 	UWBP_InventorySlot* EmptySlot = CreateWidget<UWBP_InventorySlot>(this, UIManager->InventorySlotAssetRef);
 	if (EmptySlot)
 	{
-		InventorySlotWidth = EmptySlot->GetWidth();
+		InventorySlotWidth = EmptySlot->GetDesiredSize().X;
 
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find InventorySlotAssetRef in TradingInventoryWidget, NativeConstruct")); }
+	}
+	else { UE_LOG(LogTemp, Error, TEXT("Cannot find InventorySlotAssetRef in TradingInventoryWidget, NativeConstruct")); }
 
 	int GridWidth = NumInventoryCols * InventorySlotWidth;
 	// Set the width override for both grids based on the number of columns and the size of the slots
 	if (PlayerInventorySizeBox)
 	{
-		PlayerInventorySizeBox->SetWidthOverride(GridWidth);
+		PlayerInventorySizeBox->SetWidthOverride(InventorySlotWidth);
 
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerInventorySizeBox in TradingInventoryWidget, NativeConstruct")); }
+	}
+	else { UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerInventorySizeBox in TradingInventoryWidget, NativeConstruct")); }
 
 	if (LootInventorySizeBox)
 	{
-		LootInventorySizeBox->SetWidthOverride(GridWidth);
+		LootInventorySizeBox->SetWidthOverride(InventorySlotWidth);
 
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find LootBoxInventorySizeBox in TradingInventoryWidget, NativeConstruct")); }
+	}
+	else { UE_LOG(LogTemp, Error, TEXT("Cannot find LootBoxInventorySizeBox in TradingInventoryWidget, NativeConstruct")); }
 }
 
 void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
@@ -128,12 +131,14 @@ void UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked(UWBP_InventoryS
 	// Add item to loot box
 	CurrentLootBox->AddItem(Item, NumItems);
 
+	// Update Loot Box UI grid
+	WBP_InventoryLootBoxBlock->AddItemToGrid(Item, NumItems);
+
+	// Remove item from player inventory grid
+	WBP_InventoryPlayerBlock->RemoveItemFromGrid(Item, NumItems);
+
 	// Remove item from player inventory
 	Inventory->RemoveItem(Item, NumItems);
-
-	// Update UI grids
-	LoadPlayerInventoryUIContents();
-	LoadLootBoxInventoryUIContents(CurrentLootBox);
 }
 
 void UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
@@ -146,10 +151,12 @@ void UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked(UWBP_Inventory
 	// Add item to inventory
 	Inventory->AddItem(Item, NumItems);
 
+	// Update Inventory UI grid
+	WBP_InventoryPlayerBlock->AddItemToGrid(Item, NumItems);
+
+	// Remove item from loot box grid
+	WBP_InventoryLootBoxBlock->RemoveItemFromGrid(Item, NumItems);
+
 	// Remove item from loot box
 	CurrentLootBox->RemoveItem(Item, NumItems);
-
-	// Update UI grids
-	LoadPlayerInventoryUIContents();
-	LoadLootBoxInventoryUIContents(CurrentLootBox);
 }
