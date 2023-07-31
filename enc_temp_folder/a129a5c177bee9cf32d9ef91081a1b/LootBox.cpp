@@ -13,6 +13,7 @@ ULootBox::ULootBox()
 	
 }
 
+
 // Called when the game starts
 void ULootBox::BeginPlay()
 {
@@ -24,6 +25,15 @@ void ULootBox::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Item and ItemCount arrays are not the same size!"));
 		return;		
 	}
+
+}
+
+
+// Called every frame
+void ULootBox::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 }
 
 void ULootBox::RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove)

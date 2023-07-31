@@ -21,6 +21,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	TArray<class UDA_Item*> GetItemRefArray() const { return ItemRefArray; }
 
 	TArray<int> GetItemCountArray() const { return ItemCountArray; }

@@ -33,6 +33,8 @@ void UInventoryPlayerBlockWidget::LoadInventoryGridContents(TArray<class UDA_Ite
 	UDA_Item* ItemToAdd = nullptr;
 	int ItemCount = 0;
 
+	UE_LOG(LogTemp, Warning, TEXT("NumSlots: %d"), NumSlots);
+
 	// Populate available loot grid with inventory slot widgets
 	for (int idx = 0; idx < NumSlots; idx++)
 	{
@@ -51,10 +53,10 @@ void UInventoryPlayerBlockWidget::AddItemToGrid(UDA_Item* ItemToAdd, int ItemCou
 	for (int idx = 0; idx < InventoryGrid->GetChildrenCount(); idx++)
 	{
 		InventorySlot = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(idx));
-		if (InventorySlot->GetItem()->Name == ItemToAdd->Name)
+		if (InventorySlot->GetItem() == ItemToAdd)
 		{
 			InventorySlot->SetStackSize(InventorySlot->GetNumItems() + ItemCount);
-			return;
+			break;
 		}
 	}
 	// Otherwise create a new slot
