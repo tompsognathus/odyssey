@@ -11,6 +11,7 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDoubleClicked, UWBP_InventorySlot*, InventorySlot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHovered, UWBP_InventorySlot*, InventorySlot);
 
 UCLASS()
 class ODYSSEY_API UWBP_InventorySlot : public UUserWidget
@@ -47,10 +48,15 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void DispatchOnDoubleClicked();
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void DispatchOnHovered();
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnDoubleClicked OnDoubleClicked;
+
+	UPROPERTY(BlueprintAssignable, Category = "Inventory")
+	FOnHovered OnHovered;
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetItem(class UDA_Item* NewItem, int NewItemCount);

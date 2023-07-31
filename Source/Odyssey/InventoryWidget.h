@@ -30,7 +30,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class USizeBox* PlayerInventorySizeBox;
+
 	/* FUNCTIONS */
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void SetWidthForInventoryGrid();
+	
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetItemNameText(FText NewItemNameText);
 
@@ -40,11 +46,20 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetItemImg(UTexture2D* NewItemImg);
 
-
 public:
+
+	/* VARIABLES */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	int NumInventoryCols = 6;
+
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void LoadInventoryUIContents();
 
+	UFUNCTION()
+	void OnInventorySlotHovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
+
 private:
 	class UInventory* Inventory;
+	class UUIManager* UIManager;
+
 };

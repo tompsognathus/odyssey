@@ -7,6 +7,7 @@
 #include "InventoryPlayerBlockWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotDoubleClicked, UInventoryPlayerBlockWidget*, InventoryBlockWidget, UWBP_InventorySlot*, InventorySlot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotHovered, UInventoryPlayerBlockWidget*, InventoryBlockWidget, UWBP_InventorySlot*, InventorySlot);
 
 UCLASS()
 class ODYSSEY_API UInventoryPlayerBlockWidget : public UUserWidget
@@ -41,11 +42,17 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnInventorySlotDoubleClicked OnInventorySlotDoubleClickedDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "Inventory")
+	FOnInventorySlotHovered OnInventorySlotHoveredDelegate;
+
 private:
 	class UUIManager* UIManager;
 
 	UFUNCTION()
 	void OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
+
+	UFUNCTION()
+	void OnInventorySlotHovered(UWBP_InventorySlot* InventorySlot);
 
 
 };
