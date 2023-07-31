@@ -76,6 +76,7 @@ void UInventoryPlayerBlockWidget::AddItemToGrid(UDA_Item* ItemToAdd, int ItemCou
 
 		// Bind functions to On Double Clicked event in inventory slot widget
 		InventorySlot->OnDoubleClicked.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked);
+		InventorySlot->OnHovered.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotHovered);
 
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, AddItemToGrid")); }
 }
@@ -113,5 +114,13 @@ void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlo
 	OnInventorySlotDoubleClickedDelegate.Broadcast(this, InventorySlot);
 
 }
+
+void UInventoryPlayerBlockWidget::OnInventorySlotHovered(UWBP_InventorySlot* InventorySlot)
+{
+	// broadcast event
+	OnInventorySlotHoveredDelegate.Broadcast(this, InventorySlot);
+}
+
+
 
  
