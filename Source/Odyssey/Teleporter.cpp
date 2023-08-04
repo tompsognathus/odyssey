@@ -45,3 +45,8 @@ bool ATeleporter::GetIsInteractable_Implementation()
 {
 	return IsInteractable;
 }
+
+void ATeleporter::SetIsInteractable(bool NewIsInteractable)
+{
+	IsInteractable = NewIsInteractable;
+}

@@ -23,6 +23,9 @@ public:
 	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
 	virtual bool GetIsInteractable_Implementation() override;
 
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
+	void SetIsInteractable(bool NewIsInteractable);
+
 
 public:	
 	class UWidgetComponent* InputPromptWidgetComponent;
