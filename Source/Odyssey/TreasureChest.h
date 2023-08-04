@@ -24,7 +24,6 @@ protected:
 
 public:
 	// Variables
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UWidgetComponent* InputPromptWidgetComponent;
 	
 	UPROPERTY(EditAnywhere)
