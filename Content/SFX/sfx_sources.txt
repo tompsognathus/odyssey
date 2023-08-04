@@ -1,3 +1,4 @@
 treasure_chest_creak 	https://freesound.org/people/TimPryor/sounds/188606/
 coin_spill_raw		https://freesound.org/people/clairinski/sounds/184372/
 ui_click		https://freesound.org/people/el_boss/sounds/628638/
+cannon			https://freesound.org/people/SamsterBirdies/sounds/581597/
