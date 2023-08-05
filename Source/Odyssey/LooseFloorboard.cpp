@@ -39,6 +39,7 @@ void ALooseFloorboard::Highlight_Implementation(bool IsHighlighted)
 
 	if (Highlighter)
 	{
+	UE_LOG(LogTemp, Warning, TEXT("Highlight_Implementation"));
 		Highlighter->SetHighlight(IsHighlighted);
 
 	} else { UE_LOG(LogTemp, Warning, TEXT("No highlighter component found on %s in TreasureChest, Highlight"), *GetName()); }
