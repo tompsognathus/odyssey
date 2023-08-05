@@ -8,6 +8,7 @@
 #include "OdysseyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "UIManager.h"
+#include "Highlighter.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -67,15 +68,14 @@ bool ANPC::GetIsInteractable_Implementation()
 
 void ANPC::Highlight_Implementation(bool IsHighlighted)
 {
-	//Set render custom depth to true for each static and skeletal mesh
-	for (UStaticMeshComponent* StaticMesh : StaticMeshesToOutline)
+	// Get reference to Highlighter
+	UHighlighter* Highlighter = FindComponentByClass<UHighlighter>();
+
+	if (Highlighter)
 	{
-		StaticMesh->SetRenderCustomDepth(IsHighlighted);
-	}
-	for (USkeletalMeshComponent* SkeletalMesh : SkeletalMeshesToOutline)
-	{
-		SkeletalMesh->SetRenderCustomDepth(IsHighlighted);
-	}
+		Highlighter->SetHighlight(IsHighlighted);
+	} else { UE_LOG(LogTemp, Warning, TEXT("No highlighter found on %s in NPC, Highlight"), *GetName()); }
+
 }
 
 void ANPC::DisplayInputPrompt_Implementation(bool IsVisible)

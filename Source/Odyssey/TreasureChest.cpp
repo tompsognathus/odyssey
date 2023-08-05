@@ -4,6 +4,7 @@
 #include "TreasureChest.h"
 #include "Components/ActorComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Highlighter.h"
 
 
 // Sets default values
@@ -37,15 +38,14 @@ void ATreasureChest::GetInputPromptWidgetComponent()
 
 void ATreasureChest::Highlight_Implementation(bool IsHighlighted)
 {
-	//Set render custom depth to true for each static and skeletal mesh
-	for (UStaticMeshComponent* StaticMesh : StaticMeshesToOutline)
+	// Get Highlighter component
+	UHighlighter* Highlighter = FindComponentByClass<UHighlighter>();
+
+	if (Highlighter)
 	{
-		StaticMesh->SetRenderCustomDepth(IsHighlighted);
-	}
-	for (USkeletalMeshComponent* SkeletalMesh : SkeletalMeshesToOutline)
-	{
-		SkeletalMesh->SetRenderCustomDepth(IsHighlighted);
-	}
+		Highlighter->SetHighlight(IsHighlighted);
+
+	} else { UE_LOG(LogTemp, Warning, TEXT("No highlighter component found on %s in TreasureChest, Highlight"), *GetName()); }
 }
 
 void ATreasureChest::DisplayInputPrompt_Implementation(bool IsVisible)
