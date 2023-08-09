@@ -16,14 +16,23 @@ public:
 	// Sets default values for this component's properties
 	UCombatManager();
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void StartNewCombat(class ANPC* Enemy);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 private:
 	class UUIManager* UIManager;
+	class UCharSheet* PlayerCharSheet;
+	class UCharSheet* EnemyCharSheet;
+
+	TArray<UCharSheet*> TurnOrder;
 
 	int CombatRound = 0;
 	void StartNewRound();
+
+	int RollD100();
 		
 };

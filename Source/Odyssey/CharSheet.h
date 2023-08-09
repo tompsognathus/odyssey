@@ -40,6 +40,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "CharSheet")
 	FOnHpChangedSignature OnHpChangedDelegate;
 
+	// Getters
+	int GetInitiativeBase() const { return InitiativeBase; }
+
 private:
 	int Gold = 50;
 	int Hp = 100;

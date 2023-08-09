@@ -41,6 +41,7 @@ void UCombatManager::BeginPlay()
 void UCombatManager::StartNewCombat(class ANPC* Enemy)
 {
 	CombatRound = 0;
+	StartNewRound();
 
 	// Get reference to enemy CharSheet
 	EnemyCharSheet = Cast<UCharSheet>(Enemy->GetComponentByClass(UCharSheet::StaticClass()));
@@ -76,7 +77,6 @@ void UCombatManager::StartNewRound()
 	UE_LOG(LogTemp, Warning, TEXT("StartNewRound() called in CombatManager"));
 	CombatRound += 1;
 
-	UIManager->SetCurrentRoundText(CombatRound);
 
 }
 

@@ -14,6 +14,7 @@
 #include "DialogueComponent.h"
 #include "NPC.h"
 #include "CombatWidget.h"
+#include "CombatManager.h"
 
 // Sets default values for this component's properties
 UUIManager::UUIManager()
@@ -43,6 +44,10 @@ void UUIManager::BeginPlay()
 
 	// Start in the Main Menu
 	DisplayWidget(MainMenuWidgetInstance);
+
+	// Get a reference to the combat manager on the player character
+	CombatManager = GetOwner()->FindComponentByClass<UCombatManager>();
+	if (!CombatManager) { UE_LOG(LogTemp, Error, TEXT("CombatManager not found in UIManager, BeginPlay")); }
 }
 
 /*
@@ -93,12 +98,15 @@ void UUIManager::DisplayRPEncounterWidget(UDialogueComponent* DialogueOwnerCompo
 	else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, DisplayRPEncounterWidget")); }
 }
 
-void UUIManager::DisplayCombatWidget()
+void UUIManager::DisplayCombatWidget(class ANPC* Enemy)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Displaying Combat Widget"));
 	DisplayWidget(CombatWidgetInstance);
-}
 
+	if (CombatManager)
+	{
+		CombatManager->StartNewCombat(Enemy);
+	}
+}
 
 void UUIManager::DisplayInventoryWidget()
 {

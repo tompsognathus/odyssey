@@ -93,7 +93,7 @@ public:
 	void DisplayRPEncounterWidget(UDialogueComponent* DialogueOwnerComponent);
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayCombatWidget();
+	void DisplayCombatWidget(class ANPC* Enemy);
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayInventoryWidget();
@@ -139,6 +139,10 @@ public:
 	void SetCurrentRoundText(int CurrentRound);
 
 private:
+	class UCombatManager* CombatManager;
+
+	/***** UI Widgets *****/
+
 	// Variable to hold the Parent UI Widget After Creating it
 	class UUserWidget* ParentUIWidgetInstance;
 
