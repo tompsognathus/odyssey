@@ -2,6 +2,9 @@
 
 
 #include "CombatWidget.h"
+#include "Components/Image.h"
+#include "Components/TextBlock.h"
+
 
 void UCombatWidget::NativeConstruct()
 {
@@ -28,4 +31,21 @@ void UCombatWidget::HandleAttack4BtnClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attack4BtnClicked"));
 }
+
+void UCombatWidget::SetEnemyAvatar(UMaterial* AvatarMaterial)
+{
+	EnemyAvatar->SetBrushFromMaterial(AvatarMaterial);
+}
+
+void UCombatWidget::SetEnemyName(FText EnemyName)
+{
+	EnemyNameTextBlock->Text = EnemyName;
+}
+
+void UCombatWidget::SetCurrentRoundText(int CurrentRound)
+{
+	CurrentRoundTextBlock->SetText(FText::FromString("Round " + FString::FromInt(CurrentRound)));
+}
+
+
 

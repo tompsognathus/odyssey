@@ -40,13 +40,16 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "CharSheet")
 	FOnHpChangedSignature OnHpChangedDelegate;
 
-
-
 private:
 	int Gold = 50;
 	int Hp = 100;
 	int MaxHp = 100;
 
 	class UWeapon* ActiveWeapon = nullptr;
+
+	// Stats
+	int InitiativeBase = 50;
+	
+	int Agility = 0;
 
 };

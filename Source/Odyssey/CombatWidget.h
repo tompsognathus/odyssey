@@ -17,20 +17,36 @@ class ODYSSEY_API UCombatWidget : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UImage* EnemyAvatar;
+	
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* EnemyNameTextBlock;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* CurrentRoundTextBlock;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void HandleAttack1BtnClicked();
 
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void HandleAttack2BtnClicked();
 
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void HandleAttack3BtnClicked();
 
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void HandleAttack4BtnClicked();
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	void SetEnemyAvatar(class UMaterial* AvatarMaterial);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	void SetEnemyName(FText EnemyName);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	void SetCurrentRoundText(int CurrentRound);
 
 
 };

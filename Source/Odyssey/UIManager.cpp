@@ -13,6 +13,7 @@
 #include "LootBox.h"
 #include "DialogueComponent.h"
 #include "NPC.h"
+#include "CombatWidget.h"
 
 // Sets default values for this component's properties
 UUIManager::UUIManager()
@@ -280,6 +281,21 @@ void UUIManager::LoadPlayerInventoryWidgetContent()
 
 		} else { UE_LOG(LogTemp, Error, TEXT("InventoryWidget not found in UIManager, UpdateInventoryWidgetContent")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("InventoryWidgetInstance is null in UIManager, UpdateInventoryWidgetContent")); }
+}
+
+void UUIManager::SetCurrentRoundText(int CurrentRound)
+{
+	if (CombatWidgetInstance)
+	{
+		// Cast to CombatWidget
+		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+
+		if (CombatWidget)
+		{
+			CombatWidget->SetCurrentRoundText(CurrentRound);
+
+		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetCurrentRoundText")); }
+	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetCurrentRoundText")); }
 }
 
 void UUIManager::DisplayPreviousWidget()

@@ -32,6 +32,11 @@ protected:
 public:
 	class UWidgetComponent* InputPromptWidgetComponent;
 
+	/*
+	 * Avatar 
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Avatar")
+	class UMaterial* AvatarMaterial = nullptr;
 
 	/*
 	 * Dialogue

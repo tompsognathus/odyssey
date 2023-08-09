@@ -9,7 +9,6 @@ void URPEncounterWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Get player pawn
 	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (PlayerPawn)
 	{

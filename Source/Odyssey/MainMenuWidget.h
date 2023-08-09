@@ -6,12 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenuWidget.generated.h"
 
-
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FContinueGameBtnClickedSignature);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewGameBtnClickedSignature);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOptionsBtnClickedSignature);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FQuitGameBtnClickedSignature);
-
 /**
  * 
  */

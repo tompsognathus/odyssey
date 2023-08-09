@@ -134,6 +134,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
 	void LoadPlayerInventoryWidgetContent();
 
+	/***** Combat UI Widget *****/
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetCurrentRoundText(int CurrentRound);
 
 private:
 	// Variable to hold the Parent UI Widget After Creating it
