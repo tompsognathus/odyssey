@@ -5,7 +5,6 @@
 #include "UIManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include <Kismet/GameplayStatics.h>
-#include "GM.h"
 
 
 void UWBP_Alert::NativeConstruct()
@@ -20,18 +19,6 @@ void UWBP_Alert::NativeConstruct()
 		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
 
 		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in WBP_Alert, NativeConstruct")); }
-	}
-
-	// Find GM
-	TArray<AActor*> FoundGMs;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGM::StaticClass(), FoundGMs);
-	if (FoundGMs.Num() > 1)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Found more than one instance of GM in WBP_Alert, NativeConstruct."));
-	}
-	else
-	{
-		GM = Cast<AGM>(FoundGMs[0]);
 	}
 }
 
@@ -56,7 +43,8 @@ void UWBP_Alert::HandleNewGameYesBtnClicked()
 	UE_LOG(LogTemp, Display, TEXT("Yes button clicked on New Game alert in WBP_Alert, HandleNewGameBtnYesClicked"));
 
 	UIManager->HideAllAlerts();
-	GM->StartPrologueDlg();
+	// Play Prologue
+	UIManager->StartPrologue();
 
 }
 

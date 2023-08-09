@@ -24,9 +24,13 @@ protected:
 
 
 public:	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
+	class ANPC* GM = nullptr;
+
 	// Acceptable delay between clicks to count as a double click
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
 	float DoubleClickTime = 0.25f;
+
 
 	/***** UI Widget Assets *****/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets")
@@ -46,6 +50,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Gameplay")
 	TSubclassOf<class UUserWidget> RPEncounterWidgetAssetRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Gameplay")
+	TSubclassOf<class UUserWidget> CombatWidgetAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Gameplay")
 	TSubclassOf<class UUserWidget> HUDWidgetAssetRef;
@@ -83,7 +90,10 @@ public:
 	void DisplayAudioOptionsMenuWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayRPEncounterWidget(ANPC* DialogueOwner);
+	void DisplayRPEncounterWidget(UDialogueComponent* DialogueOwnerComponent);
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void DisplayCombatWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayInventoryWidget();
@@ -112,7 +122,10 @@ public:
 	void SetRPEncounterOptionText(int OptionNumber, FText NewOptionText);
 
 	UFUNCTION()
-	void SelectDialogueOption(int OptionNumber, ANPC* NPCDialogueOwner);
+	void SelectDialogueOption(int OptionNumber, UDialogueComponent* NPCDialogueOwner);
+
+	UFUNCTION()
+	void StartPrologue();
 
 	/***** Trading Inventory UI Widget *****/
 	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
@@ -143,6 +156,9 @@ private:
 
 	// Variable to hold the Options Menu Widget After Creating it
 	class UUserWidget* RPEncounterWidgetInstance;
+
+	// Variable to hold the Combat Widget After Creating it
+	class UUserWidget* CombatWidgetInstance;
 
 	// Variable to hold the HUD Widget After Creating it
 	class UUserWidget* HUDWidgetInstance;

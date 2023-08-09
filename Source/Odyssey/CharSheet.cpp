@@ -2,6 +2,7 @@
 
 
 #include "CharSheet.h"
+#include "Weapon.h"
 
 // Sets default values for this component's properties
 UCharSheet::UCharSheet()
@@ -18,25 +19,20 @@ void UCharSheet::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Request HUD update
 	OnGoldChangedDelegate.Broadcast(Gold);
 	OnHpChangedDelegate.Broadcast(100);
+
+	// Get active weapon
+	ActiveWeapon = GetOwner()->FindComponentByClass<UWeapon>();
 }
 
-
-// Called every frame
-void UCharSheet::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 
 void UCharSheet::AddGold(int GoldAmount)
 {
 	Gold += GoldAmount;
 
 	// Request HUD update 
-
 	OnGoldChangedDelegate.Broadcast(Gold);
 }
 
@@ -52,4 +48,9 @@ void UCharSheet::AddHp(int HpAmount)
 	OnHpChangedDelegate.Broadcast(HpPercentage);
 }
 
+
+void UCharSheet::TakeDamage(int DamageAmount)
+{
+	AddHp(-DamageAmount);
+}
 

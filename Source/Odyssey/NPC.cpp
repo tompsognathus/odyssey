@@ -9,13 +9,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "UIManager.h"
 #include "Highlighter.h"
+#include "DialogueComponent.h"
 
 // Sets default values
 ANPC::ANPC()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +35,10 @@ void ANPC::BeginPlay()
 	}
 	else { UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found")); }
 
+	// Get reference to dialogue component
+	DialogueComponent = FindComponentByClass<UDialogueComponent>();
+	if (!DialogueComponent) { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, BeginPlay"), *GetName()); }
+
 	CheckIfIsInteractable();
 }
 
@@ -49,12 +53,37 @@ void ANPC::GetInputPromptWidgetComponent()
 	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, BeginPlay"), *GetName()); }
 }
 
-// Called every frame
-void ANPC::Tick(float DeltaTime)
+FName ANPC::GetParticipantName_Implementation() const
 {
-	Super::Tick(DeltaTime);
+	if (DialogueComponent)
+	{
+		return DialogueComponent->GetParticipantName();
 
+	} else { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantName"), *GetName()); }
+
+	return FName();
 }
+
+FText ANPC::GetParticipantDisplayName_Implementation(FName ActiveSpeaker) const
+{
+	if (DialogueComponent)
+	{
+		return DialogueComponent->GetParticipantDisplayName(ActiveSpeaker);
+
+	} else { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantDisplayName"), *GetName()); }
+	return FText();
+}
+
+UTexture2D* ANPC::GetParticipantIcon_Implementation(FName ActiveSpeaker, FName ActiveSpeakerState) const
+{
+	if (DialogueComponent)
+	{
+		return DialogueComponent->GetParticipantIcon(ActiveSpeaker, ActiveSpeakerState);
+
+	} else { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantIcon"), *GetName()); }
+	return nullptr;
+}
+
 
 void ANPC::SetIsInteractable(bool NewInteractable)
 {
@@ -111,102 +140,24 @@ void ANPC::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutli
 
 void ANPC::CheckIfIsInteractable()
 {
-	// If the NPC has no dialogues attachted to them, they're not interactable
-	if (Dialogues.Num() == 0)
+	if (DialogueComponent)
 	{
-		SetIsInteractable(false);
-	}
-}
+		// Check if there are any dialogues in the dialogue component
+		int NumDialogues = DialogueComponent->GetNumDialogues();
 
-
-void ANPC::PopulateDialogueBodyText()
-{
-	if (UIManager)
-	{
-		UIManager->SetRPEncounterBodyText(GetDialogueBodyText());
-	}
-	else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
-}
-
-void ANPC::PopulateDialogueOptionsText()
-{
-	if (UIManager)
-	{
-		TArray<FText> Options = GetDialogueOptionsText();
-
-		for (int i = 0; i < 4; i++)
+		// If there are any dialogues, the NPC is interactable
+		if (NumDialogues > 0)
 		{
-			if (i < Options.Num())
-			{
-				UIManager->SetRPEncounterOptionText(i + 1, Options[i]); // Options are currently indexed from 1
-			}
-			else
-			{
-				UIManager->SetRPEncounterOptionText(i + 1, FText::FromString(""));
-			}
+			SetIsInteractable(true);
+		}
+		else
+		{
+			SetIsInteractable(false);
 		}
 	}
-	else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
-}
-
-bool ANPC::StartDialogue(UDlgDialogue* Dialogue, const TArray<UObject*>& DlgParticipants)
-{
-	DialogueContext = UDlgManager::StartDialogue(Dialogue, DlgParticipants);
-
-	if (UIManager)
+	else 
 	{
-		UIManager->DisplayRPEncounterWidget(this);
-		PopulateDialogueBodyText();
-		PopulateDialogueOptionsText();
-
-	} else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
-
-	return DialogueContext != nullptr;
-}
-
-FText ANPC::GetDialogueBodyText()
-{
-	if (!DialogueContext)
-	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null"));
+		// If the NPC doesn't have a dialogue component, they're not interactable
+		SetIsInteractable(false);
 	}
-
-	const FText Text = DialogueContext->GetActiveNodeText();
-
-	return Text;
-}
-
-TArray<FText> ANPC::GetDialogueOptionsText()
-{
-	if (!DialogueContext)
-	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null"));
-	}
-
-	TArray<FText> Options;
-	int OptionsNum = DialogueContext->GetOptionsNum();
-
-	for (int i = 0; i < OptionsNum; i++)
-	{
-		Options.Add(DialogueContext->GetOptionText(i));
-	}
-
-	return Options;
-}
-
-bool ANPC::SelectDialogueOption(int32 Index)
-{
-	if (!DialogueContext || !DialogueContext->IsValidOptionIndex(Index))
-	{
-		return false;
-	}
-
-	if (!DialogueContext->ChooseOption(Index) || DialogueContext->HasDialogueEnded())
-	{
-		// Dialogue Has Ended
-		DialogueContext = nullptr;
-		return false;
-	}
-
-	return true;
 }

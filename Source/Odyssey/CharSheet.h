@@ -24,14 +24,14 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	UFUNCTION(BlueprintCallable, Category = "CharSheet")
 	void AddGold(int GoldAmount);
 
 	UFUNCTION(BlueprintCallable, Category = "CharSheet")
 	void AddHp(int HpAmount);
+
+	UFUNCTION(BlueprintCallable, Category = "CharSheet")
+	void TakeDamage(int DamageAmount);
 
 	// Delegates
 	UPROPERTY(BlueprintAssignable, Category = "CharSheet")
@@ -40,9 +40,13 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "CharSheet")
 	FOnHpChangedSignature OnHpChangedDelegate;
 
+
+
 private:
 	int Gold = 50;
 	int Hp = 100;
 	int MaxHp = 100;
+
+	class UWeapon* ActiveWeapon = nullptr;
 
 };

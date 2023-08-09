@@ -94,7 +94,6 @@ void UUIManager::DisplayRPEncounterWidget(UDialogueComponent* DialogueOwnerCompo
 
 void UUIManager::DisplayCombatWidget()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Displaying Combat Widget"));
 	DisplayWidget(CombatWidgetInstance);
 }
 

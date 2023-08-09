@@ -16,7 +16,8 @@ class ODYSSEY_API URPEncounterWidget : public UUserWidget
 	
 private:
 	class UUIManager* UIManager;
-	class ANPC* DialogueOwner;
+	//class ANPC* DialogueOwner;
+	class UDialogueComponent* DialogueOwner;
 
 protected:
 	virtual void NativeConstruct() override;
@@ -59,8 +60,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Text Fields")
 	void SetOptionText(int OptionNumber, FText NewOptionText);
 
+	//UFUNCTION()
+	//void SetDialogueOwner(class ANPC* NewDialogueOwner) { DialogueOwner = NewDialogueOwner; }
+
 	UFUNCTION()
-	void SetDialogueOwner(class ANPC* NewDialogueOwner) { DialogueOwner = NewDialogueOwner; }
+	void SetDialogueOwner(class UDialogueComponent* NewDialogueOwner) { DialogueOwner = NewDialogueOwner; }
 
 	UFUNCTION()
 	UHUDWidget* GetHUDWidget();

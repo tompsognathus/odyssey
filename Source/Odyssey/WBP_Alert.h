@@ -16,7 +16,6 @@ class ODYSSEY_API UWBP_Alert : public UUserWidget
 	
 private:
 	class UUIManager* UIManager;
-	class AGM* GM;
 
 protected:
 	virtual void NativeConstruct() override;
@@ -34,5 +33,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Alert Functions")
 	void HandleNewGameNoBtnClicked();
+
 
 };
