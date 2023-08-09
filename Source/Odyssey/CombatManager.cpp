@@ -67,6 +67,11 @@ void UCombatManager::StartNewCombat(class ANPC* Enemy)
 		TurnOrder.Add(PlayerCharSheet);
 	}
 
+	// Set enemy info
+	UIManager->SetEnemyInfo(Enemy->GetAvatarMaterial(), Enemy->GetDisplayName());
+	UIManager->SetPlayerHpPercent(PlayerCharSheet->GetHpNormalizedPercent());
+	UIManager->SetEnemyHpPercent(EnemyCharSheet->GetHpNormalizedPercent());
+
 	// Start combat
 	StartNewRound();
 }

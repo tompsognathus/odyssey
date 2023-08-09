@@ -138,6 +138,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void SetCurrentRoundText(int CurrentRound);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetEnemyInfo(UMaterial* EnemyAvatarMaterial, FText EnemyName);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetEnemyHpPercent(float NormalizedPercent);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetPlayerHpPercent(float NormalizedPercent);
+
 private:
 	class UCombatManager* CombatManager;
 

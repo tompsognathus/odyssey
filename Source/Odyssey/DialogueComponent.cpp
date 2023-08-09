@@ -29,6 +29,7 @@ void UDialogueComponent::BeginPlay()
 		UIManager = PlayerCharacter->FindComponentByClass<UUIManager>();
 	
 	} else { UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found")); }
+
 }
 
 void UDialogueComponent::PopulateDialogueBodyText()

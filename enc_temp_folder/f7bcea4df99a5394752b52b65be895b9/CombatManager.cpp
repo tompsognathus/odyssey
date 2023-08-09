@@ -41,7 +41,6 @@ void UCombatManager::BeginPlay()
 void UCombatManager::StartNewCombat(class ANPC* Enemy)
 {
 	CombatRound = 0;
-	StartNewRound();
 
 	// Get reference to enemy CharSheet
 	EnemyCharSheet = Cast<UCharSheet>(Enemy->GetComponentByClass(UCharSheet::StaticClass()));
@@ -68,6 +67,10 @@ void UCombatManager::StartNewCombat(class ANPC* Enemy)
 		TurnOrder.Add(PlayerCharSheet);
 	}
 
+	// Set enemy info
+	UIManager->SetEnemyInfo(Enemy->GetAvatarMaterial(), Enemy->GetDisplayName());
+	UIManager->SetPlayerHpPercent(PlayerCharSheet->GetHpNormalizedPercent());
+
 	// Start combat
 	StartNewRound();
 }
@@ -77,6 +80,7 @@ void UCombatManager::StartNewRound()
 	UE_LOG(LogTemp, Warning, TEXT("StartNewRound() called in CombatManager"));
 	CombatRound += 1;
 
+	UIManager->SetCurrentRoundText(CombatRound);
 
 }
 

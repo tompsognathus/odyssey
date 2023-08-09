@@ -26,6 +26,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* CurrentRoundTextBlock;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UProgressBar* EnemyHpBar;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UProgressBar* PlayerHpBar;
+
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void HandleAttack1BtnClicked();
 
@@ -48,5 +54,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void SetCurrentRoundText(int CurrentRound);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	void SetEnemyHpBarPercent(float Percent);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	void SetPlayerHpBarPercent(float Percent);
 };

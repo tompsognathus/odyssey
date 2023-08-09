@@ -4,6 +4,7 @@
 #include "CombatWidget.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Components/ProgressBar.h"
 
 
 void UCombatWidget::NativeConstruct()
@@ -39,12 +40,24 @@ void UCombatWidget::SetEnemyAvatar(UMaterial* AvatarMaterial)
 
 void UCombatWidget::SetEnemyName(FText EnemyName)
 {
-	EnemyNameTextBlock->Text = EnemyName;
+	EnemyNameTextBlock->SetText(EnemyName);
+	// print enemy name
+	UE_LOG(LogTemp, Warning, TEXT("Enemy name: %s"), *EnemyName.ToString());
 }
 
 void UCombatWidget::SetCurrentRoundText(int CurrentRound)
 {
 	CurrentRoundTextBlock->SetText(FText::FromString("Round " + FString::FromInt(CurrentRound)));
+}
+
+void UCombatWidget::SetEnemyHpBarPercent(float NormalizedPercent)
+{
+	EnemyHpBar->SetPercent(NormalizedPercent);
+}
+
+void UCombatWidget::SetPlayerHpBarPercent(float NormalizedPercent)
+{
+	PlayerHpBar->SetPercent(NormalizedPercent);
 }
 
 

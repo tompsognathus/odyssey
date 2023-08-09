@@ -33,10 +33,22 @@ public:
 	class UWidgetComponent* InputPromptWidgetComponent;
 
 	/*
+	 * NPC Info
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
+	FText UIDisplayName;
+
+	UFUNCTION(BlueprintCallable, Category = "NPC")
+	FText GetDisplayName() { return UIDisplayName; }
+ 
+	/*
 	 * Avatar 
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Avatar")
 	class UMaterial* AvatarMaterial = nullptr;
+
+	UFUNCTION(BlueprintCallable, Category = "Avatar")
+	UMaterial* GetAvatarMaterial() const { return AvatarMaterial; }
 
 	/*
 	 * Dialogue

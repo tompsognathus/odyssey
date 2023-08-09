@@ -306,6 +306,52 @@ void UUIManager::SetCurrentRoundText(int CurrentRound)
 	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetCurrentRoundText")); }
 }
 
+void UUIManager::SetEnemyInfo(UMaterial* EnemyAvatarMaterial, FText EnemyName)
+{
+	if (CombatWidgetInstance)
+	{
+		// Cast to CombatWidget
+		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+	
+		if (CombatWidget)
+		{
+			CombatWidget->SetEnemyAvatar(EnemyAvatarMaterial);
+			CombatWidget->SetEnemyName(EnemyName);
+
+		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetEnemyAvatar")); }
+	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetEnemyAvatar")); }
+}
+
+void UUIManager::SetEnemyHpPercent(float NormalizedPercent)
+{
+if (CombatWidgetInstance)
+	{
+		// Cast to CombatWidget
+		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+
+		if (CombatWidget)
+		{
+			CombatWidget->SetEnemyHpBarPercent(NormalizedPercent);
+
+		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetEnemyHpPercent")); }
+	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetEnemyHpPercent")); }
+}
+
+void UUIManager::SetPlayerHpPercent(float NormalizedPercent)
+{
+	if (CombatWidgetInstance)
+	{
+		// Cast to CombatWidget
+		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+
+		if (CombatWidget)
+		{
+			CombatWidget->SetPlayerHpBarPercent(NormalizedPercent);
+
+		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetPlayerHpPercent")); }
+	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetPlayerHpPercent")); }
+}
+
 void UUIManager::DisplayPreviousWidget()
 {
 	DisplayWidget(PreviousWidget);

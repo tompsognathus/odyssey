@@ -31,6 +31,9 @@ public:
 	void AddHp(int HpAmount);
 
 	UFUNCTION(BlueprintCallable, Category = "CharSheet")
+	int GetHpNormalizedPercent() const { return Hp / MaxHp; }
+
+	UFUNCTION(BlueprintCallable, Category = "CharSheet")
 	void TakeDamage(int DamageAmount);
 
 	// Delegates
