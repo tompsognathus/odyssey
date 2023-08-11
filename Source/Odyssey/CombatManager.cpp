@@ -83,6 +83,8 @@ void UCombatManager::StartNewRound()
 
 	UIManager->SetCurrentRoundText(CombatRound);
 
+	// Disable buttons. We enable them again if/when it's the player's turn
+	UIManager->DisableCombatActionBtns();
 }
 
 int UCombatManager::RollD100()

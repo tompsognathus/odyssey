@@ -352,6 +352,21 @@ void UUIManager::SetPlayerHpPercent(float NormalizedPercent)
 	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetPlayerHpPercent")); }
 }
 
+void UUIManager::DisableCombatActionBtns()
+{
+	if (CombatWidgetInstance)
+	{
+		// Cast to CombatWidget
+		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+
+		if (CombatWidget)
+		{
+			CombatWidget->SetActionBtnsEnabled(false);
+
+		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetPlayerHpPercent")); }
+	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetPlayerHpPercent")); }
+}
+
 void UUIManager::DisplayPreviousWidget()
 {
 	DisplayWidget(PreviousWidget);

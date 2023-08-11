@@ -5,7 +5,7 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
-
+#include "Blueprint/UserWidget.h"
 
 void UCombatWidget::NativeConstruct()
 {
@@ -59,6 +59,14 @@ void UCombatWidget::SetPlayerHpBarPercent(float NormalizedPercent)
 {
 	PlayerHpBar->SetPercent(NormalizedPercent);
 }
+
+void UCombatWidget::SetActionBtnsEnabled_Implementation(bool IsEnabled)
+{
+	// Implement in Blueprint because we need to access the buttons
+}
+
+
+
 
 
 

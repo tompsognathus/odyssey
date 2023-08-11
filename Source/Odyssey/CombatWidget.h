@@ -32,6 +32,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UProgressBar* PlayerHpBar;
 
+
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void HandleAttack1BtnClicked();
 
@@ -59,4 +60,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void SetPlayerHpBarPercent(float Percent);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat UI Functions")
+	void SetActionBtnsEnabled(bool IsEnabled);
 };
