@@ -15,3 +15,5 @@
 4. Add your skeletal mesh and whatever you need to set that up properly (animations and stuff)
 5. Set up your dialogue component - you must at the very least set a Dialogue Participant name if you want the NPC to be able to appear in dialogue.
    
+## Interactables
+## Creating an Item That Triggers Dialogue
