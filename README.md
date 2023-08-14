@@ -16,4 +16,26 @@
 5. Set up your dialogue component - you must at the very least set a Dialogue Participant name if you want the NPC to be able to appear in dialogue.
    
 ## Interactables
-## Creating an Item That Triggers Dialogue
+### Creating an Item That Triggers Dialogue
+
+## UI
+### Adding a New UI Widget
+1. Create a C++ class from UserWidget
+2. Create a new widget blueprint and set its parent class to be the class you just created
+3. Set up your blueprint widget
+4. For any components you want to be able to access from code, use 
+```
+UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+class UExampleComponent* ExampleComponentName;
+```
+Make sure the ExampleComponentName matches the name you set in your blueprint.
+
+5. If you need stuff like interactable buttons, you'll want to create a function in your C++ code that you want to be called when the buttons are clicked. Call them something like HandleBtn1Clicked...
+6. Next we want to bind the functions you just created to the appropriate events in blueprints. See how this is done in one of the existing blueprints. Any of the menu UI widgets will do
+7. Add your widget to the UI Manager code:
+   1. In your header file, under UI Widget Assets, you'll need to add an AssetRef variable. This will be a reference to the blueprint you just created. Don't forget to set this in the editor once you're done. The UI Manager is attached to your player character.
+   2. Scroll down to UI Widget Functions and add a DisplayYourWidgetName() function.
+   3. Scroll down to UI Widgets and add a YourWidgetNameInstance variable. This will be where we store a reference to your widget once we've created it at runtime.
+   4. Now go to your cpp file and implement your DisplayYourWidgetName() function. Use DisplayWidget and add whatever other functionality you need.
+   5. Find the CreateUIWidgets() function and add your widget...
+   6. Add your widget to the AddWidgetsToWidgetSwitcher() function
