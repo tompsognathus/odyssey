@@ -16,6 +16,7 @@ UDialogueComponent::UDialogueComponent()
 
 }
 
+
 // Called when the game starts
 void UDialogueComponent::BeginPlay()
 {
