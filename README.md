@@ -13,5 +13,5 @@
     6. Set up your animations as either an animation asset or blueprint
     7. Go to your Material asset that you duplicated, select the Texture Sample node and set the texture to be your RenderTarget
 4. Add your skeletal mesh and whatever you need to set that up properly (animations and stuff)
-5. Set up your dialogue component - you must at the very least set a Dialogue Participant name if you want the NPC to have dialogue.
+5. Set up your dialogue component - you must at the very least set a Dialogue Participant name if you want the NPC to be able to appear in dialogue.
    
