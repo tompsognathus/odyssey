@@ -31,7 +31,9 @@ private:
 	TArray<UCharSheet*> TurnOrder;
 
 	int CombatRound = 0;
+	int CurrentTurnIdx = -1;
 	void StartNewRound();
+	void StartNextTurn();
 
 	int RollD100();
 		

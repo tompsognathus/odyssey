@@ -73,7 +73,7 @@ void UCombatManager::StartNewCombat(class ANPC* Enemy)
 	UIManager->SetEnemyHpPercent(EnemyCharSheet->GetHpNormalizedPercent());
 
 	// Start combat
-	StartNewRound();
+	StartNextTurn();
 }
 
 void UCombatManager::StartNewRound()
@@ -84,7 +84,37 @@ void UCombatManager::StartNewRound()
 	UIManager->SetCurrentRoundText(CombatRound);
 
 	// Disable buttons. We enable them again if/when it's the player's turn
-	UIManager->DisableCombatActionBtns();
+	UIManager->SetCombatActionBtnsEnabled(false);
+}
+
+void UCombatManager::StartNextTurn()
+{
+	CurrentTurnIdx += 1;
+	CurrentTurnIdx = CurrentTurnIdx % TurnOrder.Num();
+
+	if (CurrentTurnIdx == 0)
+	{
+		// Start new round
+		StartNewRound();
+	}
+
+	// Take turn
+	UCharSheet* CurrentTurnCharSheet = TurnOrder[CurrentTurnIdx];
+
+	if (CurrentTurnCharSheet == PlayerCharSheet)
+	{
+		// Enable buttons
+		UIManager->SetCombatActionBtnsEnabled(true);
+		
+		UE_LOG(LogTemp, Warning, TEXT("Player turn"));
+	}
+	else
+	{
+		// Enemy turn
+		UIManager->SetCombatActionBtnsEnabled(false);
+
+		UE_LOG(LogTemp, Warning, TEXT("Enemy turn"));
+	}
 }
 
 int UCombatManager::RollD100()

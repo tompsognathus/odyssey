@@ -148,7 +148,7 @@ public:
 	void SetPlayerHpPercent(float NormalizedPercent);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void DisableCombatActionBtns();
+	void SetCombatActionBtnsEnabled(bool IsEnabled);
 
 private:
 	class UCombatManager* CombatManager;
