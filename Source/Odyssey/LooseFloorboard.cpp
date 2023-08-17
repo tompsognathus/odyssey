@@ -17,7 +17,7 @@ ALooseFloorboard::ALooseFloorboard()
 void ALooseFloorboard::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetMeshesToOutline(StaticMeshesToOutline, SkeletalMeshesToOutline);
 	GetInputPromptWidgetComponent();
 }
 
@@ -64,4 +64,24 @@ bool ALooseFloorboard::GetIsInteractable_Implementation()
 void ALooseFloorboard::SetIsInteractable(bool NewIsInteractable)
 {
 	IsInteractable = NewIsInteractable;
+}
+
+void ALooseFloorboard::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)
+{
+	// Get all components
+	TArray<UActorComponent*> Components;
+
+	for (UActorComponent* Component : GetComponents())
+	{
+		// If the component is a static mesh component, add it to the static mesh array
+		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(Component))
+		{
+			StaticMeshesToOutlineOUT.Add(StaticMeshComponent);
+		}
+		// If the component is a skeletal mesh component, add it to the skeletal mesh array
+		else if (USkeletalMeshComponent* SkeletalMeshComponent = Cast<USkeletalMeshComponent>(Component))
+		{
+			SkeletalMeshesToOutlineOUT.Add(SkeletalMeshComponent);
+		}
+	}
 }

@@ -51,8 +51,4 @@ private:
 	bool IsRotating = false;
 	float TargetLidAngle = LidOpenAngle;
 
-	TArray<UStaticMeshComponent*> StaticMeshesToOutline;
-	TArray<USkeletalMeshComponent*> SkeletalMeshesToOutline;
-
-	void GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT);
 };

@@ -22,6 +22,17 @@ void UHighlighter::BeginPlay()
 
 void UHighlighter::SetHighlight(bool IsHighlighted)
 {
+	// Print number of static meshes
+	UE_LOG(LogTemp, Warning, TEXT("Number of static meshes: %i"), StaticMeshesToOutline.Num());
+	// Print number of skeletal meshes
+	UE_LOG(LogTemp, Warning, TEXT("Number of skeletal meshes: %i"), SkeletalMeshesToOutline.Num());
+
+	if (StaticMeshesToOutline.Num() == 0 && SkeletalMeshesToOutline.Num() == 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No meshes to highlight in Highlighter, SetHighlight"));
+		return;
+	}
+
 	for (UStaticMeshComponent* StaticMesh : StaticMeshesToOutline)
 	{
 		StaticMesh->SetRenderCustomDepth(IsHighlighted);

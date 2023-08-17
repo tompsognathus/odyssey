@@ -23,8 +23,6 @@ void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetMeshesToOutline(StaticMeshesToOutline, SkeletalMeshesToOutline);
-
 	GetInputPromptWidgetComponent();
 
 	// Get UI Manager reference through posessed pawn
@@ -116,26 +114,6 @@ void ANPC::DisplayInputPrompt_Implementation(bool IsVisible)
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in NPC, DisplayInputPrompt"), *GetName()); }
 
-}
-
-void ANPC::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)
-{
-	// Get all components
-	TArray<UActorComponent*> Components;
-
-	for (UActorComponent* Component : GetComponents())
-	{
-		// If the component is a static mesh component, add it to the static mesh array
-		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(Component))
-		{
-			StaticMeshesToOutlineOUT.Add(StaticMeshComponent);
-		}
-		// If the component is a skeletal mesh component, add it to the skeletal mesh array
-		else if (USkeletalMeshComponent* SkeletalMeshComponent = Cast<USkeletalMeshComponent>(Component))
-		{
-			SkeletalMeshesToOutlineOUT.Add(SkeletalMeshComponent);
-		}
-	}
 }
 
 void ANPC::CheckIfIsInteractable()
