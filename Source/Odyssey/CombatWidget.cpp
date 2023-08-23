@@ -4,6 +4,7 @@
 #include "CombatWidget.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Components/Button.h"
 #include "Components/ProgressBar.h"
 #include "Components/UniformGridPanel.h"
 #include "Blueprint/UserWidget.h"
@@ -108,9 +109,21 @@ void UCombatWidget::SetUpAttackBtns(TArray<class UDA_ItemAction*> AttackActions)
 		PlayerActionGrid->AddChildToUniformGrid(AttackBtns[idx], RowIdx, ColIdx);
 
 		// Set button text
-		FText ActionName = FText::FromName(AttackActions[idx]->ActionName);
+		FText ActionName = FText::FromName(AttackActions[idx]->ActionDisplayName);
 		AttackBtns[idx]->SetActionBtnText(ActionName);
+
+		// Bind to OnClicked
+		AttackBtns[idx]->OnActionBtnClickedDelegate.AddUniqueDynamic(this, &UCombatWidget::HandleAttackBtnClicked);
 	}
+}
+
+void UCombatWidget::HandleAttackBtnClicked(UWBP_AttackBtn* AttackBtn)
+{
+	// Get button index by comparing against buttons in grid
+	int BtnIdx = AttackBtns.Find(AttackBtn);
+
+	// Get corresponding attack action
+
 }
 
 void UCombatWidget::SetActionBtnsEnabled_Implementation(bool IsEnabled)

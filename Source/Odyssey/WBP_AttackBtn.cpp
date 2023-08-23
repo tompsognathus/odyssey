@@ -3,16 +3,29 @@
 
 #include "WBP_AttackBtn.h"
 #include "Components/TextBlock.h"
+#include "Components/Button.h"
+#include "GenericPlatform/GenericPlatformMisc.h"
+
 
 void UWBP_AttackBtn::SetActionBtnText(FText NewText)
 {
-	// Print text
-	UE_LOG(LogTemp, Warning, TEXT("WBP_AttackBtn, SetActionBtnText: %s"), *NewText.ToString());
+	if (ActionBtnText != nullptr) {
+		ActionBtnText->SetText(NewText);
+	} else { UE_LOG(LogTemp, Warning, TEXT("ActionBtnText is nullptr in WBP_AttackBtn, SetActionBtnText")); }
 
-	if (ActionBtnText == nullptr) { UE_LOG(LogTemp, Warning, TEXT("ActionBtnText is nullptr in WBP_AttackBtn, SetActionBtnText")); return; }
 
-	ActionBtnText->SetText(NewText);
+	// Bind to ActionBtn Clicked Event
+	if (ActionBtn)
+	{
+		ActionBtn->OnClicked.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnClicked);
 
-	// Print Action Button Text
-	UE_LOG(LogTemp, Warning, TEXT("New ActionBtnText: %s"), *ActionBtnText->Text.ToString());
+	} else { UE_LOG(LogTemp, Warning, TEXT("ActionBtn is nullptr in WBP_AttackBtn, SetActionBtnText")); }
+
 }
+
+void UWBP_AttackBtn::OnActionBtnClicked()
+{
+	OnActionBtnClickedDelegate.Broadcast(this);
+}
+
+

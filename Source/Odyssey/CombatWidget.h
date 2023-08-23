@@ -77,4 +77,6 @@ private:
 	class UCharSheet* CharSheet;
 	TArray<class UWBP_AttackBtn*> AttackBtns;
 
+	UFUNCTION()
+	void HandleAttackBtnClicked(UWBP_AttackBtn* AttackBtn);
 };
