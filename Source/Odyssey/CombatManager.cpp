@@ -6,6 +6,7 @@
 #include "CharSheet.h"
 #include "NPC.h"
 #include "DA_Item.h"
+#include "CombatWidget.h"
 
 // Sets default values for this component's properties
 UCombatManager::UCombatManager()
@@ -34,9 +35,18 @@ void UCombatManager::BeginPlay()
 
 		if (!PlayerCharSheet) { UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager BeginPlay")); }
 
+		// Bind to combat widget's combat action request delegate
+		UUserWidget* CombatUserWidget = UIManager->GetCombatWidgetInstance();
+		if (CombatUserWidget)
+		{
+			CombatWidget = Cast<UCombatWidget>(CombatUserWidget);
+			if (CombatWidget)
+			{
+				CombatWidget->OnCombatActionRequestedDelegate.AddUniqueDynamic(this, &UCombatManager::PerformCombatAction);
+
+			} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast CombatUserWidget to CombatWidget in CombatManager BeginPlay")); }
+		} else { UE_LOG(LogTemp, Error, TEXT("Cannot find CombatWidget in CombatManager BeginPlay")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerPawn in CombatManager BeginPlay")); }
-
-
 }
 
 void UCombatManager::StartNewCombat(class ANPC* Enemy)
@@ -62,6 +72,13 @@ void UCombatManager::StartNewCombat(class ANPC* Enemy)
 	if (!ActiveWeapon) { UE_LOG(LogTemp, Error, TEXT("Cannot find ActiveWeapon in CombatManager, StartNewCombat")); }
 
 	UIManager->UpdatePlayerCombatActionBtns(ActiveWeapon->ItemActions);
+
+	// Set up Bindings
+	if (CombatWidget)
+	{
+		CombatWidget->SetUpCombatantBindings(PlayerCharSheet, EnemyCharSheet);
+	
+	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find CombatWidget in CombatManager, StartNewCombat")); }
 
 	// Roll initiative
 	int PlayerInitiative = RollD100() + PlayerCharSheet->GetInitiativeBase();
@@ -149,6 +166,20 @@ void UCombatManager::StartNextTurn()
 		UE_LOG(LogTemp, Warning, TEXT("Combat over"));
 		return;
 	}
+}
+
+void UCombatManager::PerformCombatAction(UDA_ItemAction* CombatAction)
+{
+	// Deal damage to enemy
+	int DamageBase = CombatAction->ActionDamageBase;
+	float DamageMultiplier = PlayerCharSheet->GetDamageMultiplier();
+
+	float Damage = DamageBase * DamageMultiplier;
+
+	EnemyCharSheet->TakeDamage(Damage);
+
+	// Finally move on to the next turn
+	StartNextTurn();
 }
 
 int UCombatManager::RollD100()

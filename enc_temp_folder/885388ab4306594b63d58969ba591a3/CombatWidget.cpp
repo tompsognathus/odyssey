@@ -38,16 +38,16 @@ void UCombatWidget::SetCurrentRoundText(int CurrentRound)
 	CurrentRoundTextBlock->SetText(FText::FromString("Round " + FString::FromInt(CurrentRound)));
 }
 
-void UCombatWidget::SetEnemyHpBarPercent(float NormalizedPercent)
+void UCombatWidget::SetEnemyHpBarPercent(float Percent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("SetEnemyHpBarPercent: %f"), NormalizedPercent);
-	EnemyHpBar->SetPercent(NormalizedPercent);
+	UE_LOG(LogTemp, Warning, TEXT("SetEnemyHpBarPercent: %f"), Percent);
+	EnemyHpBar->SetPercent(Percent * 0.01f);
 }
 
-void UCombatWidget::SetPlayerHpBarPercent(float NormalizedPercent)
+void UCombatWidget::SetPlayerHpBarPercent(float Percent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("SetPlayerHpBarPercent: %f"), NormalizedPercent);
-	PlayerHpBar->SetPercent(NormalizedPercent);
+	UE_LOG(LogTemp, Warning, TEXT("SetPlayerHpBarPercent: %f"), Percent);
+	PlayerHpBar->SetPercent(Percent * 0.01f);
 }
 
 void UCombatWidget::SetUpAttackBtns(TArray<class UDA_ItemAction*> NewAttackActions)

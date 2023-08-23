@@ -9,7 +9,7 @@
 #include "WBP_AttackBtn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionBtnClickedSignature, UWBP_AttackBtn*, AttackBtn);
-/**
+/*
  * 
  */
 UCLASS()

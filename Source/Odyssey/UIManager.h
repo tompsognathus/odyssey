@@ -104,6 +104,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
 
+	/***** UI Widget Getters *****/
+	UFUNCTION(BlueprintCallable, Category = "UI Functions|Getters")
+	class UUserWidget* const GetCombatWidgetInstance() { return CombatWidgetInstance; }
+
 	/***** Alert Functions *****/
 	UFUNCTION(BlueprintCallable, Category = "UI Functions|Alerts")
 	void OverlayQuitGameAlertWidget();

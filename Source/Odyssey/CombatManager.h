@@ -27,6 +27,7 @@ private:
 	class UUIManager* UIManager;
 	class UCharSheet* PlayerCharSheet;
 	class UCharSheet* EnemyCharSheet;
+	class UCombatWidget* CombatWidget;
 
 	TArray<UCharSheet*> TurnOrder;
 
@@ -35,6 +36,15 @@ private:
 	void StartNewRound();
 	void StartNextTurn();
 
+	UFUNCTION()
+	void PerformCombatAction(class UDA_ItemAction* Action);
+
 	int RollD100();
-		
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	class UCharSheet* GetPlayerCharSheet() const { return PlayerCharSheet; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	class UCharSheet* GetEnemyCharSheet() const { return EnemyCharSheet; }
 };

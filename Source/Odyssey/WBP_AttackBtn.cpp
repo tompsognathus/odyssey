@@ -11,6 +11,7 @@ void UWBP_AttackBtn::SetActionBtnText(FText NewText)
 {
 	if (ActionBtnText != nullptr) {
 		ActionBtnText->SetText(NewText);
+
 	} else { UE_LOG(LogTemp, Warning, TEXT("ActionBtnText is nullptr in WBP_AttackBtn, SetActionBtnText")); }
 
 
@@ -27,5 +28,3 @@ void UWBP_AttackBtn::OnActionBtnClicked()
 {
 	OnActionBtnClickedDelegate.Broadcast(this);
 }
-
-

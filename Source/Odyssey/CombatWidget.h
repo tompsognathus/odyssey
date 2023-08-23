@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "CombatWidget.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCombatActionRequested, UDA_ItemAction*, ItemAction);
 /**
  * 
  */
@@ -13,7 +15,10 @@ UCLASS()
 class ODYSSEY_API UCombatWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	FOnCombatActionRequested OnCombatActionRequestedDelegate;
+
 protected:
 	virtual void NativeConstruct() override;
 
@@ -35,18 +40,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UUniformGridPanel* PlayerActionGrid;
 
-	//UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	//void HandleAttack1BtnClicked();
-
-	//UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	//void HandleAttack2BtnClicked();
-
-	//UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	//void HandleAttack3BtnClicked();
-
-	//UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	//void HandleAttack4BtnClicked();
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat UI")
 	TSubclassOf<class UUserWidget> AttackBtnAssetRef;
@@ -61,10 +54,10 @@ public:
 	void SetCurrentRoundText(int CurrentRound);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	void SetEnemyHpBarPercent(float Percent);
+	void SetEnemyHpBarPercent(float NormalizedPercent);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	void SetPlayerHpBarPercent(float Percent);
+	void SetPlayerHpBarPercent(float NormalizedPercent);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void SetUpAttackBtns(TArray<class UDA_ItemAction*> AttackActions);
@@ -72,11 +65,19 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat UI Functions")
 	void SetActionBtnsEnabled(bool IsEnabled);
 
+	void SetUpCombatantBindings(class UCharSheet* PlayerCharSheet, class UCharSheet* EnemyCharSheet);
 
 private:
-	class UCharSheet* CharSheet;
+	class UCharSheet* PlayerCharSheet;
+	class UCharSheet* EnemyCharSheet;
+
 	TArray<class UWBP_AttackBtn*> AttackBtns;
+	TArray<class UDA_ItemAction*> AttackActions;
 
 	UFUNCTION()
 	void HandleAttackBtnClicked(UWBP_AttackBtn* AttackBtn);
+
+	UFUNCTION()
+	void HandleCombatActionRequested(class UDA_ItemAction* ItemAction);
+	
 };

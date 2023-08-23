@@ -50,17 +50,22 @@ public:
 	class UDA_Item* GetActiveWeapon() const { return ActiveWeapon; }
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "CharSheet")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
 	class UDA_Item* ActiveWeapon;
+
+	// Stats
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charsheet")
+	float DamageMultiplier = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
+	int InitiativeBase = 50;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
+	int MaxHp = 100;
 
 private:
 	int Gold = 50;
 	int Hp = 100;
-	int MaxHp = 100;
-
-	// Stats
-	int InitiativeBase = 50;
-	float DamageMultiplier = 1.0f;
 	
 	int Agility = 0;
 

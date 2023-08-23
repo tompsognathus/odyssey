@@ -40,9 +40,9 @@ void UCharSheet::AddHp(int HpAmount)
 	Hp = std::min(Hp, MaxHp);
 	Hp = std::max(Hp, 0);
 
-	float NormalizedHpPercentage = (float)Hp / (float)MaxHp;
+	float HpPercentage =  (int32)((float)Hp / (float)MaxHp * 100.0f);
 	// Request HUD update
-	OnHpChangedDelegate.Broadcast(NormalizedHpPercentage);
+	OnHpChangedDelegate.Broadcast(HpPercentage);
 }
 
 

@@ -25,7 +25,7 @@ class ODYSSEY_API UDA_ItemAction : public UPrimaryDataAsset
 	FName ActionDisplayName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	int ActionDamage = 0;
+	int ActionDamageBase = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int ActionHeal = 0;
