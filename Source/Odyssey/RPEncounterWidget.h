@@ -16,7 +16,6 @@ class ODYSSEY_API URPEncounterWidget : public UUserWidget
 	
 private:
 	class UUIManager* UIManager;
-	//class ANPC* DialogueOwner;
 	class UDialogueComponent* DialogueOwner;
 
 protected:
@@ -27,6 +26,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* AdventureText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UImage* AvatarImg;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* OptionText1;
@@ -60,8 +62,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Text Fields")
 	void SetOptionText(int OptionNumber, FText NewOptionText);
 
-	//UFUNCTION()
-	//void SetDialogueOwner(class ANPC* NewDialogueOwner) { DialogueOwner = NewDialogueOwner; }
+	UFUNCTION(BlueprintCallable, Category = "Avatar Image")
+	void SetAvatar(UMaterial* NewAvatarMaterial);
 
 	UFUNCTION()
 	void SetDialogueOwner(class UDialogueComponent* NewDialogueOwner) { DialogueOwner = NewDialogueOwner; }

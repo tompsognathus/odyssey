@@ -72,15 +72,15 @@ FText ANPC::GetParticipantDisplayName_Implementation(FName ActiveSpeaker) const
 	return FText();
 }
 
-UTexture2D* ANPC::GetParticipantIcon_Implementation(FName ActiveSpeaker, FName ActiveSpeakerState) const
-{
-	if (DialogueComponent)
-	{
-		return DialogueComponent->GetParticipantIcon(ActiveSpeaker, ActiveSpeakerState);
-
-	} else { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantIcon"), *GetName()); }
-	return nullptr;
-}
+//UMaterial* ANPC::GetParticipantIcon_Implementation(FName ActiveSpeaker, FName ActiveSpeakerState) const
+//{
+//	if (DialogueComponent)
+//	{
+//		return DialogueComponent->GetParticipantAvatar(ActiveSpeaker, ActiveSpeakerState);
+//
+//	} else { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantIcon"), *GetName()); }
+//	return nullptr;
+//}
 
 
 void ANPC::SetIsInteractable(bool NewInteractable)

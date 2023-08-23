@@ -126,6 +126,9 @@ public:
 	void SetRPEncounterOptionText(int OptionNumber, FText NewOptionText);
 
 	UFUNCTION()
+	void SetRPEncounterAvatar(UMaterial* AvatarMaterial);
+
+	UFUNCTION()
 	void SelectDialogueOption(int OptionNumber, UDialogueComponent* NPCDialogueOwner);
 
 	UFUNCTION()

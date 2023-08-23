@@ -205,8 +205,6 @@ void UUIManager::SetRPEncounterOptionText(int OptionNumber, FText NewOptionText)
 
 void UUIManager::StartPrologue()
 {
-	UE_LOG(LogTemp, Warning, TEXT("StartPrologue"));
-
 	if (GM)
 	{
 		// Get dialogue component
@@ -225,6 +223,17 @@ void UUIManager::StartPrologue()
 			} else { UE_LOG(LogTemp, Error, TEXT("No dialogues found on DialogueComponent in UIManager, StartPrologue")); }
 		} else { UE_LOG(LogTemp, Error, TEXT("DialogueComponent is null in UIManager, StartPrologue")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("GM is null in UIManager, StartPrologue")); }
+}
+
+void UUIManager::SetRPEncounterAvatar(UMaterial* AvatarMaterial)
+{
+	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
+
+	if (RPEncounterWidget)
+	{
+		RPEncounterWidget->SetAvatar(AvatarMaterial);
+	
+	} else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, SetRPEncounterAvatar")); }
 }
 
 /*

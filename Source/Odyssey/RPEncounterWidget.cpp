@@ -4,6 +4,7 @@
 #include "RPEncounterWidget.h"
 #include "UIManager.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 
 void URPEncounterWidget::NativeConstruct()
 {
@@ -83,6 +84,15 @@ void URPEncounterWidget::SetOptionText(int OptionNumber, FText NewOptionText)
 		UE_LOG(LogTemp, Error, TEXT("Invalid Option Number"))
 			break;
 	}
+}
+
+void URPEncounterWidget::SetAvatar(UMaterial* NewAvatarMaterial)
+{
+	if (AvatarImg)
+	{
+		AvatarImg->SetBrushFromMaterial(NewAvatarMaterial);
+
+	} else { UE_LOG(LogTemp, Error, TEXT("AvatarImg not found in RPEncounterWidget, SetAvatar")); }
 }
 
 UHUDWidget* URPEncounterWidget::GetHUDWidget()

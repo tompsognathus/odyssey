@@ -50,6 +50,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Avatar")
 	UMaterial* GetAvatarMaterial() const { return AvatarMaterial; }
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Avatar")
+	class UMaterial* PortraitAvatarMaterial = nullptr;
+
+	UFUNCTION(BlueprintCallable, Category = "Avatar")
+	UMaterial* GetPortraitAvatarMaterial() const { return PortraitAvatarMaterial; }
+
 	/*
 	 * Dialogue
 	 */
@@ -61,7 +67,7 @@ public:
 
 	FName GetParticipantName_Implementation() const override;
 	FText GetParticipantDisplayName_Implementation(FName ActiveSpeaker) const override;
-	UTexture2D* GetParticipantIcon_Implementation(FName ActiveSpeaker, FName ActiveSpeakerState) const override;
+	//UMaterial* GetParticipantIcon_Implementation(FName ActiveSpeaker, FName ActiveSpeakerState) const override;
 
 	/*
 	 * Interactable

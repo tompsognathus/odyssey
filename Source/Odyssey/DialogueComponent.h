@@ -41,7 +41,7 @@ public:
 
 	// Used for GetParticipantIcon
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	UTexture2D* DialogueParticipantIcon;
+	UMaterial* DialogueParticipantAvatar;
 
 	// Context used to control the Dialogue follow
 	UPROPERTY(BlueprintReadWrite, Category = Dialogue)
@@ -83,9 +83,9 @@ public:
 		return DialogueParticipantDisplayName;
 	}
 
-	UTexture2D* GetParticipantIcon(FName ActiveSpeaker, FName ActiveSpeakerState) 
+	UMaterial* GetParticipantAvatar(FName ActiveSpeaker, FName ActiveSpeakerState) 
 	{ 
-		return DialogueParticipantIcon; 
+		return DialogueParticipantAvatar; 
 	}
 
 	UFUNCTION()
