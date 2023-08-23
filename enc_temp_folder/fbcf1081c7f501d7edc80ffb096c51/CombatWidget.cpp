@@ -6,28 +6,10 @@
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Blueprint/UserWidget.h"
-#include "CharSheet.h"
 
 void UCombatWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
-	{
-		// Get CharSheet component
-		CharSheet = Cast<UCharSheet>(PlayerPawn->GetComponentByClass(UCharSheet::StaticClass()));
-
-		if (!CharSheet) { UE_LOG(LogTemp, Error, TEXT("Cannot find CharSheet in HUDWidget, NativeConstruct")); }
-	}
-
-	// Bind to CharSheet Delegates to update HUD
-	if (CharSheet)
-	{
-		CharSheet->OnHpChangedDelegate.AddDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
-
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot bind to CharSheet Delegates in HUDWidget, NativeConstruct")); }
 
 }
 

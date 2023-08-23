@@ -45,8 +45,6 @@ public:
 
 	// Getters
 	int GetInitiativeBase() const { return InitiativeBase; }
-	float GetDamageMultiplier() const { return DamageMultiplier; }
-	int GetHp() const { return Hp; }
 
 private:
 	int Gold = 50;
@@ -57,7 +55,6 @@ private:
 
 	// Stats
 	int InitiativeBase = 50;
-	float DamageMultiplier = 1.0f;
 	
 	int Agility = 0;
 

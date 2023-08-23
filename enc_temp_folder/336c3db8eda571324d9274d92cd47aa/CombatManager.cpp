@@ -114,23 +114,6 @@ void UCombatManager::StartNextTurn()
 		UIManager->SetCombatActionBtnsEnabled(false);
 
 		UE_LOG(LogTemp, Warning, TEXT("Enemy turn"));
-
-		int EnemyDamageBase = RollD100();
-		float EnemyDamageMultiplier = CurrentTurnCharSheet->GetDamageMultiplier();
-
-		float EnemyDamage = EnemyDamageBase * EnemyDamageMultiplier;
-
-		// Deal damage to player
-		PlayerCharSheet->TakeDamage(EnemyDamage);
-	}
-
-	if (PlayerCharSheet->GetHp() > 0 && EnemyCharSheet->GetHp() > 0)
-	{
-		StartNextTurn();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Combat over"));
 	}
 }
 

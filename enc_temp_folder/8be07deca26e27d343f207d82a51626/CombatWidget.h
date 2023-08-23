@@ -63,8 +63,4 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat UI Functions")
 	void SetActionBtnsEnabled(bool IsEnabled);
-
-private:
-	class UCharSheet* CharSheet;
-
 };

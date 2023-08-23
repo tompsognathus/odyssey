@@ -22,12 +22,15 @@ void UHUDWidget::NativeConstruct()
 	}
 
 	// Bind to CharSheet Delegates to update HUD
-	if (CharSheet)
+if (CharSheet)
 	{
 		CharSheet->OnGoldChangedDelegate.AddDynamic(this, &UHUDWidget::SetGpText);
 		CharSheet->OnHpChangedDelegate.AddDynamic(this, &UHUDWidget::SetHpBar);
-
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot bind to CharSheet Delegates in HUDWidget, NativeConstruct")); }
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot bind to CharSheet Delegates in HUDWidget, NativeConstruct"));
+	}
 
 }
 
