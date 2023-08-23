@@ -47,13 +47,16 @@ public:
 	int GetInitiativeBase() const { return InitiativeBase; }
 	float GetDamageMultiplier() const { return DamageMultiplier; }
 	int GetHp() const { return Hp; }
+	class UDA_Item* GetActiveWeapon() const { return ActiveWeapon; }
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "CharSheet")
+	class UDA_Item* ActiveWeapon;
 
 private:
 	int Gold = 50;
 	int Hp = 100;
 	int MaxHp = 100;
-
-	class UWeapon* ActiveWeapon = nullptr;
 
 	// Stats
 	int InitiativeBase = 50;

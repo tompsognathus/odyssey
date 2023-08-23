@@ -101,11 +101,8 @@ void UCombatWidget::SetUpAttackBtns(TArray<class UDA_ItemAction*> AttackActions)
 		// Add it to the attack button array
 		AttackBtns.Add(AttackBtn);
 
-		// And to the grid with 4 columns
-		int RowIdx = idx / 4;
-		int ColIdx = idx % 4;
-
-		PlayerActionGrid->AddChildToUniformGrid(AttackBtns[idx], RowIdx, ColIdx);
+		// And to the grid
+		PlayerActionGrid->AddChildToUniformGrid(AttackBtns[idx], 0, idx);
 
 		// Set button text
 		FText ActionName = FText::FromName(AttackActions[idx]->ActionName);

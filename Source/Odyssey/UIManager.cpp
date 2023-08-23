@@ -367,7 +367,20 @@ void UUIManager::SetCombatActionBtnsEnabled(bool IsEnabled)
 	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetPlayerHpPercent")); }
 }
 
+void UUIManager::UpdatePlayerCombatActionBtns(TArray<class UDA_ItemAction*> AttackActions)
+{
+	if (CombatWidgetInstance)
+	{
+		// Cast to CombatWidget
+		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
 
+		if (CombatWidget)
+		{
+			CombatWidget->SetUpAttackBtns(AttackActions);
+
+		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, UpdatePlayerCombatActionBtns")); }
+	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, UpdatePlayerCombatActionBtns")); }
+}
 
 void UUIManager::DisplayPreviousWidget()
 {

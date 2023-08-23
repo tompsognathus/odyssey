@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 
 #include "ItemNames.h"
+#include "DA_ItemAction.h"
 
 #include "DA_Item.generated.h"
 
@@ -32,4 +33,7 @@ class ODYSSEY_API UDA_Item : public UPrimaryDataAsset
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	UTexture2D* Icon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TArray<UDA_ItemAction*> ItemActions;
 };

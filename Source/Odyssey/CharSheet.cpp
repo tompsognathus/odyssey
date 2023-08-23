@@ -2,7 +2,6 @@
 
 
 #include "CharSheet.h"
-#include "Weapon.h"
 
 // Sets default values for this component's properties
 UCharSheet::UCharSheet()
@@ -23,8 +22,6 @@ void UCharSheet::BeginPlay()
 	OnGoldChangedDelegate.Broadcast(Gold);
 	OnHpChangedDelegate.Broadcast(100);
 
-	// Get active weapon
-	ActiveWeapon = GetOwner()->FindComponentByClass<UWeapon>();
 }
 
 

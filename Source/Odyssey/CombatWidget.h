@@ -32,20 +32,25 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UProgressBar* PlayerHpBar;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UUniformGridPanel* PlayerActionGrid;
 
-	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	void HandleAttack1BtnClicked();
+	//UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	//void HandleAttack1BtnClicked();
 
-	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	void HandleAttack2BtnClicked();
+	//UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	//void HandleAttack2BtnClicked();
 
-	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	void HandleAttack3BtnClicked();
+	//UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	//void HandleAttack3BtnClicked();
 
-	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	void HandleAttack4BtnClicked();
+	//UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	//void HandleAttack4BtnClicked();
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat UI")
+	TSubclassOf<class UUserWidget> AttackBtnAssetRef;
+
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void SetEnemyAvatar(class UMaterial* AvatarMaterial);
 
@@ -61,10 +66,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void SetPlayerHpBarPercent(float Percent);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	void SetUpAttackBtns(TArray<class UDA_ItemAction*> AttackActions);
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat UI Functions")
 	void SetActionBtnsEnabled(bool IsEnabled);
 
+
 private:
 	class UCharSheet* CharSheet;
+	TArray<class UWBP_AttackBtn*> AttackBtns;
 
 };

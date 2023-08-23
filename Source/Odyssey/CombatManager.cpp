@@ -5,6 +5,7 @@
 #include "UIManager.h"
 #include "CharSheet.h"
 #include "NPC.h"
+#include "DA_Item.h"
 
 // Sets default values for this component's properties
 UCombatManager::UCombatManager()
@@ -50,6 +51,17 @@ void UCombatManager::StartNewCombat(class ANPC* Enemy)
 		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheet in CombatManager StartNewCombat"));
 		return;
 	}
+	if (!PlayerCharSheet)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager StartNewCombat"));
+		return;
+	}
+
+	// Set up player action buttons
+	UDA_Item* ActiveWeapon = PlayerCharSheet->GetActiveWeapon();
+	if (!ActiveWeapon) { UE_LOG(LogTemp, Error, TEXT("Cannot find ActiveWeapon in CombatManager, StartNewCombat")); }
+
+	UIManager->UpdatePlayerCombatActionBtns(ActiveWeapon->ItemActions);
 
 	// Roll initiative
 	int PlayerInitiative = RollD100() + PlayerCharSheet->GetInitiativeBase();
@@ -107,6 +119,10 @@ void UCombatManager::StartNextTurn()
 		UIManager->SetCombatActionBtnsEnabled(true);
 		
 		UE_LOG(LogTemp, Warning, TEXT("Player turn"));
+
+		// We've activated the buttons and are now waitng for the player to select an action,
+		// which will end up triggering this function again unless we reach the end of the combat
+		return;
 	}
 	else
 	{
@@ -131,6 +147,7 @@ void UCombatManager::StartNextTurn()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Combat over"));
+		return;
 	}
 }
 

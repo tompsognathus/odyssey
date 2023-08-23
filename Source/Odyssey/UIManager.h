@@ -150,6 +150,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void SetCombatActionBtnsEnabled(bool IsEnabled);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void UpdatePlayerCombatActionBtns(TArray<class UDA_ItemAction*> AttackActions);
+
 private:
 	class UCombatManager* CombatManager;
 
