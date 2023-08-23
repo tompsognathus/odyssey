@@ -20,10 +20,16 @@ public:
 	class USkeletalMeshComponent* SkeletalMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
-	class USpringArmComponent* SpringArm;
+	class USpringArmComponent* FullBodySpringArm;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
-	class USceneCaptureComponent2D* RenderTarget;
+	class USceneCaptureComponent2D* FullBodyRenderTarget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
+	class USpringArmComponent* HeadSpringArm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
+	class USceneCaptureComponent2D* HeadRenderTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
 	class USpotLightComponent* SpotLight;

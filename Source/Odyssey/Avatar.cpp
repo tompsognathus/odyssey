@@ -17,11 +17,17 @@ AAvatar::AAvatar()
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("AvatarMesh"));
 	SkeletalMesh->SetupAttachment(RootComponent);
 
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->SetupAttachment(SkeletalMesh);
+	FullBodySpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("FullBodySpringArm"));
+	FullBodySpringArm->SetupAttachment(SkeletalMesh);
 
-	RenderTarget = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("RenderTarget"));
-	RenderTarget->SetupAttachment(SpringArm);
+	FullBodyRenderTarget = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("FullBodyRenderTarget"));
+	FullBodyRenderTarget->SetupAttachment(FullBodySpringArm);
+
+	HeadSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("HeadSpringArm"));
+	HeadSpringArm->SetupAttachment(SkeletalMesh);
+
+	HeadRenderTarget = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("HeadRenderTarget"));
+	HeadRenderTarget->SetupAttachment(HeadSpringArm);
 
 	SpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("SpotLight"));
 	SpotLight->SetupAttachment(SkeletalMesh);
