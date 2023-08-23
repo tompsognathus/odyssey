@@ -67,6 +67,8 @@ public:
 
 	void SetUpCombatantBindings(class UCharSheet* PlayerCharSheet, class UCharSheet* EnemyCharSheet);
 
+	void RemoveCombatantBindings();
+
 private:
 	class UCharSheet* PlayerCharSheet;
 	class UCharSheet* EnemyCharSheet;

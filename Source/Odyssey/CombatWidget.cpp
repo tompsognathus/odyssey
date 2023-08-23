@@ -114,25 +114,36 @@ void UCombatWidget::SetActionBtnsEnabled_Implementation(bool IsEnabled)
 
 void UCombatWidget::SetUpCombatantBindings(UCharSheet* NewPlayerCharSheet, UCharSheet* NewEnemyCharSheet)
 {
-	// TODO: Remove bindings
-	
-	
 	PlayerCharSheet = NewPlayerCharSheet;
 	EnemyCharSheet = NewEnemyCharSheet;
 
 	if (PlayerCharSheet)
 	{
-		PlayerCharSheet->OnHpChangedDelegate.AddUniqueDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
+		PlayerCharSheet->OnHpChangedDelegate.AddDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
 
 	} else { UE_LOG(LogTemp, Error, TEXT("PlayerCharSheet is null in CombatWidget, SetUpCombatantBindings")); }
 
 	if (EnemyCharSheet)
 	{
-		EnemyCharSheet->OnHpChangedDelegate.AddUniqueDynamic(this, &UCombatWidget::SetEnemyHpBarPercent);
+		EnemyCharSheet->OnHpChangedDelegate.AddDynamic(this, &UCombatWidget::SetEnemyHpBarPercent);
 
 	} else { UE_LOG(LogTemp, Error, TEXT("EnemyCharSheet is null in CombatWidget, SetUpCombatantBindings")); }
 }
 
+void UCombatWidget::RemoveCombatantBindings()
+{
+	if (PlayerCharSheet)
+	{
+		PlayerCharSheet->OnHpChangedDelegate.RemoveDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
+
+	} else { UE_LOG(LogTemp, Error, TEXT("PlayerCharSheet is null in CombatWidget, RemoveCombatantBindings")); }
+
+	if (EnemyCharSheet)
+	{
+		EnemyCharSheet->OnHpChangedDelegate.RemoveDynamic(this, &UCombatWidget::SetEnemyHpBarPercent);
+
+	} else { UE_LOG(LogTemp, Error, TEXT("EnemyCharSheet is null in CombatWidget, RemoveCombatantBindings")); }
+}
 
 
 

@@ -164,13 +164,8 @@ void UCombatManager::StartNextTurn()
 	else
 	{
 		CombatWidget->RemoveCombatantBindings();
-		// Return to game
-		if (UIManager)
-		{
-			UIManager->DisplayHUDWidgetOnly();
-
-		} else { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in CombatManager, StartNextTurn")); }
-
+		
+		UE_LOG(LogTemp, Warning, TEXT("Combat over"));
 		return;
 	}
 }
