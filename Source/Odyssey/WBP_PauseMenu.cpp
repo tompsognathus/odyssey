@@ -40,7 +40,6 @@ void UWBP_PauseMenu::HandleMainMenuBtnClicked()
 
 }
 
-
 void UWBP_PauseMenu::HandleQuitGameBtnClicked()
 {
 	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
