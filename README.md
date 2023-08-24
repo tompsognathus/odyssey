@@ -12,8 +12,9 @@
     5. Select the SkeletalMesh componenet and set the SkeletalMeshAsset to whatever you need it to be. If you need to add multiple, just add them as children or whatever you need for animations to work.
     6. Set up your animations as either an animation asset or blueprint
     7. Go to your Material asset that you duplicated, select the Texture Sample node and set the texture to be your RenderTarget
+    8. Repeat the relevant steps to set up a second material with the second camera and position it to frame the character's head.
 4. Add your skeletal mesh and whatever you need to set that up properly (animations and stuff)
-5. Set up your dialogue component - you must at the very least set a Dialogue Participant name if you want the NPC to be able to appear in dialogue.
+5. Set up your dialogue component - you must at the very least set a Dialogue Participant name if you want the NPC to be able to appear in dialogue. Set the participant avatar to be the new head material you just created.
    
 ## Interactables
 ### Creating an Item That Triggers Dialogue
