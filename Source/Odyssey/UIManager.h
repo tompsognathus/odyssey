@@ -162,6 +162,7 @@ public:
 
 private:
 	class UCombatManager* CombatManager;
+	TArray<class UUserWidget*> WidgetSequence;
 
 	/***** UI Widgets *****/
 

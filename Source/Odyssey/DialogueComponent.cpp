@@ -69,8 +69,11 @@ bool UDialogueComponent::StartDialogue(UDlgDialogue* Dialogue, const TArray<UObj
 		UIManager->DisplayRPEncounterWidget(this);
 		PopulateDialogueBodyText();
 		PopulateDialogueOptionsText();
-		UIManager->SetRPEncounterAvatar(DialogueParticipantAvatar);
-
+		if (DialogueParticipantAvatar != nullptr)
+		{
+			UIManager->SetRPEncounterAvatar(DialogueParticipantAvatar);
+	
+		} else UE_LOG(LogTemp, Warning, TEXT("DialogueParticipantAvatar is null for %s - see DialogueComponent, StartDialogue."), *DialogueParticipantName.ToString());
 	} else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
 
 	return DialogueContext != nullptr;
