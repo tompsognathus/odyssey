@@ -6,6 +6,7 @@
 
 ACannon::ACannon()
 {
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 

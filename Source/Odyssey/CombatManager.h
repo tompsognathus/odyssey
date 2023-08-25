@@ -17,6 +17,7 @@ class ODYSSEY_API UCombatManager : public UActorComponent
 	GENERATED_BODY()
 
 public:	
+	UCombatManager();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void StartNewCombat(class ANPC* Enemy);

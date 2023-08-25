@@ -10,7 +10,7 @@
 
 UCombatManager::UCombatManager()
 {
-
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UCombatManager::BeginPlay()
