@@ -1,0 +1,347 @@
+Begin Object Class=/Script/Engine.Material Name="World_Space_Master_Mat"
+   Begin Object Class=/Script/Engine.MaterialExpressionAdd Name="MaterialExpressionAdd_1"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionAdd Name="MaterialExpressionAdd_2"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionClamp Name="MaterialExpressionClamp_1"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionClamp Name="MaterialExpressionClamp_2"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionComment Name="MaterialExpressionComment_5"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionComment Name="MaterialExpressionComment_6"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionComponentMask Name="MaterialExpressionComponentMask_0"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionConstant Name="MaterialExpressionConstant_0"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionConstant Name="MaterialExpressionConstant_3"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionConstant Name="MaterialExpressionConstant_4"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionConstant Name="MaterialExpressionConstant_5"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionDivide Name="MaterialExpressionDivide_0"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionLinearInterpolate Name="MaterialExpressionLinearInterpolate_1"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionLinearInterpolate Name="MaterialExpressionLinearInterpolate_2"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionMaterialFunctionCall Name="MaterialExpressionMaterialFunctionCall_6"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionMultiply Name="MaterialExpressionMultiply_0"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionMultiply Name="MaterialExpressionMultiply_1"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionScalarParameter Name="MaterialExpressionScalarParameter_0"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionScalarParameter Name="MaterialExpressionScalarParameter_1"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionScalarParameter Name="MaterialExpressionScalarParameter_2"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionScalarParameter Name="MaterialExpressionScalarParameter_4"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionScalarParameter Name="MaterialExpressionScalarParameter_5"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionTextureSampleParameter2D Name="MaterialExpressionTextureSampleParameter2D_0"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionTextureSampleParameter2D Name="MaterialExpressionTextureSampleParameter2D_1"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionTextureSampleParameter2D Name="MaterialExpressionTextureSampleParameter2D_2"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionVectorParameter Name="MaterialExpressionVectorParameter_0"
+   End Object
+   Begin Object Class=/Script/Engine.MaterialExpressionWorldPosition Name="MaterialExpressionWorldPosition_0"
+   End Object
+   Begin Object Class=/Script/UnrealEd.SceneThumbnailInfoWithPrimitive Name="SceneThumbnailInfoWithPrimitive_0"
+   End Object
+   Begin Object Name="MaterialExpressionAdd_1"
+      A=(Expression=MaterialExpressionTextureSampleParameter2D'"World_Space_Master_Mat:MaterialExpressionTextureSampleParameter2D_2"',OutputIndex=3,Mask=1,MaskB=1)
+      B=(Expression=MaterialExpressionLinearInterpolate'"World_Space_Master_Mat:MaterialExpressionLinearInterpolate_1"')
+      MaterialExpressionEditorX=432
+      MaterialExpressionEditorY=720
+      MaterialExpressionGuid=184AB3104EEF6BDB649DD4BD146259D9
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionAdd_2"
+      A=(Expression=MaterialExpressionTextureSampleParameter2D'"World_Space_Master_Mat:MaterialExpressionTextureSampleParameter2D_2"',OutputIndex=2,Mask=1,MaskG=1)
+      B=(Expression=MaterialExpressionLinearInterpolate'"World_Space_Master_Mat:MaterialExpressionLinearInterpolate_2"')
+      MaterialExpressionEditorX=448
+      MaterialExpressionEditorY=1104
+      MaterialExpressionGuid=184AB3104EEF6BDB649DD4BD146259D9
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionClamp_1"
+      Input=(Expression=MaterialExpressionAdd'"World_Space_Master_Mat:MaterialExpressionAdd_1"')
+      MaterialExpressionEditorX=624
+      MaterialExpressionEditorY=704
+      MaterialExpressionGuid=0D25233F4055D4BCE39B6186089153E9
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionClamp_2"
+      Input=(Expression=MaterialExpressionAdd'"World_Space_Master_Mat:MaterialExpressionAdd_2"')
+      MaterialExpressionEditorX=640
+      MaterialExpressionEditorY=1088
+      MaterialExpressionGuid=0D25233F4055D4BCE39B6186089153E9
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionComment_5"
+      SizeX=800
+      SizeY=336
+      Text="Metallic Controls "
+      MaterialExpressionEditorX=32
+      MaterialExpressionEditorY=656
+      MaterialExpressionGuid=F172EF134C4EB9512D750E95B7936C7C
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionComment_6"
+      SizeX=800
+      SizeY=336
+      Text="Roughness Controls "
+      MaterialExpressionEditorX=32
+      MaterialExpressionEditorY=1040
+      MaterialExpressionGuid=F172EF134C4EB9512D750E95B7936C7C
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionComponentMask_0"
+      Input=(Expression=MaterialExpressionDivide'"World_Space_Master_Mat:MaterialExpressionDivide_0"')
+      R=True
+      G=True
+      MaterialExpressionEditorX=-624
+      MaterialExpressionEditorY=80
+      MaterialExpressionGuid=99713CCE4DDE1114319FC6816E7C2D54
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionConstant_0"
+      R=-1.000000
+      MaterialExpressionEditorX=48
+      MaterialExpressionEditorY=736
+      MaterialExpressionGuid=C948553A4FF8D1A188148983C292BE00
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionConstant_3"
+      R=1.000000
+      MaterialExpressionEditorX=48
+      MaterialExpressionEditorY=816
+      MaterialExpressionGuid=C948553A4FF8D1A188148983C292BE00
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionConstant_4"
+      R=-1.000000
+      MaterialExpressionEditorX=80
+      MaterialExpressionEditorY=1120
+      MaterialExpressionGuid=C948553A4FF8D1A188148983C292BE00
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionConstant_5"
+      R=1.000000
+      MaterialExpressionEditorX=80
+      MaterialExpressionEditorY=1200
+      MaterialExpressionGuid=C948553A4FF8D1A188148983C292BE00
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionDivide_0"
+      A=(Expression=MaterialExpressionWorldPosition'"World_Space_Master_Mat:MaterialExpressionWorldPosition_0"')
+      B=(Expression=MaterialExpressionScalarParameter'"World_Space_Master_Mat:MaterialExpressionScalarParameter_0"')
+      MaterialExpressionEditorX=-800
+      MaterialExpressionEditorY=64
+      MaterialExpressionGuid=DBD441B746433670A0DCBB8CF8052FAF
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionLinearInterpolate_1"
+      A=(Expression=MaterialExpressionConstant'"World_Space_Master_Mat:MaterialExpressionConstant_0"')
+      B=(Expression=MaterialExpressionConstant'"World_Space_Master_Mat:MaterialExpressionConstant_3"')
+      Alpha=(Expression=MaterialExpressionScalarParameter'"World_Space_Master_Mat:MaterialExpressionScalarParameter_5"')
+      MaterialExpressionEditorX=288
+      MaterialExpressionEditorY=752
+      MaterialExpressionGuid=92DBE0564EC22ED32D1B3E9786C669B4
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionLinearInterpolate_2"
+      A=(Expression=MaterialExpressionConstant'"World_Space_Master_Mat:MaterialExpressionConstant_4"')
+      B=(Expression=MaterialExpressionConstant'"World_Space_Master_Mat:MaterialExpressionConstant_5"')
+      Alpha=(Expression=MaterialExpressionScalarParameter'"World_Space_Master_Mat:MaterialExpressionScalarParameter_1"')
+      MaterialExpressionEditorX=304
+      MaterialExpressionEditorY=1136
+      MaterialExpressionGuid=92DBE0564EC22ED32D1B3E9786C669B4
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionMaterialFunctionCall_6"
+      MaterialFunction=MaterialFunction'"/Engine/Functions/Engine_MaterialFunctions01/Texturing/FlattenNormal.FlattenNormal"'
+      FunctionInputs(0)=(ExpressionInputId=28AAF19044840619BEBDFC824A64C7A0,Input=(Expression=MaterialExpressionTextureSampleParameter2D'"World_Space_Master_Mat:MaterialExpressionTextureSampleParameter2D_1"',InputName="Normal",Mask=1,MaskR=1,MaskG=1,MaskB=1))
+      FunctionInputs(1)=(ExpressionInputId=03CE862F4BD8BFCC0550048115A40E71,Input=(Expression=MaterialExpressionScalarParameter'"World_Space_Master_Mat:MaterialExpressionScalarParameter_4"',InputName="Flatness"))
+      FunctionOutputs(0)=(ExpressionOutputId=CF2DF7CD446736F3FF50B0A17088C5A7,Output=(OutputName="Result"))
+      MaterialExpressionEditorX=320
+      MaterialExpressionEditorY=448
+      MaterialExpressionGuid=EC709FA147241516599085A11D65B9F4
+      Material=Material'"World_Space_Master_Mat"'
+      Outputs(0)=(OutputName="Result")
+   End Object
+   Begin Object Name="MaterialExpressionMultiply_0"
+      A=(Expression=MaterialExpressionTextureSampleParameter2D'"World_Space_Master_Mat:MaterialExpressionTextureSampleParameter2D_0"',Mask=1,MaskR=1,MaskG=1,MaskB=1)
+      B=(Expression=MaterialExpressionVectorParameter'"World_Space_Master_Mat:MaterialExpressionVectorParameter_0"',Mask=1,MaskR=1,MaskG=1,MaskB=1)
+      MaterialExpressionEditorX=576
+      MaterialExpressionEditorY=64
+      MaterialExpressionGuid=B6C34D5A42493C4D7ACCEE82930AEA17
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionMultiply_1"
+      A=(Expression=MaterialExpressionMultiply'"World_Space_Master_Mat:MaterialExpressionMultiply_0"')
+      B=(Expression=MaterialExpressionScalarParameter'"World_Space_Master_Mat:MaterialExpressionScalarParameter_2"')
+      MaterialExpressionEditorX=736
+      MaterialExpressionEditorY=64
+      MaterialExpressionGuid=B6C34D5A42493C4D7ACCEE82930AEA17
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionScalarParameter_0"
+      DefaultValue=100.000000
+      ParameterName="UV Tile"
+      ExpressionGUID=6DCA185B4888CEA439DDC995A691F355
+      MaterialExpressionEditorX=-976
+      MaterialExpressionEditorY=176
+      MaterialExpressionGuid=47B9962E4CCF893D7D604AAD59913710
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionScalarParameter_1"
+      DefaultValue=1.000000
+      ParameterName="Roughness Amount"
+      ExpressionGUID=3C5BDFA9441CF3DBE596DB8DE08701C2
+      MaterialExpressionEditorX=80
+      MaterialExpressionEditorY=1280
+      MaterialExpressionGuid=2D05CCFE4B47491F5AC8E2B4EA6369D3
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionScalarParameter_2"
+      DefaultValue=1.000000
+      ParameterName="Base Colour Intensity"
+      ExpressionGUID=C6B5083B4E09A387AB26D7B6FCB32F2A
+      Group="Emissive"
+      MaterialExpressionEditorX=576
+      MaterialExpressionEditorY=240
+      MaterialExpressionGuid=ED5F37BD47B5FB6CA240EBAA98356BA7
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionScalarParameter_4"
+      ParameterName="Normal Intensity "
+      ExpressionGUID=E9F8BB6948FF7DCED3FE1A84C9F27DD7
+      MaterialExpressionEditorX=16
+      MaterialExpressionEditorY=560
+      MaterialExpressionGuid=DBF1E77844ECC155762A13B54F902631
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionScalarParameter_5"
+      DefaultValue=1.000000
+      ParameterName="Metalness Amount"
+      ExpressionGUID=6C24D70B43DDA33A340345959BBAAB01
+      MaterialExpressionEditorX=48
+      MaterialExpressionEditorY=896
+      MaterialExpressionGuid=2D05CCFE4B47491F5AC8E2B4EA6369D3
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionTextureSampleParameter2D_0"
+      ParameterName="Base"
+      ExpressionGUID=687D4E6B44EAA1E9B8DF2087C1539BBD
+      Coordinates=(Expression=MaterialExpressionComponentMask'"World_Space_Master_Mat:MaterialExpressionComponentMask_0"')
+      Texture=Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_BaseColor.Floor_BaseColor"'
+      MaterialExpressionEditorX=-352
+      MaterialExpressionEditorY=64
+      MaterialExpressionGuid=D29BB5374107EC0E08EA62AD22EAAA27
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionTextureSampleParameter2D_1"
+      ParameterName="Normal"
+      ExpressionGUID=051701DA4FAF8464E45C1DB82ABD19A6
+      Coordinates=(Expression=MaterialExpressionComponentMask'"World_Space_Master_Mat:MaterialExpressionComponentMask_0"')
+      Texture=Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_Normal.Floor_Normal"'
+      SamplerType=SAMPLERTYPE_Normal
+      MaterialExpressionEditorX=-352
+      MaterialExpressionEditorY=400
+      MaterialExpressionGuid=2426DB884FE6AEB9F7CBB7801ED5750C
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionTextureSampleParameter2D_2"
+      ParameterName="ORM"
+      ExpressionGUID=B0DC4563409552C35F5E4198E42D6172
+      Coordinates=(Expression=MaterialExpressionComponentMask'"World_Space_Master_Mat:MaterialExpressionComponentMask_0"')
+      Texture=Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_ORM.Floor_ORM"'
+      MaterialExpressionEditorX=-352
+      MaterialExpressionEditorY=720
+      MaterialExpressionGuid=849304434AA882084EEF9F91DF86E6B2
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionVectorParameter_0"
+      DefaultValue=(R=1.000000,G=1.000000,B=1.000000,A=1.000000)
+      ParameterName="Base Colur Changer"
+      ExpressionGUID=F69417CA4F34A39221AB0D9DA748477C
+      Group="Emissive"
+      MaterialExpressionEditorX=320
+      MaterialExpressionEditorY=192
+      MaterialExpressionGuid=748138534C625D4BAF6E2AA6A42D3679
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="MaterialExpressionWorldPosition_0"
+      MaterialExpressionEditorX=-1056
+      MaterialExpressionEditorY=-64
+      MaterialExpressionGuid=3C3F17EF49E558D3120984961F59ED38
+      Material=Material'"World_Space_Master_Mat"'
+   End Object
+   Begin Object Name="SceneThumbnailInfoWithPrimitive_0"
+   End Object
+   BaseColor=(Expression=MaterialExpressionMultiply'"MaterialExpressionMultiply_1"')
+   Metallic=(Expression=MaterialExpressionClamp'"MaterialExpressionClamp_1"')
+   Roughness=(Expression=MaterialExpressionClamp'"MaterialExpressionClamp_2"')
+   Normal=(Expression=MaterialExpressionMaterialFunctionCall'"MaterialExpressionMaterialFunctionCall_6"')
+   AmbientOcclusion=(Expression=MaterialExpressionTextureSampleParameter2D'"MaterialExpressionTextureSampleParameter2D_2"',OutputIndex=1,Mask=1,MaskR=1)
+   bUsedWithStaticLighting=True
+   EditorX=1552
+   EditorY=80
+   Expressions(0)=MaterialExpressionMultiply'"MaterialExpressionMultiply_1"'
+   Expressions(1)=MaterialExpressionClamp'"MaterialExpressionClamp_1"'
+   Expressions(2)=MaterialExpressionClamp'"MaterialExpressionClamp_2"'
+   Expressions(3)=MaterialExpressionMaterialFunctionCall'"MaterialExpressionMaterialFunctionCall_6"'
+   Expressions(4)=MaterialExpressionTextureSampleParameter2D'"MaterialExpressionTextureSampleParameter2D_2"'
+   Expressions(5)=MaterialExpressionWorldPosition'"MaterialExpressionWorldPosition_0"'
+   Expressions(6)=MaterialExpressionScalarParameter'"MaterialExpressionScalarParameter_0"'
+   Expressions(7)=MaterialExpressionDivide'"MaterialExpressionDivide_0"'
+   Expressions(8)=MaterialExpressionComponentMask'"MaterialExpressionComponentMask_0"'
+   Expressions(9)=MaterialExpressionConstant'"MaterialExpressionConstant_0"'
+   Expressions(10)=MaterialExpressionConstant'"MaterialExpressionConstant_3"'
+   Expressions(11)=MaterialExpressionScalarParameter'"MaterialExpressionScalarParameter_5"'
+   Expressions(12)=MaterialExpressionLinearInterpolate'"MaterialExpressionLinearInterpolate_1"'
+   Expressions(13)=MaterialExpressionAdd'"MaterialExpressionAdd_1"'
+   Expressions(14)=MaterialExpressionConstant'"MaterialExpressionConstant_4"'
+   Expressions(15)=MaterialExpressionConstant'"MaterialExpressionConstant_5"'
+   Expressions(16)=MaterialExpressionScalarParameter'"MaterialExpressionScalarParameter_1"'
+   Expressions(17)=MaterialExpressionLinearInterpolate'"MaterialExpressionLinearInterpolate_2"'
+   Expressions(18)=MaterialExpressionAdd'"MaterialExpressionAdd_2"'
+   Expressions(19)=MaterialExpressionVectorParameter'"MaterialExpressionVectorParameter_0"'
+   Expressions(20)=MaterialExpressionMultiply'"MaterialExpressionMultiply_0"'
+   Expressions(21)=MaterialExpressionScalarParameter'"MaterialExpressionScalarParameter_2"'
+   Expressions(22)=MaterialExpressionScalarParameter'"MaterialExpressionScalarParameter_4"'
+   Expressions(23)=MaterialExpressionTextureSampleParameter2D'"MaterialExpressionTextureSampleParameter2D_0"'
+   Expressions(24)=MaterialExpressionTextureSampleParameter2D'"MaterialExpressionTextureSampleParameter2D_1"'
+   EditorComments(0)=MaterialExpressionComment'"MaterialExpressionComment_5"'
+   EditorComments(1)=MaterialExpressionComment'"MaterialExpressionComment_6"'
+   ParameterGroupData(0)=(GroupName="None")
+   ParameterGroupData(1)=(GroupName="None")
+   ParameterGroupData(2)=(GroupName="None")
+   ParameterGroupData(3)=(GroupName="None")
+   ParameterGroupData(4)=(GroupName="Emissive")
+   ParameterGroupData(5)=(GroupName="Emissive")
+   ParameterGroupData(6)=(GroupName="None")
+   ParameterGroupData(7)=(GroupName="None")
+   ParameterGroupData(8)=(GroupName="None")
+   bCanMaskedBeAssumedOpaque=True
+   StateId=7D17027849BDDBEB1E085F9BEC6FDDF8
+   CachedExpressionData=(Parameters=(RuntimeEntries[0]=(NameHashes=(335273491833000979,2929039726693479898,3510229365512889821,5417708269517164482,9306585654094157760),ParameterInfos=((Name="Base Colour Intensity"),(Name="UV Tile"),(Name="Normal Intensity "),(Name="Roughness Amount"),(Name="Metalness Amount")),ExpressionGuids=(C6B5083B4E09A387AB26D7B6FCB32F2A,6DCA185B4888CEA439DDC995A691F355,E9F8BB6948FF7DCED3FE1A84C9F27DD7,3C5BDFA9441CF3DBE596DB8DE08701C2,6C24D70B43DDA33A340345959BBAAB01)),RuntimeEntries[1]=(NameHashes=(17792621130979259430),ParameterInfos=((Name="Base Colur Changer")),ExpressionGuids=(F69417CA4F34A39221AB0D9DA748477C)),RuntimeEntries[2]=(NameHashes=(2793399648321680069,4708953410708818575,15416496549873643388),ParameterInfos=((Name="ORM"),(Name="Normal"),(Name="Base")),ExpressionGuids=(B0DC4563409552C35F5E4198E42D6172,051701DA4FAF8464E45C1DB82ABD19A6,687D4E6B44EAA1E9B8DF2087C1539BBD)),ScalarValues=(1.000000,100.000000,0.000000,1.000000,1.000000),VectorValues=((R=1.000000,G=1.000000,B=1.000000,A=1.000000)),TextureValues=(Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_ORM.Floor_ORM"',Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_Normal.Floor_Normal"',Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_BaseColor.Floor_BaseColor"'),ScalarMinMaxValues=((X=0.000000,Y=0.000000),(X=0.000000,Y=0.000000),(X=0.000000,Y=0.000000),(X=0.000000,Y=0.000000),(X=0.000000,Y=0.000000)),ScalarCurveValues=(None,None,None,None,None),ScalarCurveAtlasValues=(None,None,None,None,None),VectorChannelNameValues=(()),VectorUsedAsChannelMaskValues=(False),TextureChannelNameValues=((),(),())),ReferencedTextures=(Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_ORM.Floor_ORM"',Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_BaseColor.Floor_BaseColor"',Texture2D'"/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_Normal.Floor_Normal"'),FunctionInfos=((StateId=FE67B48A44296B30FBF15EBB0FC10ADF,Function=MaterialFunction'"/Engine/Functions/Engine_MaterialFunctions01/Texturing/FlattenNormal.FlattenNormal"')),QualityLevelsUsed=(False,False,False,False))
+   ReferencedTextureGuids(0)=364CA1DB4798935C09C3C5B876067052
+   ReferencedTextureGuids(1)=C986726245368F368BD614B646EBF08C
+   ReferencedTextureGuids(2)=CDAF9D1448524B6A833C52BADA14184A
+   TextureStreamingDataVersion=1
+   TextureStreamingData(0)=(SamplingScale=0.312500,UVChannelIndex=0,TextureName="Floor_BaseColor",TextureReference=/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_BaseColor.Floor_BaseColor)
+   TextureStreamingData(1)=(SamplingScale=0.312500,UVChannelIndex=0,TextureName="Floor_Normal",TextureReference=/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_Normal.Floor_Normal)
+   TextureStreamingData(2)=(SamplingScale=0.312500,UVChannelIndex=0,TextureName="Floor_ORM",TextureReference=/Game/Sea_Of_Thieves_Assets/Materials/Mater_Blend_Mat/Floor/Floor_ORM.Floor_ORM)
+   ThumbnailInfo=SceneThumbnailInfoWithPrimitive'"SceneThumbnailInfoWithPrimitive_0"'
+   ParameterOverviewExpansion=(("-12Global", True),("-12Global Emissive", True))
+   LightingGuid=A35CD0EE4DC78A6D1982C69E44481D4F
+End Object

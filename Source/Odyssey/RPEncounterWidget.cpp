@@ -86,13 +86,19 @@ void URPEncounterWidget::SetOptionText(int OptionNumber, FText NewOptionText)
 	}
 }
 
-void URPEncounterWidget::SetAvatar(UMaterial* NewAvatarMaterial)
+void URPEncounterWidget::SetAvatar(UMaterial* NewAvatarMaterial, FText NewAvatarName)
 {
 	if (AvatarImg)
 	{
 		AvatarImg->SetBrushFromMaterial(NewAvatarMaterial);
 
 	} else { UE_LOG(LogTemp, Error, TEXT("AvatarImg not found in RPEncounterWidget, SetAvatar")); }
+
+	if (AvatarName)
+	{
+		AvatarName->SetText(NewAvatarName);
+
+	} else { UE_LOG(LogTemp, Error, TEXT("AvatarName not found in RPEncounterWidget, SetAvatar")); }
 }
 
 UHUDWidget* URPEncounterWidget::GetHUDWidget()

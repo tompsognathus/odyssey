@@ -225,13 +225,13 @@ void UUIManager::StartPrologue()
 	} else { UE_LOG(LogTemp, Error, TEXT("GM is null in UIManager, StartPrologue")); }
 }
 
-void UUIManager::SetRPEncounterAvatar(UMaterial* AvatarMaterial)
+void UUIManager::SetRPEncounterAvatar(UMaterial* AvatarMaterial, FText AvatarName)
 {
 	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
 
 	if (RPEncounterWidget)
 	{
-		RPEncounterWidget->SetAvatar(AvatarMaterial);
+		RPEncounterWidget->SetAvatar(AvatarMaterial, AvatarName);
 	
 	} else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, SetRPEncounterAvatar")); }
 }

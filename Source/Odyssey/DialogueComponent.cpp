@@ -69,7 +69,7 @@ bool UDialogueComponent::StartDialogue(UDlgDialogue* Dialogue, const TArray<UObj
 		UIManager->DisplayRPEncounterWidget(this);
 		PopulateDialogueBodyText();
 		PopulateDialogueOptionsText();
-		UIManager->SetRPEncounterAvatar(DialogueParticipantAvatar);
+		UIManager->SetRPEncounterAvatar(DialogueParticipantAvatar, DialogueParticipantDisplayName);
 
 	} else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
 

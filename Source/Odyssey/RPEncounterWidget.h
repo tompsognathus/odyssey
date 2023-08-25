@@ -31,6 +31,9 @@ protected:
 	class UImage* AvatarImg;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* AvatarName;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* OptionText1;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
@@ -63,7 +66,7 @@ public:
 	void SetOptionText(int OptionNumber, FText NewOptionText);
 
 	UFUNCTION(BlueprintCallable, Category = "Avatar Image")
-	void SetAvatar(UMaterial* NewAvatarMaterial);
+	void SetAvatar(UMaterial* NewAvatarMaterial, FText NewAvatarName);
 
 	UFUNCTION()
 	void SetDialogueOwner(class UDialogueComponent* NewDialogueOwner) { DialogueOwner = NewDialogueOwner; }
