@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "AudioOptionsMenuWidget.generated.h"
 
+class UUIManager;
+
 /**
  * 
  */
@@ -14,12 +16,13 @@ class ODYSSEY_API UAudioOptionsMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-private:
-	class UUIManager* UIManager;
-
 protected:
 	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void HandleBackBtnClicked();
+
+private:
+	UUIManager* UIManager;
+
 };

@@ -6,32 +6,36 @@
 #include "GameFramework/Actor.h"
 #include "Avatar.generated.h"
 
+class USkeletalMeshComponent;
+class USpringArmComponent;
+class USceneCaptureComponent2D;
+class USpotLightComponent;
+
 UCLASS()
 class ODYSSEY_API AAvatar : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AAvatar();
 
-public:	
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
-	class USkeletalMeshComponent* SkeletalMesh;
+	USkeletalMeshComponent* SkeletalMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
-	class USpringArmComponent* FullBodySpringArm;
+	USpringArmComponent* FullBodySpringArm;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
-	class USceneCaptureComponent2D* FullBodyRenderTarget;
+	USceneCaptureComponent2D* FullBodyRenderTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
-	class USpringArmComponent* HeadSpringArm;
+	USpringArmComponent* HeadSpringArm;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
-	class USceneCaptureComponent2D* HeadRenderTarget;
+	USceneCaptureComponent2D* HeadRenderTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Avatar")
-	class USpotLightComponent* SpotLight;
+	USpotLightComponent* SpotLight;
 
 };

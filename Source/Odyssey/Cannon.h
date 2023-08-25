@@ -7,20 +7,18 @@
 #include "Interactable.h"
 #include "Cannon.generated.h"
 
+class UWidgetComponent;
+
 UCLASS()
 class ODYSSEY_API ACannon : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 
-protected:
-	virtual void BeginPlay() override;
-
-	void GetInputPromptWidgetComponent();
 
 public:	
-	// Sets default values for this actor's properties
 	ACannon();
 
+	/***** Interactable Interface Functions *****/
 	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
 	virtual bool GetIsInteractable_Implementation() override;
 
@@ -28,7 +26,15 @@ public:
 	void SetIsInteractable(bool NewIsInteractable);
 
 public:
-	class UWidgetComponent* InputPromptWidgetComponent;
+	UWidgetComponent* InputPromptWidgetComponent;
+
+
+protected:
+	virtual void BeginPlay() override;
+
+
+private:
+	void GetInputPromptWidgetComponent();
 
 private:
 	bool IsInteractable = true;

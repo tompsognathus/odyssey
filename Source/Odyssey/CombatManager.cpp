@@ -8,83 +8,128 @@
 #include "DA_Item.h"
 #include "CombatWidget.h"
 
-// Sets default values for this component's properties
 UCombatManager::UCombatManager()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
 }
 
-// Called when the game starts
 void UCombatManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
+	UWorld* World = GetWorld();
+	if (!IsValid(World)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find World in CombatManager, BeginPlay")); 
+		return; 
+	}
+
+	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
+	if (!IsValid(FirstPlayerController))
 	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerController in CombatManager, BeginPlay"));
+		return;
+	}
 
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in CombatManager BeginPlay")); }
+	APawn* PlayerPawn = FirstPlayerController->GetPawn();
+	if (!IsValid(PlayerPawn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerPawn in CombatManager, BeginPlay"));
+		return;
+	}
+
+	UActorComponent* UIManagerActorComponent = PlayerPawn->GetComponentByClass(UUIManager::StaticClass());
+	if (!IsValid(UIManagerActorComponent)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManagerActorComponent in CombatManager BeginPlay")); 
+		return;
+	}
+
+	UIManager = Cast<UUIManager>(UIManagerActorComponent);
+	if (!IsValid(UIManager)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot cast UIManagerActorComponent to UIManager in CombatManager BeginPlay")); 
+		return;
+	}
+
+	UActorComponent* PlayerCharSheetActorComponent = PlayerPawn->GetComponentByClass(UCharSheet::StaticClass());
+	if (!IsValid(PlayerCharSheetActorComponent)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheetActorComponent in CombatManager BeginPlay")); 
+		return;
+	}
+
+	PlayerCharSheet = Cast<UCharSheet>(PlayerCharSheetActorComponent);
+	if (!IsValid(PlayerCharSheet)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager BeginPlay")); 
+		return;
+	}
+
+	UUserWidget* CombatUserWidget = UIManager->GetCombatWidgetInstance();
+	if (!IsValid(CombatUserWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find CombatUserWidget in CombatManager BeginPlay"));
+		return;
+	}
+
+	CombatWidget = Cast<UCombatWidget>(CombatUserWidget);
+	if (!IsValid(CombatWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot cast CombatUserWidget to CombatWidget in CombatManager BeginPlay"));
+		return;
+	}
+
+	CombatWidget->OnCombatActionRequestedDelegate.AddUniqueDynamic(this, &UCombatManager::PerformCombatAction);
 	
-		// Get reference to player CharSheet
-		PlayerCharSheet = Cast<UCharSheet>(PlayerPawn->GetComponentByClass(UCharSheet::StaticClass()));
-
-		if (!PlayerCharSheet) { UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager BeginPlay")); }
-
-		// Bind to combat widget's combat action request delegate
-		UUserWidget* CombatUserWidget = UIManager->GetCombatWidgetInstance();
-		if (CombatUserWidget)
-		{
-			CombatWidget = Cast<UCombatWidget>(CombatUserWidget);
-			if (CombatWidget)
-			{
-				CombatWidget->OnCombatActionRequestedDelegate.AddUniqueDynamic(this, &UCombatManager::PerformCombatAction);
-
-			} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast CombatUserWidget to CombatWidget in CombatManager BeginPlay")); }
-		} else { UE_LOG(LogTemp, Error, TEXT("Cannot find CombatWidget in CombatManager BeginPlay")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerPawn in CombatManager BeginPlay")); }
 }
 
-void UCombatManager::StartNewCombat(class ANPC* Enemy)
+void UCombatManager::StartNewCombat(ANPC* Enemy)
 {
 	CombatRound = 0;
 
-	// Get reference to enemy CharSheet
-	EnemyCharSheet = Cast<UCharSheet>(Enemy->GetComponentByClass(UCharSheet::StaticClass()));
-
-	if (!EnemyCharSheet) 
+	UActorComponent* EnemyCharSheetActorComponent = Enemy->GetComponentByClass(UCharSheet::StaticClass());
+	if (!IsValid(EnemyCharSheetActorComponent)) 
 	{ 
-		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheet in CombatManager StartNewCombat"));
+		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheetActorComponent in CombatManager, StartNewCombat")); 
 		return;
 	}
-	if (!PlayerCharSheet)
+
+	EnemyCharSheet = Cast<UCharSheet>(EnemyCharSheetActorComponent);
+	if (!IsValid(EnemyCharSheet)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheet in CombatManager, StartNewCombat"));
+		return;
+	}
+
+	// PlayerCharSheet doesn't change, so we only set it in BeginPlay and only need to make sure it's valid here
+	if (!IsValid(PlayerCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager StartNewCombat"));
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager, StartNewCombat"));
 		return;
 	}
 
 	// Set up player action buttons
-	UDA_Item* ActiveWeapon = PlayerCharSheet->GetActiveWeapon();
-	if (!ActiveWeapon) { UE_LOG(LogTemp, Error, TEXT("Cannot find ActiveWeapon in CombatManager, StartNewCombat")); }
+	TObjectPtr<UDA_Item> ActiveWeapon = PlayerCharSheet->GetActiveWeapon();
+	if (!IsValid(ActiveWeapon)) { 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find ActiveWeapon in CombatManager, StartNewCombat")); 
+		return;
+	}
 
-	UIManager->UpdatePlayerCombatActionBtns(ActiveWeapon->ItemActions);
+	TArray<UDA_ItemAction*> ActiveWeaponActions = ActiveWeapon->ItemActions;
+	UIManager->UpdatePlayerCombatActionButtons(ActiveWeaponActions);
 
-	// Set up Bindings
-	if (CombatWidget)
+	if (!IsValid(CombatWidget))
 	{
-		CombatWidget->SetUpCombatantBindings(PlayerCharSheet, EnemyCharSheet);
+		UE_LOG(LogTemp, Error, TEXT("Cannot find CombatWidget in CombatManager, StartNewCombat"));
+		return;
+	}
+	CombatWidget->SetUpCombatantBindings(PlayerCharSheet, EnemyCharSheet);
 	
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find CombatWidget in CombatManager, StartNewCombat")); }
-
-	// Roll initiative
+	// Figure out initiative order
 	int PlayerInitiative = RollD100() + PlayerCharSheet->GetInitiativeBase();
 	int EnemyInitiative = RollD100() + EnemyCharSheet->GetInitiativeBase();
 
-	// Check for initiative
 	if (PlayerInitiative >= EnemyInitiative)
 	{
 		TurnOrder.Add(PlayerCharSheet);
@@ -96,7 +141,7 @@ void UCombatManager::StartNewCombat(class ANPC* Enemy)
 		TurnOrder.Add(PlayerCharSheet);
 	}
 
-	// Set enemy info
+	// Update UI with player and enemy details
 	UIManager->SetEnemyInfo(Enemy->GetAvatarMaterial(), Enemy->GetDisplayName());
 	UIManager->SetPlayerHpPercent(PlayerCharSheet->GetHpNormalizedPercent());
 	UIManager->SetEnemyHpPercent(EnemyCharSheet->GetHpNormalizedPercent());
@@ -107,9 +152,13 @@ void UCombatManager::StartNewCombat(class ANPC* Enemy)
 
 void UCombatManager::StartNewRound()
 {
-	UE_LOG(LogTemp, Warning, TEXT("StartNewRound() called in CombatManager"));
 	CombatRound += 1;
 
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in CombatManager, StartNewRound"));
+		return;
+	}
 	UIManager->SetCurrentRoundText(CombatRound);
 
 	// Disable buttons. We enable them again if/when it's the player's turn
@@ -118,25 +167,50 @@ void UCombatManager::StartNewRound()
 
 void UCombatManager::StartNextTurn()
 {
+	if (!IsValid(PlayerCharSheet))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager, StartNextTurn"));
+		return;
+	}
+	if (!IsValid(EnemyCharSheet))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheet in CombatManager, StartNextTurn"));
+		return;
+	}
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in CombatManager, StartNextTurn"));
+		return;
+	}
+	if (!IsValid(CombatWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find CombatWidget in CombatManager, StartNextTurn"));
+		return;
+	}
+	
 	CurrentTurnIdx += 1;
+	int NumTurns = TurnOrder.Num();
+	if (NumTurns <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("TurnOrder contains no turns in CombatManager, StartNextTurn"));
+		return;
+	}
+
 	CurrentTurnIdx = CurrentTurnIdx % TurnOrder.Num();
 
 	if (CurrentTurnIdx == 0)
 	{
-		// Start new round
 		StartNewRound();
 	}
 
-	// Take turn
+	// Take either a player or enemy turn
 	UCharSheet* CurrentTurnCharSheet = TurnOrder[CurrentTurnIdx];
 
 	if (CurrentTurnCharSheet == PlayerCharSheet)
 	{
-		// Enable buttons
+
 		UIManager->SetCombatActionBtnsEnabled(true);
 		
-		UE_LOG(LogTemp, Warning, TEXT("Player turn"));
-
 		// We've activated the buttons and are now waitng for the player to select an action,
 		// which will end up triggering this function again unless we reach the end of the combat
 		return;
@@ -145,8 +219,6 @@ void UCombatManager::StartNextTurn()
 	{
 		// Enemy turn
 		UIManager->SetCombatActionBtnsEnabled(false);
-
-		UE_LOG(LogTemp, Warning, TEXT("Enemy turn"));
 
 		int EnemyDamageBase = RollD100();
 		float EnemyDamageMultiplier = CurrentTurnCharSheet->GetDamageMultiplier();
@@ -165,27 +237,30 @@ void UCombatManager::StartNextTurn()
 	{
 		CombatWidget->RemoveCombatantBindings();
 		// Return to game
-		if (UIManager)
-		{
-			UIManager->DisplayHUDWidgetOnly();
-
-		} else { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in CombatManager, StartNextTurn")); }
-
+		UIManager->DisplayHUDWidgetOnly();
 		return;
 	}
 }
 
 void UCombatManager::PerformCombatAction(UDA_ItemAction* CombatAction)
 {
+	if (!IsValid(PlayerCharSheet))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager, PerformCombatAction"));
+		return;
+	}
+	if (!IsValid(EnemyCharSheet))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheet in CombatManager, PerformCombatAction"));
+		return;
+	}
+
 	// Deal damage to enemy
 	int DamageBase = CombatAction->ActionDamageBase;
 	float DamageMultiplier = PlayerCharSheet->GetDamageMultiplier();
-
 	float Damage = DamageBase * DamageMultiplier;
-
 	EnemyCharSheet->TakeDamage(Damage);
 
-	// Finally move on to the next turn
 	StartNextTurn();
 }
 

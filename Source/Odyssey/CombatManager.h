@@ -6,6 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "CombatManager.generated.h"
 
+class UUIManager;
+class UCharSheet;
+class UCombatWidget;
+class UDA_ItemAction;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ODYSSEY_API UCombatManager : public UActorComponent
@@ -13,38 +17,40 @@ class ODYSSEY_API UCombatManager : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UCombatManager();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void StartNewCombat(class ANPC* Enemy);
 
+	// Getters
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	UCharSheet* GetPlayerCharSheet() const { return PlayerCharSheet; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	UCharSheet* GetEnemyCharSheet() const { return EnemyCharSheet; }
+
+
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
+
 private:
-	class UUIManager* UIManager;
-	class UCharSheet* PlayerCharSheet;
-	class UCharSheet* EnemyCharSheet;
-	class UCombatWidget* CombatWidget;
-
-	TArray<UCharSheet*> TurnOrder;
-
-	int CombatRound = 0;
-	int CurrentTurnIdx = -1;
 	void StartNewRound();
 	void StartNextTurn();
 
 	UFUNCTION()
-	void PerformCombatAction(class UDA_ItemAction* Action);
+	void PerformCombatAction(UDA_ItemAction* Action);
 
 	int RollD100();
 
-public:
-	UFUNCTION(BlueprintCallable, Category = "Combat")
-	class UCharSheet* GetPlayerCharSheet() const { return PlayerCharSheet; }
+private:
+	UUIManager* UIManager;
+	UCharSheet* PlayerCharSheet;
+	UCharSheet* EnemyCharSheet;
+	UCombatWidget* CombatWidget;
 
-	UFUNCTION(BlueprintCallable, Category = "Combat")
-	class UCharSheet* GetEnemyCharSheet() const { return EnemyCharSheet; }
+	TArray<UCharSheet*> TurnOrder = TArray<UCharSheet*>();
+
+	int CombatRound = 0;
+	int CurrentTurnIdx = -1;
+
 };

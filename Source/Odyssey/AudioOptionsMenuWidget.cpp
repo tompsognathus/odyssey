@@ -9,20 +9,42 @@ void UAudioOptionsMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
-	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
-
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, NativeConstruct")); }
+	UWorld* World = GetWorld();
+	if (!IsValid(World)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find world in MainMenuWidget, NativeConstruct")); 
+		return; 
 	}
+
+	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
+	if (!IsValid(FirstPlayerController)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find player controller in MainMenuWidget, NativeConstruct")); 
+		return; 
+	}
+
+	APawn* PlayerPawn = FirstPlayerController->GetPawn();
+	if (!IsValid(PlayerPawn)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find player pawn in MainMenuWidget, NativeConstruct")); 
+		return; 
+	}
+
+	UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
+	if (!IsValid(UIManager)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, NativeConstruct")); 
+		return; 
+	}
+
 }
 
 void UAudioOptionsMenuWidget::HandleBackBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
+	if (!IsValid(UIManager)) { 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, HandleBackBtnClicked")); 
+		return; 
+	}
 
 	UIManager->DisplayOptionsMenuWidget();
 }

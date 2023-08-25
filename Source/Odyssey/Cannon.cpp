@@ -4,11 +4,8 @@
 #include "Cannon.h"
 #include "Components/WidgetComponent.h"
 
-// Sets default values
 ACannon::ACannon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -21,24 +18,25 @@ void ACannon::BeginPlay()
 
 void ACannon::GetInputPromptWidgetComponent()
 {
-	// Find the input prompt widget reference
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
-	if (InputPromptActorComponent)
+	if (!IsValid(InputPromptActorComponent))
 	{
-		InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
+		UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in Cannon, BeginPlay"), *GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in Cannon, BeginPlay"), *GetName()); }
+
+	InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
 }
 
 void ACannon::DisplayInputPrompt_Implementation(bool IsVisible)
 {
-	// Set input prompt visibility
-	if (InputPromptWidgetComponent)
+	if (!IsValid(InputPromptWidgetComponent)) 
 	{
-		InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
+		UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in Cannon, DisplayInputPrompt"), *GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in Cannon, DisplayInputPrompt"), *GetName()); }
 
+	InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
 }
 
 bool ACannon::GetIsInteractable_Implementation()

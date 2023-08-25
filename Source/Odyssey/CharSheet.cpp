@@ -3,17 +3,11 @@
 
 #include "CharSheet.h"
 
-// Sets default values for this component's properties
 UCharSheet::UCharSheet()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
 }
 
-
-// Called when the game starts
 void UCharSheet::BeginPlay()
 {
 	Super::BeginPlay();
@@ -23,7 +17,6 @@ void UCharSheet::BeginPlay()
 	OnHpChangedDelegate.Broadcast(100);
 
 }
-
 
 void UCharSheet::AddGold(int GoldAmount)
 {
@@ -41,6 +34,7 @@ void UCharSheet::AddHp(int HpAmount)
 	Hp = std::max(Hp, 0);
 
 	float NormalizedHpPercentage = (float)Hp / (float)MaxHp;
+
 	// Request HUD update
 	OnHpChangedDelegate.Broadcast(NormalizedHpPercentage);
 }

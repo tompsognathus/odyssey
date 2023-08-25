@@ -376,7 +376,7 @@ void UUIManager::SetCombatActionBtnsEnabled(bool IsEnabled)
 	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetPlayerHpPercent")); }
 }
 
-void UUIManager::UpdatePlayerCombatActionBtns(TArray<class UDA_ItemAction*> AttackActions)
+void UUIManager::UpdatePlayerCombatActionButtons(TArray<class UDA_ItemAction*> AttackActions)
 {
 	if (CombatWidgetInstance)
 	{

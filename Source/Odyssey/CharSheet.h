@@ -6,9 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "CharSheet.generated.h"
 
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChangedSignature, int32, NewGoldAmount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHpChangedSignature, float, NewHpPercent);
+
+class UDA_Item;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ODYSSEY_API UCharSheet : public UActorComponent
@@ -16,14 +17,8 @@ class ODYSSEY_API UCharSheet : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UCharSheet();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
 	UFUNCTION(BlueprintCallable, Category = "CharSheet")
 	void AddGold(int GoldAmount);
 
@@ -36,6 +31,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "CharSheet")
 	void TakeDamage(int DamageAmount);
 
+	// Getters
+	int GetInitiativeBase() const { return InitiativeBase; }
+	float GetDamageMultiplier() const { return DamageMultiplier; }
+	int GetHp() const { return Hp; }
+	UDA_Item* GetActiveWeapon() const { return ActiveWeapon; }
+
+public:
 	// Delegates
 	UPROPERTY(BlueprintAssignable, Category = "CharSheet")
 	FOnGoldChangedSignature OnGoldChangedDelegate;
@@ -43,15 +45,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "CharSheet")
 	FOnHpChangedSignature OnHpChangedDelegate;
 
-	// Getters
-	int GetInitiativeBase() const { return InitiativeBase; }
-	float GetDamageMultiplier() const { return DamageMultiplier; }
-	int GetHp() const { return Hp; }
-	class UDA_Item* GetActiveWeapon() const { return ActiveWeapon; }
-
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
-	class UDA_Item* ActiveWeapon;
+	UDA_Item* ActiveWeapon;
 
 	// Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charsheet")
@@ -60,13 +55,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
 	int InitiativeBase = 50;
 
+
+protected:
+	virtual void BeginPlay() override;
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
 	int MaxHp = 100;
+
 
 private:
 	int Gold = 50;
 	int Hp = 100;
 	
-	int Agility = 0;
 
 };
