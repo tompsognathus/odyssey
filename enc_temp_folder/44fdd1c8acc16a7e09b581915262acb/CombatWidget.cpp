@@ -81,14 +81,14 @@ void UCombatWidget::SetPlayerHpBarPercent(float NormalizedPercent)
 	PlayerHpBar->SetPercent(NormalizedPercent);
 }
 
-void UCombatWidget::SetUpAttackButtons(TArray<class UDA_ItemAction*> NewAttackActions)
+void UCombatWidget::SetUpAttackBtns(TArray<class UDA_ItemAction*> NewAttackActions)
 {
 	if (!PlayerActionGrid) 
 	{
 		UE_LOG(LogTemp, Error, TEXT("PlayerActionGrid is null in CombatWidget, SetUpAttackBtns")); 
 		return; 
 	}
-	if (!AttackButtonAssetRef)
+	if (!AttackBtnAssetRef)
 	{
 		UE_LOG(LogTemp, Error, TEXT("AttackBtnAssetRef is null in CombatWidget, SetUpAttackBtns"));
 		return;
@@ -102,51 +102,50 @@ void UCombatWidget::SetUpAttackButtons(TArray<class UDA_ItemAction*> NewAttackAc
 	// Then create new buttons for each attack action
 	for (int idx = 0; idx < AttackActions.Num(); idx++)
 	{
-		UUserWidget* AttackButtonWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), AttackButtonAssetRef);
-		if (!AttackButtonWidgetInstance) 
+		UUserWidget* AttackBtnWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), AttackBtnAssetRef);
+		if (!AttackBtnWidgetInstance) 
 		{ 
 			UE_LOG(LogTemp, Error, TEXT("Cannot create AttackBtnWidgetInstance in CombatWidget, SetUpAttackBtns")); 
 			return; 
 		}
 
-		UWBP_AttackBtn* AttackButton = Cast<UWBP_AttackBtn>(AttackButtonWidgetInstance);
-		if (!AttackButton) 
+		UWBP_AttackBtn* AttackBtn = Cast<UWBP_AttackBtn>(AttackBtnWidgetInstance);
+		if (!AttackBtn) 
 		{ 
 			UE_LOG(LogTemp, Error, TEXT("Cannot cast AttackBtnWidgetInstance to UWBP_AttackBtn in CombatWidget, SetUpAttackBtns")); 
 			return; 
 		} 
 		
-		AttackButtons.Add(AttackButton);
+		AttackBtns.Add(AttackBtn);
 
 		// And to the grid with 4 columns
 		int RowIdx = idx / NumButtonsPerRow;
 		int ColIdx = idx % NumButtonsPerRow;
 
-		PlayerActionGrid->AddChildToUniformGrid(AttackButtons[idx], RowIdx, ColIdx);
+		PlayerActionGrid->AddChildToUniformGrid(AttackBtns[idx], RowIdx, ColIdx);
 
 		// Set button text
 		FText ActionName = FText::FromName(AttackActions[idx]->ActionDisplayName);
-		AttackButtons[idx]->SetActionButtonText(ActionName);
+		AttackBtns[idx]->SetActionBtnText(ActionName);
 
 		// Bind to OnClicked
-		AttackButtons[idx]->OnActionButtonClickedDelegate.AddUniqueDynamic(this, &UCombatWidget::HandleAttackButtonClicked);
+		AttackBtns[idx]->OnActionBtnClickedDelegate.AddUniqueDynamic(this, &UCombatWidget::HandleAttackBtnClicked);
 	}
 }
 
-void UCombatWidget::HandleAttackButtonClicked(UWBP_AttackBtn* AttackButton)
+void UCombatWidget::HandleAttackBtnClicked(UWBP_AttackBtn* AttackBtn)
 {
 	// Get button index by comparing against buttons in grid
-	int ButtonIdx = AttackButtons.Find(AttackButton);
+	int BtnIdx = AttackBtns.Find(AttackBtn);
 
 	// Get corresponding attack action
-	if (!IsValid(AttackActions[ButtonIdx]))
+	if (AttackActions[BtnIdx] != nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("AttackAction is null in CombatWidget, HandleAttackButtonClicked"));
-		return;
-	}
+		UDA_ItemAction* AttackAction = AttackActions[BtnIdx];
 
-	UDA_ItemAction* AttackAction = AttackActions[ButtonIdx];
-	HandleCombatActionRequested(AttackActions[ButtonIdx]);
+	} else { UE_LOG(LogTemp, Error, TEXT("AttackAction is null in CombatWidget, HandleAttackBtnClicked")); }
+
+	HandleCombatActionRequested(AttackActions[BtnIdx]);
 
 }
 
@@ -165,38 +164,32 @@ void UCombatWidget::SetUpCombatantBindings(UCharSheet* NewPlayerCharSheet, UChar
 	PlayerCharSheet = NewPlayerCharSheet;
 	EnemyCharSheet = NewEnemyCharSheet;
 
-	if (!IsValid(PlayerCharSheet))
+	if (PlayerCharSheet)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerCharSheet is null in CombatWidget, SetUpCombatantBindings"));
-		return;
-	}
-	if (!IsValid(EnemyCharSheet))
+		PlayerCharSheet->OnHpChangedDelegate.AddDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
+
+	} else { UE_LOG(LogTemp, Error, TEXT("PlayerCharSheet is null in CombatWidget, SetUpCombatantBindings")); }
+
+	if (EnemyCharSheet)
 	{
-		UE_LOG(LogTemp, Error, TEXT("EnemyCharSheet is null in CombatWidget, SetUpCombatantBindings"));
-		return;
-	}
+		EnemyCharSheet->OnHpChangedDelegate.AddDynamic(this, &UCombatWidget::SetEnemyHpBarPercent);
 
-	PlayerCharSheet->OnHpChangedDelegate.AddDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
-	EnemyCharSheet->OnHpChangedDelegate.AddDynamic(this, &UCombatWidget::SetEnemyHpBarPercent);
-
+	} else { UE_LOG(LogTemp, Error, TEXT("EnemyCharSheet is null in CombatWidget, SetUpCombatantBindings")); }
 }
 
 void UCombatWidget::RemoveCombatantBindings()
 {
-	if (!IsValid(PlayerCharSheet))
+	if (PlayerCharSheet)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerCharSheet is null in CombatWidget, RemoveCombatantBindings"));
-		return;
-	}
-	if (!IsValid(EnemyCharSheet))
-	{
-		UE_LOG(LogTemp, Error, TEXT("EnemyCharSheet is null in CombatWidget, RemoveCombatantBindings"));
-		return;
-	}
-	
-	PlayerCharSheet->OnHpChangedDelegate.RemoveDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
-	EnemyCharSheet->OnHpChangedDelegate.RemoveDynamic(this, &UCombatWidget::SetEnemyHpBarPercent);
+		PlayerCharSheet->OnHpChangedDelegate.RemoveDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
 
+	} else { UE_LOG(LogTemp, Error, TEXT("PlayerCharSheet is null in CombatWidget, RemoveCombatantBindings")); }
+
+	if (EnemyCharSheet)
+	{
+		EnemyCharSheet->OnHpChangedDelegate.RemoveDynamic(this, &UCombatWidget::SetEnemyHpBarPercent);
+
+	} else { UE_LOG(LogTemp, Error, TEXT("EnemyCharSheet is null in CombatWidget, RemoveCombatantBindings")); }
 }
 
 

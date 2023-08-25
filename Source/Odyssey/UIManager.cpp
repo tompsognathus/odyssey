@@ -385,7 +385,7 @@ void UUIManager::UpdatePlayerCombatActionButtons(TArray<class UDA_ItemAction*> A
 
 		if (CombatWidget)
 		{
-			CombatWidget->SetUpAttackBtns(AttackActions);
+			CombatWidget->SetUpAttackButtons(AttackActions);
 
 		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, UpdatePlayerCombatActionBtns")); }
 	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, UpdatePlayerCombatActionBtns")); }

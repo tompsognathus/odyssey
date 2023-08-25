@@ -41,7 +41,7 @@ public:
 	void SetPlayerHpBarPercent(float NormalizedPercent);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
-	void SetUpAttackButtons(TArray<UDA_ItemAction*> AttackActions);
+	void SetUpAttackBtns(TArray<UDA_ItemAction*> AttackActions);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat UI Functions")
 	void SetActionBtnsEnabled(bool IsEnabled);
@@ -52,7 +52,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat UI")
-	TSubclassOf<UUserWidget> AttackButtonAssetRef;
+	TSubclassOf<UUserWidget> AttackBtnAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat UI")
 	int NumButtonsPerRow = 4;
@@ -84,7 +84,7 @@ protected:
 
 private:
 	UFUNCTION()
-	void HandleAttackButtonClicked(UWBP_AttackBtn* AttackBtn);
+	void HandleAttackBtnClicked(UWBP_AttackBtn* AttackBtn);
 
 	UFUNCTION()
 	void HandleCombatActionRequested(UDA_ItemAction* ItemAction);
@@ -93,7 +93,7 @@ private:
 	class UCharSheet* PlayerCharSheet;
 	class UCharSheet* EnemyCharSheet;
 
-	TArray<UWBP_AttackBtn*> AttackButtons = TArray<UWBP_AttackBtn*>();
+	TArray<UWBP_AttackBtn*> AttackBtns = TArray<UWBP_AttackBtn*>();
 	TArray<UDA_ItemAction*> AttackActions = TArray<UDA_ItemAction*>();
 	
 };

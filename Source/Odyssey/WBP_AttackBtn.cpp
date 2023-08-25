@@ -7,7 +7,7 @@
 #include "GenericPlatform/GenericPlatformMisc.h"
 
 
-void UWBP_AttackBtn::SetActionBtnText(FText NewText)
+void UWBP_AttackBtn::SetActionButtonText(FText NewText)
 {
 	if (ActionBtnText != nullptr) {
 		ActionBtnText->SetText(NewText);
@@ -26,5 +26,5 @@ void UWBP_AttackBtn::SetActionBtnText(FText NewText)
 
 void UWBP_AttackBtn::OnActionBtnClicked()
 {
-	OnActionBtnClickedDelegate.Broadcast(this);
+	OnActionButtonClickedDelegate.Broadcast(this);
 }

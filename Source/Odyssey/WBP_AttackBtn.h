@@ -18,7 +18,7 @@ class ODYSSEY_API UWBP_AttackBtn : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	FOnActionBtnClickedSignature OnActionBtnClickedDelegate;
+	FOnActionBtnClickedSignature OnActionButtonClickedDelegate;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* ActionBtnText;
@@ -27,7 +27,7 @@ public:
 	class UButton* ActionBtn;
 
 	UFUNCTION(BlueprintCallable, Category = "AttackBtn")
-	void SetActionBtnText(FText Text);
+	void SetActionButtonText(FText Text);
 
 private:
 	UFUNCTION()
