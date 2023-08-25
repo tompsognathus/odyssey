@@ -10,6 +10,7 @@
 
 #include "DialogueComponent.generated.h"
 
+class UUIManager;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ODYSSEY_API UDialogueComponent : public UActorComponent
@@ -17,87 +18,66 @@ class ODYSSEY_API UDialogueComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UDialogueComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-	class UUIManager* UIManager;
-
-public:	
-	/*
-	 * Dialogue
-	 */
-	 // Name of this participant, used for GetParticipantName
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	FName DialogueParticipantName;
-
-	// UI name of this participant, what is displayed inside the UI
-	// Used for GetParticipantDisplayName
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	FText DialogueParticipantDisplayName = NSLOCTEXT("ExampleNamespace", "ExampleCharacterName", "ExampleParticipantName");
-
-	// Used for GetParticipantIcon
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	UMaterial* DialogueParticipantAvatar;
-
-	// Context used to control the Dialogue follow
-	UPROPERTY(BlueprintReadWrite, Category = Dialogue)
-	UDlgContext* DialogueContext = nullptr;
-
-	// Function to start the dialogue
-	UFUNCTION(BlueprintCallable, Category = Dialogue)
+	/***** Dialogue *****/
+	UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	bool StartDialogue(UDlgDialogue* Dialogue, const TArray<UObject*>& Participants);
-
-	// Functionto advance through the dialogue
-	UFUNCTION(BlueprintCallable, Category = Dialogue)
+	UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	bool SelectDialogueOption(int32 Index);
 
 	void PopulateDialogueBodyText();
 	void PopulateDialogueOptionsText();
 
-	// Character's dialogue assets
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
-	TArray<UDlgDialogue*> Dialogues;
-
+	// Getters
 	UFUNCTION()
 	TArray<UDlgDialogue*> GetDialogues() { return Dialogues; }
-
-	// Character's dialogue participants
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
-	TArray<UObject*> Participants;
 
 	UFUNCTION()
 	TArray<UObject*> GetParticipants() { return Participants; }
 
+	FName GetParticipantName() { return DialogueParticipantName; }
 
-	FName GetParticipantName()
-	{
-		return DialogueParticipantName;
-	}
+	FText GetParticipantDisplayName(FName ActiveSpeaker) { return DialogueParticipantDisplayName; }
 
-	FText GetParticipantDisplayName(FName ActiveSpeaker) 
-	{
-		return DialogueParticipantDisplayName;
-	}
-
-	UMaterial* GetParticipantAvatar(FName ActiveSpeaker, FName ActiveSpeakerState) 
-	{ 
-		return DialogueParticipantAvatar; 
-	}
+	UMaterial* GetParticipantAvatar(FName ActiveSpeaker, FName ActiveSpeakerState) { return DialogueParticipantAvatar; }
 
 	UFUNCTION()
 	int GetNumDialogues() { return Dialogues.Num(); }
 
+public:
+	/***** Dialogue *****/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
+	TArray<UDlgDialogue*> Dialogues;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
+	TArray<UObject*> Participants;
+
+protected:
+	virtual void BeginPlay() override;
+
+protected:
+	/***** Dialogue *****/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
+	FName DialogueParticipantName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
+	FText DialogueParticipantDisplayName = NSLOCTEXT("ExampleNamespace", "ExampleCharacterName", "ExampleParticipantName");
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
+	UMaterial* DialogueParticipantAvatar;
+
+	UPROPERTY(BlueprintReadWrite, Category = Dialogue)
+	UDlgContext* DialogueContext;
+
+	/***** Other Components *****/
+	UUIManager* UIManager;
+
 private:
-	/*
-	 * Dialogue
-	 */
-	UFUNCTION(BlueprintCallable, Category = Dialogue)
+	/***** Dialogue *****/
 	FText GetDialogueBodyText();
 
-	UFUNCTION(BlueprintCallable, Category = Dialogue)
 	TArray<FText> GetDialogueOptionsText();
+
+
 };

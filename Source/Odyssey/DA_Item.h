@@ -18,7 +18,7 @@ class ODYSSEY_API UDA_Item : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
-	public:
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TSubclassOf<AActor> ActorRef;
 

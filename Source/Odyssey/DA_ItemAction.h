@@ -17,7 +17,7 @@ class ODYSSEY_API UDA_ItemAction : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
-	public:
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FName ActionName;
 

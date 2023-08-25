@@ -10,9 +10,7 @@
 // Sets default values for this component's properties
 UDialogueComponent::UDialogueComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 }
 
@@ -21,82 +19,141 @@ void UDialogueComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Get UI Manager reference through posessed pawn
-	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	if (PlayerCharacter)
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
 	{
-		UIManager = PlayerCharacter->FindComponentByClass<UUIManager>();
-	
-	} else { UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found")); }
+		UE_LOG(LogTemp, Error, TEXT("Cannot get world in DialogueComponent, BeginPlay"));
+		return;
+	}
 
+	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(World, 0);
+	if (!IsValid(PlayerPawn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot get player pawn in DialogueComponent, BeginPlay"));
+		return;
+	}
+
+	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(PlayerPawn);
+	if (!IsValid(PlayerCharacter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot get player character in DialogueComponent, BeginPlay"));
+		return;
+	}
+		
+	UIManager = PlayerCharacter->FindComponentByClass<UUIManager>();
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot get UIManager in DialogueComponent, BeginPlay"));
+		return;
+	}
 }
 
 void UDialogueComponent::PopulateDialogueBodyText()
 {
-	if (UIManager)
+	if (!IsValid(UIManager))
 	{
-		UIManager->SetRPEncounterBodyText(GetDialogueBodyText());
-	
-	} else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
+		UE_LOG(LogTemp, Error, TEXT("Cannot get UIManager in DialogueComponent, PopulateDialogueBodyText"));
+		return;
+	}
+
+	FText DialogueBodyText = GetDialogueBodyText();
+	if (DialogueBodyText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Error, TEXT("DialogueBodyText is empty or whitespace in DialogueComponent, PopulateDialogueBodyText"));
+		return;
+	}
+
+	UIManager->SetRPEncounterBodyText(DialogueBodyText);
 }
 
 void UDialogueComponent::PopulateDialogueOptionsText()
 {
-	if (UIManager)
+	if (!IsValid(UIManager))
 	{
-		TArray<FText> Options = GetDialogueOptionsText();
+		UE_LOG(LogTemp, Error, TEXT("Cannot get UIManager in DialogueComponent, PopulateDialogueOptionsText"));
+		return;
+	}
 
-		for (int i = 0; i < 4; i++)
+	TArray<FText> Options = GetDialogueOptionsText();
+
+	for (int i = 0; i < 4; i++) // Currently only 4 options are supported
+	{
+		if (i < Options.Num())
 		{
-			if (i < Options.Num())
-			{
-				UIManager->SetRPEncounterOptionText(i + 1, Options[i]); // Options are currently indexed from 1
-			}
-			else
-			{
-				UIManager->SetRPEncounterOptionText(i + 1, FText::FromString(""));
-			}
+			UIManager->SetRPEncounterOptionText(i + 1, Options[i]); // Options are currently indexed from 1
 		}
-	} else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
+		else
+		{
+			// TODO: Hide/disable the option button and also hide the A/B/C/D text
+			UIManager->SetRPEncounterOptionText(i + 1, FText::FromString(""));
+		}
+	}
 }
 
 bool UDialogueComponent::StartDialogue(UDlgDialogue* Dialogue, const TArray<UObject*>& DlgParticipants)
 {
-	DialogueContext = UDlgManager::StartDialogue(Dialogue, DlgParticipants);
-
-	if (UIManager)
+	if (!IsValid(UIManager))
 	{
-		UIManager->DisplayRPEncounterWidget(this);
-		PopulateDialogueBodyText();
-		PopulateDialogueOptionsText();
-		UIManager->SetRPEncounterAvatar(DialogueParticipantAvatar, DialogueParticipantDisplayName);
+		UE_LOG(LogTemp, Error, TEXT("Cannot get UIManager in DialogueComponent, StartDialogue"));
+		return false;
+	}
+	if (!IsValid(Dialogue))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Dialogue is null in DialogueComponent, StartDialogue"));
+		return false;
+	}
+	if (DlgParticipants.Num() == 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("DlgParticipants has no participants in DialogueComponent, StartDialogue"));
+		return false;
+	}
+	if (!IsValid(DialogueParticipantAvatar))
+	{
+		UE_LOG(LogTemp, Error, TEXT("DialogueParticipantAvatar is null in DialogueComponent, StartDialogue"));
+		return false;
+	}
+	if (DialogueParticipantDisplayName.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Error, TEXT("DialogueParticipantDisplayName is empty or whitespace in DialogueComponent, StartDialogue"));
+		return false;
+	}
 
-	} else { UE_LOG(LogTemp, Error, TEXT("UIManager not found")); }
+	DialogueContext = UDlgManager::StartDialogue(Dialogue, DlgParticipants);
+	if (!IsValid(DialogueContext))
+	{
+		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null in DialogueComponent, StartDialogue"));
+		return false;
+	}
+
+	UIManager->DisplayRPEncounterWidget(this);
+	PopulateDialogueBodyText();
+	PopulateDialogueOptionsText();
+	UIManager->SetRPEncounterAvatar(DialogueParticipantAvatar, DialogueParticipantDisplayName);
 
 	return DialogueContext != nullptr;
 }
 
 FText UDialogueComponent::GetDialogueBodyText()
 {
-	if (!DialogueContext)
+	if (!IsValid(DialogueContext))
 	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null"));
+		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null in DialogueComponent, GetDialogueBodyText"));
 		return FText();
 	}
 
 	const FText Text = DialogueContext->GetActiveNodeText();
-
 	return Text;
 }
 
 TArray<FText> UDialogueComponent::GetDialogueOptionsText()
 {
-	TArray<FText> Options;
-	if (!DialogueContext)
+	if (!IsValid(DialogueContext))
 	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null"));
-		return Options;
+		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null in DialogueComponent, GetDialogueOptionsText"));
+		return TArray<FText>();
 	}
+
+	TArray<FText> Options;
 
 	int OptionsNum = DialogueContext->GetOptionsNum();
 
@@ -110,12 +167,20 @@ TArray<FText> UDialogueComponent::GetDialogueOptionsText()
 
 bool UDialogueComponent::SelectDialogueOption(int32 Index)
 {
-	if (!DialogueContext || !DialogueContext->IsValidOptionIndex(Index))
+	if (!IsValid(DialogueContext))
 	{
+		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null in DialogueComponent, SelectDialogueOption"));
+		return false;
+	}
+	
+	if (!DialogueContext->IsValidOptionIndex(Index))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Index is invalid in DialogueComponent, SelectDialogueOption"));
 		return false;
 	}
 
-	if (!DialogueContext->ChooseOption(Index) || DialogueContext->HasDialogueEnded())
+	bool DidChooseOption = DialogueContext->ChooseOption(Index);
+	if (!DidChooseOption || DialogueContext->HasDialogueEnded())
 	{
 		// Dialogue Has Ended
 		DialogueContext = nullptr;
