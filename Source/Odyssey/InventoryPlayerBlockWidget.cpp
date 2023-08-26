@@ -13,20 +13,47 @@
 
 void UInventoryPlayerBlockWidget::NativeConstruct()
 {
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
+	Super::NativeConstruct();
+	
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
 	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
-
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in InventoryWidget, NativeConstruct")); }
+		UE_LOG(LogTemp, Error, TEXT("Invalid World in InventoryWidget, NativeConstruct"));
+		return;
 	}
+
+	APlayerController* PlayerController = World->GetFirstPlayerController();
+	if (!IsValid(PlayerController))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid PlayerController in InventoryWidget, NativeConstruct"));
+		return;
+	}
+
+	APawn* PlayerPawn = PlayerController->GetPawn();
+	if (!IsValid(PlayerPawn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid PlayerPawn in InventoryWidget, NativeConstruct"));
+		return;
+	}
+
+	UActorComponent* UIManagerComponent = PlayerPawn->GetComponentByClass(UUIManager::StaticClass());
+	if (!UIManagerComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManagerComponent in InventoryWidget, NativeConstruct"));
+		return;
+	}
+
+	UIManager = Cast<UUIManager>(UIManagerComponent);
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot cast UIManagerComponent to UUIManager in InventoryWidget, NativeConstruct"));
+		return;
+	}
+
 }
 
 void UInventoryPlayerBlockWidget::LoadInventoryGridContents(TArray<class UDA_Item*> ItemRefArray, TArray<int> ItemCountArray)
 {
-	// Clear inventory grid
 	InventoryGrid->ClearChildren();
 
 	int NumSlots = ItemRefArray.Num();
@@ -45,12 +72,29 @@ void UInventoryPlayerBlockWidget::LoadInventoryGridContents(TArray<class UDA_Ite
 
 void UInventoryPlayerBlockWidget::AddItemToGrid(UDA_Item* ItemToAdd, int ItemCount)
 {
+	if (!IsValid(ItemToAdd))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid ItemToAdd in InventoryWidget, AddItemToGrid"));
+		return;
+	}
+	if (!IsValid(InventoryGrid))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid InventoryGrid in InventoryWidget, AddItemToGrid"));
+		return;
+	}
+
 	UWBP_InventorySlot* InventorySlot = nullptr;
 
 	// If the item already exists in the grid, find it and add to the count
 	for (int idx = 0; idx < InventoryGrid->GetChildrenCount(); idx++)
 	{
 		InventorySlot = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(idx));
+		if (!IsValid(InventorySlot))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlot in InventoryWidget, AddItemToGrid"));
+			return;
+		}
+
 		if (InventorySlot->GetItem()->Name == ItemToAdd->Name)
 		{
 			InventorySlot->SetStackSize(InventorySlot->GetNumItems() + ItemCount);
@@ -58,66 +102,115 @@ void UInventoryPlayerBlockWidget::AddItemToGrid(UDA_Item* ItemToAdd, int ItemCou
 		}
 	}
 	// Otherwise create a new slot
-	UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), UIManager->InventorySlotAssetRef);
-	InventorySlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
-
-	if (InventorySlot)
+	TSubclassOf<UUserWidget> InventorySlotAssetRef = UIManager->InventorySlotAssetRef;
+	if (!IsValid(InventorySlotAssetRef))
 	{
-		// Compute index for this new slot
-		int idx = InventoryGrid->GetChildrenCount();
+		UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlotAssetRef in InventoryWidget, AddItemToGrid. Is it assigned in the UIManager?"));
+		return;
+	}
 
-		// Compute its row/column
-		int SlotRow = idx / NumInventoryCols;
-		int SlotCol = idx % NumInventoryCols;
+	UUserWidget* InventorySlotWidget = CreateWidget<UUserWidget>(GetWorld(), InventorySlotAssetRef);
+	if (!IsValid(InventorySlotWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlotWidget in InventoryWidget, AddItemToGrid. Couldn't create it..."));
+		return;
+	}
+
+	InventorySlot = Cast<UWBP_InventorySlot>(InventorySlotWidget);
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlot in InventoryWidget, AddItemToGrid."));
+		return;
+	}
+
+	// Compute index for this new slot
+	int idx = InventoryGrid->GetChildrenCount();
+
+	int SlotRow = idx / NumInventoryCols;
+	int SlotCol = idx % NumInventoryCols;
 	
-		// Add to grid
-		InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
-		InventorySlot->SetItem(ItemToAdd, ItemCount);
+	// Add the slot to the grid
+	InventoryGrid->AddChildToUniformGrid(InventorySlotWidget, idx / NumInventoryCols, idx % NumInventoryCols);
+	InventorySlot->SetItem(ItemToAdd, ItemCount);
 
-		// Bind functions to On Double Clicked event in inventory slot widget
-		InventorySlot->OnDoubleClicked.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked);
-		InventorySlot->OnHovered.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotHovered);
+	// Bind functions to On Double Clicked event in inventory slot widget
+	InventorySlot->OnDoubleClicked.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked);
+	InventorySlot->OnHovered.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotHovered);
 
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, AddItemToGrid")); }
 }
 
 void UInventoryPlayerBlockWidget::RemoveItemFromGrid(UDA_Item* ItemToRemove, int NumToRemove)
 {
+	if (!IsValid(ItemToRemove))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid ItemToRemove in InventoryWidget, RemoveItemFromGrid"));
+		return;
+	}
+	if (!IsValid(InventoryGrid))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid InventoryGrid in InventoryWidget, RemoveItemFromGrid"));
+		return;
+	}
+
 	// Find slot in grid
 	for (int idx = 0; idx < InventoryGrid->GetChildrenCount(); idx++)
 	{
-		UWBP_InventorySlot* InventorySlot = Cast<UWBP_InventorySlot>(InventoryGrid->GetChildAt(idx));
-		if (InventorySlot)
+		UWidget* SlotWidget = InventoryGrid->GetChildAt(idx);
+		if (!IsValid(SlotWidget))
 		{
-			if (InventorySlot->GetItem() == ItemToRemove)
+			UE_LOG(LogTemp, Error, TEXT("Invalid SlotWidget in InventoryWidget, RemoveItemFromGrid"));
+			return;
+		}
+
+		UWBP_InventorySlot* InventorySlot = Cast<UWBP_InventorySlot>(SlotWidget);
+		if (!IsValid(InventorySlot))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlot in InventoryWidget, RemoveItemFromGrid"));
+			return;
+		}
+
+		UDA_Item* ItemInSlot = InventorySlot->GetItem();
+		if (!IsValid(ItemInSlot))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Invalid ItemInSlot in InventoryWidget, RemoveItemFromGrid"));
+			return;
+		}
+
+		if (ItemInSlot == ItemToRemove)
+		{
+			// If we are removing less than the total number of items in the slot, remove that many but keep the slot
+			if (NumToRemove < InventorySlot->GetNumItems())
 			{
-				// If we are removing less than the total number of items in the slot, remove that many but keep the slot
-				if (NumToRemove < InventorySlot->GetNumItems())
-				{
-					InventorySlot->SetItem(ItemToRemove, InventorySlot->GetNumItems() - NumToRemove);
-					return;
-				}
-				// Otherwise remove the whole slot
-				else
-				{
-					InventoryGrid->RemoveChildAt(idx);
-					return;
-				}
+				InventorySlot->SetItem(ItemToRemove, InventorySlot->GetNumItems() - NumToRemove);
+				return;
 			}
-		} else { UE_LOG(LogTemp, Error, TEXT("Cannot cast InventorySlotWidget to UWBP_InventorySlot in InventoryWidget, RemoveItemFromGrid")); }
+			// Otherwise remove the whole slot
+			else
+			{
+				InventoryGrid->RemoveChildAt(idx);
+				return;
+			}
+		}
 	}
 }
 
 void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
-	// broadcast event
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlot in InventoryWidget, OnInventorySlotDoubleClicked"));
+		return;
+	}
 	OnInventorySlotDoubleClickedDelegate.Broadcast(this, InventorySlot);
-
 }
 
 void UInventoryPlayerBlockWidget::OnInventorySlotHovered(UWBP_InventorySlot* InventorySlot)
 {
-	// broadcast event
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlot in InventoryWidget, OnInventorySlotHovered"));
+		return;
+	}
 	OnInventorySlotHoveredDelegate.Broadcast(this, InventorySlot);
 }
 
