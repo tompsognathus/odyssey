@@ -15,96 +15,204 @@ void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
 	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
+		UE_LOG(LogTemp, Error, TEXT("Cannot find world in InventoryWidget, NativeConstruct"));
+		return;
+	}
 
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in InventoryWidget, NativeConstruct")); }
+	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
+	if (!IsValid(FirstPlayerController))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find player controller in InventoryWidget, NativeConstruct"));
+		return;
+	}
 
-		// Get inventory component
-		Inventory = Cast<UInventory>(PlayerPawn->GetComponentByClass(UInventory::StaticClass()));
+	APawn* PlayerPawn = FirstPlayerController->GetPawn();
+	if (!IsValid(PlayerPawn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find player pawn in InventoryWidget, NativeConstruct"));
+		return;
+	}
 
-		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
+	UActorComponent* UIManagerComponent = PlayerPawn->GetComponentByClass(UUIManager::StaticClass());
+	if (!IsValid(UIManagerComponent))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManagerComponent in InventoryWidget, NativeConstruct"));
+		return;
+	}
+
+	UIManager = Cast<UUIManager>(UIManagerComponent);
+	if (!IsValid(UIManager)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in InventoryWidget, NativeConstruct")); 
+		return;
+	}
+
+	UActorComponent* InventoryComponent = PlayerPawn->GetComponentByClass(UInventory::StaticClass());
+	if (!IsValid(InventoryComponent))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find InventoryComponent in InventoryWidget, NativeConstruct"));
+		return;
+	}
+	
+	Inventory = Cast<UInventory>(InventoryComponent);
+	if (!IsValid(Inventory)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); 
+		return;
 	}
 
 	SetWidthForInventoryGrid();
 
 	// Bind delegates
-	if (WBP_InventoryPlayerBlock)
+	if (!IsValid(WBP_InventoryPlayerBlock))
 	{
-		WBP_InventoryPlayerBlock->OnInventorySlotHoveredDelegate.AddDynamic(this, &UInventoryWidget::OnInventorySlotHovered);
-
+		UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in InventoryWidget, NativeConstruct"));
+		return;
 	}
-	else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in InventoryWidget, NativeConstruct")); }
+	WBP_InventoryPlayerBlock->OnInventorySlotHoveredDelegate.AddDynamic(this, &UInventoryWidget::OnInventorySlotHovered);
+
 }
 
 
 void UInventoryWidget::SetWidthForInventoryGrid()
 {
 	int InventorySlotWidth = 100;
+
 	// Create an empty slot widget to get its size
-	UWBP_InventorySlot* EmptySlot = CreateWidget<UWBP_InventorySlot>(this, UIManager->InventorySlotAssetRef);
-	if (EmptySlot)
+	if (!IsValid(UIManager))
 	{
-		InventorySlotWidth = EmptySlot->GetWidth();
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in InventoryWidget, SetWidthForInventoryGrid"));
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find InventorySlotAssetRef in TradingInventoryWidget, NativeConstruct")); }
+	TSubclassOf<class UUserWidget> InventorySlotAssetRef = UIManager->InventorySlotAssetRef;
+	if (!IsValid(InventorySlotAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find InventorySlotAssetRef in InventoryWidget, SetWidthForInventoryGrid"));
+		return;
+	}
 
+	UWBP_InventorySlot* EmptySlot = CreateWidget<UWBP_InventorySlot>(this, InventorySlotAssetRef);
+	if (!IsValid(EmptySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot create EmptySlot in InventoryWidget, SetWidthForInventoryGrid"));
+		return;
+	}
+
+	InventorySlotWidth = EmptySlot->GetWidth();
 	int GridWidth = NumInventoryCols * InventorySlotWidth;
+
 	// Set the width override for both grids based on the number of columns and the size of the slots
-	if (PlayerInventorySizeBox)
+	if (!IsValid(PlayerInventorySizeBox))
 	{
-		PlayerInventorySizeBox->SetWidthOverride(GridWidth);
-
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerInventorySizeBox in TradingInventoryWidget, NativeConstruct")); }
-
+		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerInventorySizeBox in InventoryWidget, SetWidthForInventoryGrid"));
+		return;
+	}
+	PlayerInventorySizeBox->SetWidthOverride(GridWidth);
 }
 
 void UInventoryWidget::SetItemNameText(FText NewItemNameText)
 {
-	if (ItemNameText)
+	if (!IsValid(ItemNameText))
 	{
-		ItemNameText->SetText(NewItemNameText);
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find ItemNameText in InventoryWidget, SetItemNameText"));
+		return;
+	}
+	if (NewItemNameText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NewItemNameText is empty in InventoryWidget, SetItemNameText"));
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("Cannot find ItemNameText in InventoryWidget, SetItemNameText")) }
+	ItemNameText->SetText(NewItemNameText);
 }
 
 void UInventoryWidget::SetItemDescriptionText(FText NewItemDescriptionText)
 {
-	if (ItemDescriptionText)
+	if (!IsValid(ItemDescriptionText))
 	{
-		ItemDescriptionText->SetText(NewItemDescriptionText);
+		UE_LOG(LogTemp, Error, TEXT("Cannot find ItemDescriptionText in InventoryWidget, SetItemDescriptionText"));
+		return;
+	}
+	if (NewItemDescriptionText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Error, TEXT("NewItemDescriptionText is empty in InventoryWidget, SetItemDescriptionText"));
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("Cannot find ItemDescriptionText in InventoryWidget, SetItemDescriptionText")) }
+	ItemDescriptionText->SetText(NewItemDescriptionText);
 }
 
 void UInventoryWidget::SetItemImg(UTexture2D* NewItemImg)
 {
-	if (ItemImg)
+	if (!IsValid(ItemImg))
 	{
-		ItemImg->SetBrushFromTexture(NewItemImg);
+		UE_LOG(LogTemp, Error, TEXT("Cannot find ItemImg in InventoryWidget, SetItemImg"));
+		return;
+	}
+	if (!IsValid(NewItemImg))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find NewItemImg in InventoryWidget, SetItemImg"));
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("Cannot find ItemImg in InventoryWidget, SetItemImg")) }
+	ItemImg->SetBrushFromTexture(NewItemImg);
 }
 
 void UInventoryWidget::LoadInventoryUIContents()
 {
-	if (WBP_InventoryPlayerBlock)
+	if (!IsValid(WBP_InventoryPlayerBlock))
 	{
-		WBP_InventoryPlayerBlock->LoadInventoryGridContents(Inventory->GetItemRefArray(), Inventory->GetItemCountArray());
+		UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in InventoryWidget, UpdateInventoryUIContents"));
+		return;
+	}
+	if (!IsValid(Inventory))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, UpdateInventoryUIContents"));
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("Cannot find WBP_InventoryPlayerBlock in InventoryWidget, UpdateInventoryUIContents")) }
+	WBP_InventoryPlayerBlock->LoadInventoryGridContents(Inventory->GetItemRefArray(), Inventory->GetItemCountArray());
 }
 
 void UInventoryWidget::OnInventorySlotHovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hovered over inventory slot"));
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find InventorySlot in InventoryWidget, OnInventorySlotHovered"));
+		return;
+	}
+	if (!IsValid(InventoryBlockWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find InventoryBlockWidget in InventoryWidget, OnInventorySlotHovered"));
+		return;
+	}
 
-	SetItemNameText(FText::FromString(InventorySlot->GetItem()->DisplayName));
-	SetItemDescriptionText(FText::FromString(InventorySlot->GetItem()->Description));
-	SetItemImg(InventorySlot->GetItem()->Icon);
+	FText HoveredItemDisplayNameText = FText::FromString(InventorySlot->GetItem()->DisplayName);
+	if (HoveredItemDisplayNameText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Error, TEXT("ItemDisplayNameText is empty in InventoryWidget, OnInventorySlotHovered"));
+		return;
+	}
+	SetItemNameText(HoveredItemDisplayNameText);
+
+	FText HoveredItemDescriptionText = FText::FromString(InventorySlot->GetItem()->Description);
+	if (HoveredItemDescriptionText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Error, TEXT("ItemDescriptionText is empty in InventoryWidget, OnInventorySlotHovered"));
+		return;
+	}
+	SetItemDescriptionText(HoveredItemDescriptionText);
+
+	UTexture2D* HoveredItemImgTexture = InventorySlot->GetItem()->Icon;
+	if (!IsValid(HoveredItemImgTexture))
+	{
+		UE_LOG(LogTemp, Error, TEXT("ItemImgTexture is invalid in InventoryWidget, OnInventorySlotHovered."));
+		return;
+	}
+	SetItemImg(HoveredItemImgTexture);
 }
 

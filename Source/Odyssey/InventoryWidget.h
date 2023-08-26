@@ -6,34 +6,31 @@
 #include "Blueprint/UserWidget.h"
 #include "InventoryWidget.generated.h"
 
-/**
- * 
- */
+class UTextBlock;
+class UImage;
+class USizeBox;
+class UInventoryPlayerBlockWidget;
+
 UCLASS()
 class ODYSSEY_API UInventoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void LoadInventoryUIContents();
+
+	UFUNCTION()
+	void OnInventorySlotHovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	int NumInventoryCols = 6;
+
+
 protected:
 	virtual void NativeConstruct() override;
 
-	/* WIDGET BINDINGS */
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* ItemNameText;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* ItemDescriptionText;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UImage* ItemImg;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class USizeBox* PlayerInventorySizeBox;
-
-	/* FUNCTIONS */
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetWidthForInventoryGrid();
 	
@@ -46,17 +43,24 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetItemImg(UTexture2D* NewItemImg);
 
-public:
+protected:
 
-	/* VARIABLES */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	int NumInventoryCols = 6;
+	/* WIDGET BINDINGS */
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* ItemNameText;
 
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void LoadInventoryUIContents();
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* ItemDescriptionText;
 
-	UFUNCTION()
-	void OnInventorySlotHovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UImage* ItemImg;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	USizeBox* PlayerInventorySizeBox;
+
 
 private:
 	class UInventory* Inventory;
