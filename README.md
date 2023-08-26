@@ -15,7 +15,8 @@
     8. Repeat the relevant steps to set up a second material with the second camera and position it to frame the character's head.
 4. Add your skeletal mesh and whatever you need to set that up properly (animations and stuff)
 5. Set up your dialogue component - you must at the very least set a Dialogue Participant name if you want the NPC to be able to appear in dialogue. Set the participant avatar to be the new head material you just created.
-   
+6. Highlighter component: By default, all static and skeletal meshes get highlighted when the object is interactable. If you only want to highlight specific meshes, check the _Outline Only Tagged Meshes_ checkbox in the Highlighter component, set the _Outline Mesh Tag_ to whatever you want it to be and add the tag to any meshes you want to be highlighted
+    
 ## Interactables
 ### Creating an Item That Triggers Dialogue
 
