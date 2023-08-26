@@ -17,6 +17,7 @@ public:
 
 	void SetHighlight(bool IsHighlighted);
 
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -26,6 +27,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Highlighter")
 	FName OutlineMeshTag = "Outline";
+
 
 private:
 	void GetMeshesToOutline();

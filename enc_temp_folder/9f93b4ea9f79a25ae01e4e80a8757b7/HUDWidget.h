@@ -6,11 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "HUDWidget.generated.h"
 
-class UProgressBar;
-class UTextBlock;
-class UCharSheet;
-class AOdysseyCharacter;
-
 /**
  * 
  */
@@ -22,22 +17,20 @@ class ODYSSEY_API UHUDWidget : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 
-protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UProgressBar* HpBar;
+	class UProgressBar* HpBar;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* GpText;
+	class UTextBlock* GpText;
 
 private:
+	class UCharSheet* CharSheet;
+	class AOdysseyCharacter* Player;
+
 	UFUNCTION()
 	void SetHpBar(float Percent);
 	
 	UFUNCTION()
 	void SetGpText(int32 Gp);
-
-private:
-	UCharSheet* CharSheet;
-	AOdysseyCharacter* Player;
 
 };
