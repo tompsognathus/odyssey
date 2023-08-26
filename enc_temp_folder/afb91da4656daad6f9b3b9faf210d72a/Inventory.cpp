@@ -5,9 +5,12 @@
 #include "DA_Item.h"
 #include "WBP_InventorySlot.h"
 
+// Sets default values for this component's properties
 UInventory::UInventory()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+	// off to improve performance if you don't need them.
+	PrimaryComponentTick.bCanEverTick = true;
 
 }
 
@@ -18,12 +21,7 @@ int UInventory::GetNumItems()
 
 void UInventory::AddItem(UDA_Item* ItemToAdd, int NumToAdd)
 {
-	if (!IsValid(ItemToAdd))
-	{
-		UE_LOG(LogTemp, Error, TEXT("ItemToAdd is not valid in Inventory, AddItem"));
-		return;
-	}
-
+	// Try to find the index of the item in the inventory
 	int IndexOfItem = ItemRefArray.Find(ItemToAdd);
 
 	// If the item is already in the inventory, add to the count of that item
@@ -41,12 +39,7 @@ void UInventory::AddItem(UDA_Item* ItemToAdd, int NumToAdd)
 
 void UInventory::RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove)
 {
-	if (!IsValid(ItemToRemove))
-	{
-		UE_LOG(LogTemp, Error, TEXT("ItemToRemove is not valid in Inventory, RemoveItem"));
-		return;
-	}
-
+	// Find item in inventory
 	int IndexOfItemToRemove = ItemRefArray.Find(ItemToRemove);
 
 	// Check if the item actually exists in the inventory

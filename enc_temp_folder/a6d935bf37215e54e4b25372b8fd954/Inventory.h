@@ -11,8 +11,6 @@
 
 #include "Inventory.generated.h"
 
-class UDA_Item;
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ODYSSEY_API UInventory : public UActorComponent
@@ -20,8 +18,10 @@ class ODYSSEY_API UInventory : public UActorComponent
 	GENERATED_BODY()
 
 public:	
+	// Sets default values for this component's properties
 	UInventory();
 
+public:	
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	int GetNumItems();
 
@@ -31,7 +31,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove);
 
-	// Getters
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	TArray<class UDA_Item*> GetItemRefArray() const { return ItemRefArray; }
 
@@ -43,9 +42,10 @@ protected:
 	int MaxInventorySize = 60;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
-	TArray<UDA_Item*> ItemRefArray = TArray<UDA_Item*>();
+	TArray<class UDA_Item*> ItemRefArray;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
-	TArray<int> ItemCountArray = TArray<int>();
+	TArray<int> ItemCountArray;
+
 
 };
