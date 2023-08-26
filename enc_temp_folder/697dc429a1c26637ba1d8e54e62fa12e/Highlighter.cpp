@@ -35,46 +35,23 @@ void UHighlighter::SetHighlight(bool IsHighlighted)
 
 void UHighlighter::GetMeshesToOutline()
 {
+	// Get all static and skeletal meshes from parent actor
 	AActor* ParentActor = GetOwner();
-	if (!IsValid(ParentActor))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Could not get parent actor in Highlighter, GetAllMeshes"));
-		return;
-	}
 
 	for (UActorComponent* ActorComponent : ParentActor->GetComponents())
 	{
 		UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(ActorComponent);
 		if (StaticMeshComponent)
 		{
-			// Skip the mesh if it is not tagged with the outline tag and we want to only outline tagged meshes
-			if (bOutlineOnlyTaggedMeshes)
-			{
-				if (!StaticMeshComponent->ComponentHasTag(OutlineMeshTag))
-				{
-					continue;
-				}
-			}
-
 			StaticMeshesToOutline.Add(StaticMeshComponent);
 		}
 
 		USkeletalMeshComponent* SkeletalMeshComponent = Cast<USkeletalMeshComponent>(ActorComponent);
 		if (SkeletalMeshComponent)
 		{
-			// Skip the mesh if it is not tagged with the outline tag and we want to only outline tagged meshes
-			if (bOutlineOnlyTaggedMeshes)
-			{
-				if (!SkeletalMeshComponent->ComponentHasTag(OutlineMeshTag))
-				{
-					continue;
-				}
-			}
-
 			SkeletalMeshesToOutline.Add(SkeletalMeshComponent);
 		}
 	}
-
 }
 
 

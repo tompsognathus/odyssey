@@ -13,23 +13,25 @@ class ODYSSEY_API UHighlighter : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UHighlighter();
 
+	void SetHighlight(bool IsHighlighted);
+
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:
-	void SetHighlight(bool IsHighlighted);
-	
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Highlighter")
-	TArray<UStaticMeshComponent*> StaticMeshesToOutline;
+	bool bOutlineOnlyTaggedMeshes = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Highlighter")
+	FName OutlineMeshTag = "Outline";
+
+private:
+	void GetMeshesToOutline();
+
+private:
+	TArray<UStaticMeshComponent*> StaticMeshesToOutline;
 	TArray<USkeletalMeshComponent*> SkeletalMeshesToOutline;
 
-	// Idk how to actually override this, so instead if I only want a subset of the meshes, I set them in BeginPlay
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Highlighter")
-	void GetMeshesToOutline();
 };
