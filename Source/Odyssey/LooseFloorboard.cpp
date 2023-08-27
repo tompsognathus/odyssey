@@ -5,54 +5,55 @@
 #include "Highlighter.h"
 #include "Components/WidgetComponent.h"
 
-// Sets default values
 ALooseFloorboard::ALooseFloorboard()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
-// Called when the game starts or when spawned
 void ALooseFloorboard::BeginPlay()
 {
 	Super::BeginPlay();
-	GetMeshesToOutline(StaticMeshesToOutline, SkeletalMeshesToOutline);
+
 	GetInputPromptWidgetComponent();
+
+	// I think the following is unnecessary because it's now done by the highlighter component, but keeping it here for now just in case. TODO: Remove if not needed.
+	//GetMeshesToOutline(StaticMeshesToOutline, SkeletalMeshesToOutline);
 }
 
 void ALooseFloorboard::GetInputPromptWidgetComponent()
 {
-	// Find the input prompt widget reference
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
-	if (InputPromptActorComponent)
+	if (!IsValid(InputPromptActorComponent))
 	{
-		InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
-	
-	} else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in Cannon, BeginPlay"), *GetName()); }
+		UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in LooseFloorboard, BeginPlay"), *GetName());
+		return;
+	}
+
+	InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
 }
 
 void ALooseFloorboard::Highlight_Implementation(bool IsHighlighted)
 {
-	// Get Highlighter component
 	UHighlighter* Highlighter = FindComponentByClass<UHighlighter>();
-
-	if (Highlighter)
+	if (!IsValid(Highlighter))
 	{
-		Highlighter->SetHighlight(IsHighlighted);
+		UE_LOG(LogTemp, Warning, TEXT("No highlighter found on %s in LooseFloorboard, Highlight"), *GetName());
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("No highlighter component found on %s in TreasureChest, Highlight"), *GetName()); }
+	Highlighter->SetHighlight(IsHighlighted);
 }
 
 void ALooseFloorboard::DisplayInputPrompt_Implementation(bool IsVisible)
 {
-	// Set input prompt visibility
-	if (InputPromptWidgetComponent)
+	if (!IsValid(InputPromptWidgetComponent))
 	{
-		InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
+		UE_LOG(LogTemp, Error, TEXT("No input prompt widget found on %s in LooseFloorboard, DisplayInputPrompt"), *GetName());
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, DisplayInputPrompt"), *GetName()); }
-
+	InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
 }
 
 bool ALooseFloorboard::GetIsInteractable_Implementation()
@@ -65,22 +66,24 @@ void ALooseFloorboard::SetIsInteractable(bool NewIsInteractable)
 	IsInteractable = NewIsInteractable;
 }
 
-void ALooseFloorboard::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)
-{
-	// Get all components
-	TArray<UActorComponent*> Components;
 
-	for (UActorComponent* Component : GetComponents())
-	{
-		// If the component is a static mesh component, add it to the static mesh array
-		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(Component))
-		{
-			StaticMeshesToOutlineOUT.Add(StaticMeshComponent);
-		}
-		// If the component is a skeletal mesh component, add it to the skeletal mesh array
-		else if (USkeletalMeshComponent* SkeletalMeshComponent = Cast<USkeletalMeshComponent>(Component))
-		{
-			SkeletalMeshesToOutlineOUT.Add(SkeletalMeshComponent);
-		}
-	}
-}
+// I think the following is unnecessary because it's now done by the highlighter component, but keeping it here for now just in case. TODO: Remove if not needed.
+//void ALooseFloorboard::GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT)
+//{
+//	// Get all components
+//	TArray<UActorComponent*> Components;
+//
+//	for (UActorComponent* Component : GetComponents())
+//	{
+//		// If the component is a static mesh component, add it to the static mesh array
+//		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(Component))
+//		{
+//			StaticMeshesToOutlineOUT.Add(StaticMeshComponent);
+//		}
+//		// If the component is a skeletal mesh component, add it to the skeletal mesh array
+//		else if (USkeletalMeshComponent* SkeletalMeshComponent = Cast<USkeletalMeshComponent>(Component))
+//		{
+//			SkeletalMeshesToOutlineOUT.Add(SkeletalMeshComponent);
+//		}
+//	}
+//}

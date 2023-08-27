@@ -7,6 +7,8 @@
 #include "Interactable.h"
 #include "LooseFloorboard.generated.h"
 
+class UWidgetComponent;
+
 UCLASS()
 class ODYSSEY_API ALooseFloorboard : public AActor, public IInteractable
 {
@@ -35,11 +37,13 @@ public:
 	bool IsInteractable = true;
 
 private:
-	class UWidgetComponent* InputPromptWidgetComponent;
+	UWidgetComponent* InputPromptWidgetComponent;
 	
-	TArray<UStaticMeshComponent*> StaticMeshesToOutline;
-	TArray<USkeletalMeshComponent*> SkeletalMeshesToOutline;
-	void GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT);
+
+	// I think the following is unnecessary because it's now done by the highlighter component, but keeping it here for now just in case. TODO: Remove if not needed.
+	//TArray<UStaticMeshComponent*> StaticMeshesToOutline = TArray<UStaticMeshComponent*>();
+	//TArray<USkeletalMeshComponent*> SkeletalMeshesToOutline = TArray<USkeletalMeshComponent*>();
+	//void GetMeshesToOutline(TArray<UStaticMeshComponent*>& StaticMeshesToOutlineOUT, TArray<USkeletalMeshComponent*>& SkeletalMeshesToOutlineOUT);
 
 
 };
