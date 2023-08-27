@@ -18,23 +18,23 @@ public:
 	// Sets default values for this actor's properties
 	ALooseFloorboard();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	void GetInputPromptWidgetComponent();
-
-
-public:	
 	virtual void Highlight_Implementation(bool IsHighlighted) override;
 	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
 	virtual bool GetIsInteractable_Implementation() override;
 
+public:	
 	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	void SetIsInteractable(bool NewIsInteractable);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TreasureChest")
 	bool IsInteractable = true;
+
+
+protected:
+	virtual void BeginPlay() override;
+
+	void GetInputPromptWidgetComponent();
+
 
 private:
 	UWidgetComponent* InputPromptWidgetComponent;

@@ -4,12 +4,9 @@
 #include "LootBox.h"
 #include "WBP_InventorySlot.h"
 
-// Sets default values for this component's properties
 ULootBox::ULootBox()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 	
 }
 
@@ -18,7 +15,7 @@ void ULootBox::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Check if the item and count arrays have the same size as we need a count for each item
+	// We need to make sure each item also has a corresponding count, so we make sure the arrays are the same size
 	if (ItemRefArray.Num() != ItemCountArray.Num())
 	{
 		UE_LOG(LogTemp, Error, TEXT("Item and ItemCount arrays are not the same size!"));
