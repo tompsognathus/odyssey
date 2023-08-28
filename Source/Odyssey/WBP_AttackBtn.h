@@ -9,25 +9,28 @@
 #include "WBP_AttackBtn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionBtnClickedSignature, UWBP_AttackBtn*, AttackBtn);
-/*
- * 
- */
+
+class UTextBlock;
+class UButton;
+
 UCLASS()
 class ODYSSEY_API UWBP_AttackBtn : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "AttackBtn")
+	void SetActionButtonText(FText Text);
+
+public:
 	FOnActionBtnClickedSignature OnActionButtonClickedDelegate;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* ActionBtnText;
+	UTextBlock* ActionBtnText;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* ActionBtn;
+	UButton* ActionBtn;
 
-	UFUNCTION(BlueprintCallable, Category = "AttackBtn")
-	void SetActionButtonText(FText Text);
 
 private:
 	UFUNCTION()

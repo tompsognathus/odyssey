@@ -9,19 +9,19 @@
 
 void UWBP_AttackBtn::SetActionButtonText(FText NewText)
 {
-	if (ActionBtnText != nullptr) {
-		ActionBtnText->SetText(NewText);
-
-	} else { UE_LOG(LogTemp, Warning, TEXT("ActionBtnText is nullptr in WBP_AttackBtn, SetActionBtnText")); }
-
-
-	// Bind to ActionBtn Clicked Event
-	if (ActionBtn)
+	if (!IsValid(ActionBtnText))
 	{
-		ActionBtn->OnClicked.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnClicked);
+		UE_LOG(LogTemp, Error, TEXT("UWBP_AttackBtn::SetActionButtonText: Invalid ActionBtnText"));
+		return;
+	}
+	ActionBtnText->SetText(NewText);
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("ActionBtn is nullptr in WBP_AttackBtn, SetActionBtnText")); }
-
+	if (!IsValid(ActionBtn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_AttackBtn::SetActionButtonText: Invalid ActionBtn"));
+		return;
+	}
+	ActionBtn->OnClicked.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnClicked);
 }
 
 void UWBP_AttackBtn::OnActionBtnClicked()
