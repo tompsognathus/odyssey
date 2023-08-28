@@ -15,11 +15,32 @@ void UWBP_InventorySlot::NativeConstruct()
 
 void UWBP_InventorySlot::SetItemImg(UTexture2D* NewItemImg)
 {
+	if (!IsValid(NewItemImg))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_InventorySlot::SetItemImg: Invalid NewItemImg"));
+		return;
+	}
+	if (!IsValid(ItemImg))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_InventorySlot::SetItemImg: Invalid ItemImg"));
+		return;
+	}
+
 	ItemImg->SetBrushFromTexture(NewItemImg);
 }
 
 void UWBP_InventorySlot::SetStackSizeText(FText NewStackSizeText)
 {
+	if (!IsValid(StackSizeText))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_InventorySlot::SetStackSizeText: Invalid StackSizeText"));
+		return;
+	}
+	if (NewStackSizeText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWBP_InventorySlot::SetStackSizeText: NewStackSizeText is empty or whitespace"));
+	}
+
 	StackSizeText->SetText(NewStackSizeText);
 }
 
@@ -62,6 +83,12 @@ void UWBP_InventorySlot::SetStackSize(int NewStackSize)
 
 int UWBP_InventorySlot::GetWidth()
 {
+	if (!IsValid(SizeBox))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_InventorySlot::GetWidth: Invalid SizeBox"));
+		return 0;
+	}
+
 	return SizeBox->GetWidthOverride();
 }
 
