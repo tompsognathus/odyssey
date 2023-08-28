@@ -6,17 +6,13 @@
 #include "Blueprint/UserWidget.h"
 #include "WBP_PauseMenu.generated.h"
 
-/**
- * 
- */
+class UUIManager;
+
 UCLASS()
 class ODYSSEY_API UWBP_PauseMenu : public UUserWidget
 {
 	GENERATED_BODY()
 	
-private:
-	class UUIManager* UIManager;
-
 protected:
 	virtual void NativeConstruct() override;
 
@@ -32,4 +28,7 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void HandleQuitGameBtnClicked();
 
+
+private:
+	UUIManager* UIManager;
 };

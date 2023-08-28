@@ -3,47 +3,58 @@
 
 #include "WBP_PauseMenu.h"
 #include "UIManager.h"
+#include "Utility.h"
 
 void UWBP_PauseMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
+	UIManager = Utility::GetUIManager(this);
+	if (!IsValid(UIManager))
 	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
-
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, NativeConstruct")); }
+		UE_LOG(LogTemp, Error, TEXT("UWBP_PauseMenu::NativeConstruct: Invalid UIManager"));
+		return;
 	}
 }
 
 
 void UWBP_PauseMenu::HandleContinueGameBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Continue game button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_PauseMenu::HandleContinueGameBtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->DisplayHUDWidgetOnly();
-
 }
 
 void UWBP_PauseMenu::HandleOptionsBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Options button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_PauseMenu::HandleOptionsBtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->DisplayOptionsMenuWidget();
 }
 
 void UWBP_PauseMenu::HandleMainMenuBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("New game button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_PauseMenu::HandleMainMenuBtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->DisplayMainMenuWidget();
-
 }
 
 void UWBP_PauseMenu::HandleQuitGameBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_PauseMenu::HandleQuitGameBtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->OverlayQuitGameAlertWidget();
-
 }
 
