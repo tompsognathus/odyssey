@@ -5,52 +5,67 @@
 #include "UIManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include <Kismet/GameplayStatics.h>
-
+#include "Utility.h"
 
 void UWBP_Alert::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
-	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
-
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in WBP_Alert, NativeConstruct")); }
-	}
+	UIManager = Utility::GetUIManager(this);
 }
 
 /***** Quit Game Alerts *****/
 void UWBP_Alert::HandleQuitGameYesBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Yes button clicked on Quit Game alert in WBP_Alert, HandleQuitGameBtnYesClicked"));
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid World in WBP_Alert, HandleQuitGameBtnYesClicked"));
+		return;
+	}
 
-	// Quit game
-	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, false);
+	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
+	if (!IsValid(FirstPlayerController))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid FirstPlayerController in WBP_Alert, HandleQuitGameBtnYesClicked"));
+		return;
+	}
+
+	UKismetSystemLibrary::QuitGame(World, FirstPlayerController, EQuitPreference::Quit, false);
 }
 
 void UWBP_Alert::HandleQuitGameNoBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("No button clicked on Quit Game alert in WBP_Alert, HandleQuitGameBtnNoClicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid UIManager in WBP_Alert, HandleQuitGameBtnNoClicked"));
+		return;
+	}
+
 	UIManager->HideAllAlerts();
 }
 
 /***** New Game Alerts *****/
 void UWBP_Alert::HandleNewGameYesBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Yes button clicked on New Game alert in WBP_Alert, HandleNewGameBtnYesClicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid UIManager in WBP_Alert, HandleNewGameBtnYesClicked"));
+		return;
+	}
 
 	UIManager->HideAllAlerts();
-	// Play Prologue
 	UIManager->StartPrologue();
-
 }
 
 void UWBP_Alert::HandleNewGameNoBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("No button clicked on New Game alert in WBP_Alert, HandleNewGameBtnNoClicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid UIManager in WBP_Alert, HandleNewGameBtnNoClicked"));
+		return;
+	}
+
 	UIManager->HideAllAlerts();
 }
 

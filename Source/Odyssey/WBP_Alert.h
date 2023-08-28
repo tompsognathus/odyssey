@@ -6,17 +6,13 @@
 #include "Blueprint/UserWidget.h"
 #include "WBP_Alert.generated.h"
 
-/**
- * 
- */
+class UUIManager;
+
 UCLASS()
 class ODYSSEY_API UWBP_Alert : public UUserWidget
 {
 	GENERATED_BODY()
 	
-private:
-	class UUIManager* UIManager;
-
 protected:
 	virtual void NativeConstruct() override;
 
@@ -34,5 +30,8 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Alert Functions")
 	void HandleNewGameNoBtnClicked();
 
+
+private:
+	UUIManager* UIManager;
 
 };
