@@ -10,6 +10,7 @@ ULootBox::ULootBox()
 	
 }
 
+// Called when the game starts
 void ULootBox::BeginPlay()
 {
 	Super::BeginPlay();
@@ -24,15 +25,19 @@ void ULootBox::BeginPlay()
 
 void ULootBox::RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove)
 {
+	// Try to find the index of the item in the loot box
 	int IndexOfItem = ItemRefArray.Find(ItemToRemove);
 
-	if (IndexOfItem != INDEX_NONE)  // make sure the item actually exists in the loot box
+	// Check if the item actually exists in the loot box
+	if (IndexOfItem != INDEX_NONE)
 	{
-		if (AmountToRemove < ItemCountArray[IndexOfItem]) // Reduce the item count
+		// If we're removing less than the total count of the item, just subtract the amount
+		if (AmountToRemove < ItemCountArray[IndexOfItem])
 		{
 			ItemCountArray[IndexOfItem] -= AmountToRemove;
 		}
-		else  // Remove the whole item
+		// Otherwise remove the whole item from the loot box
+		else
 		{
 			ItemRefArray.RemoveAt(IndexOfItem);
 			ItemCountArray.RemoveAt(IndexOfItem);
@@ -42,13 +47,17 @@ void ULootBox::RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove)
 
 void ULootBox::AddItem(UDA_Item* ItemToAdd, int NumToAdd)
 {
+	// Try to find the index of the item in the loot box
 	int IndexOfItem = ItemRefArray.Find(ItemToAdd);
 
-	if (IndexOfItem != INDEX_NONE)  // make sure the item actually exists in the loot box
+	// Check if the item already exists in the loot box
+	if (IndexOfItem != INDEX_NONE)
 	{
-		ItemCountArray[IndexOfItem] += NumToAdd;  // Increase the item count
+		// If it does, just add the amount to the existing count
+		ItemCountArray[IndexOfItem] += NumToAdd;
 	}
-	else  // Add new item to the loot box
+	// Otherwise add the item to the loot box
+	else
 	{
 		ItemRefArray.Add(ItemToAdd);
 		ItemCountArray.Add(NumToAdd);

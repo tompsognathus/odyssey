@@ -6,13 +6,16 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenuWidget.generated.h"
 
-class UUIManager;
-
+/**
+ * 
+ */
 UCLASS()
 class ODYSSEY_API UMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+private:
+	class UUIManager* UIManager;
 
 protected:
 	virtual void NativeConstruct() override;
@@ -30,7 +33,5 @@ protected:
 	void HandleQuitGameBtnClicked();
 
 
-private:
-	UUIManager* UIManager;
 
 };
