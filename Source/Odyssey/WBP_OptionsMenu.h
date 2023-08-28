@@ -6,9 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "WBP_OptionsMenu.generated.h"
 
-/**
- * 
- */
+class UUIManager;
+
 UCLASS()
 class ODYSSEY_API UWBP_OptionsMenu : public UUserWidget
 {
@@ -16,7 +15,7 @@ class ODYSSEY_API UWBP_OptionsMenu : public UUserWidget
 	
 
 private:
-	class UUIManager* UIManager;
+	UUIManager* UIManager;
 
 protected:
 	virtual void NativeConstruct() override;

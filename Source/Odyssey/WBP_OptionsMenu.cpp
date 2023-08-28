@@ -4,28 +4,28 @@
 #include "WBP_OptionsMenu.h"
 
 #include "UIManager.h"
-
+#include "Utility.h"
 
 void UWBP_OptionsMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
+	UIManager = Utility::GetUIManager(this);
+	if (!IsValid(UIManager))
 	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
-
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, NativeConstruct")); }
+		UE_LOG(LogTemp, Error, TEXT("UWBP_OptionsMenu::NativeConstruct: Invalid UIManager"));
+		return;
 	}
 }
 
 void UWBP_OptionsMenu::HandleAudioBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Audio button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_OptionsMenu::HandleAudioBtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->DisplayAudioOptionsMenuWidget();
-
 }
 
 void UWBP_OptionsMenu::HandleVideoBtnClicked()
@@ -41,7 +41,10 @@ void UWBP_OptionsMenu::HandleGameplayBtnClicked()
 
 void UWBP_OptionsMenu::HandleBackBtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Quit game button clicked"));
-
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_OptionsMenu::HandleBackBtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->DisplayPreviousWidget();
 }
