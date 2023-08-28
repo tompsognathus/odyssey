@@ -10,98 +10,127 @@
 #include "WBP_InventorySlot.h"
 #include "InventoryPlayerBlockWidget.h"
 #include "Components/SizeBox.h"
+#include "Utility.h"
 
 void UTradingInventoryWidget::NativeConstruct()
 {
-	// Get player pawn
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
+	UIManager = Utility::GetUIManager(this);
+	Inventory = Utility::GetInventory(this);
+
+	if (!IsValid(WBP_InventoryPlayerBlock))
 	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
-
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in InventoryWidget, NativeConstruct")); }
-	
-		// Get inventory component
-		Inventory = Cast<UInventory>(PlayerPawn->GetComponentByClass(UInventory::StaticClass()));
-
-		if (!Inventory) { UE_LOG(LogTemp, Error, TEXT("Cannot find Inventory in InventoryWidget, NativeConstruct")); }
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::NativeConstruct: Invalid WBP_InventoryPlayerBlock on %s"), *GetName());
+		return;
+	}
+	if (!IsValid(WBP_InventoryLootBoxBlock))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::NativeConstruct: Invalid WBP_InventoryLootBoxBlock on %s"), *GetName());
+		return;
 	}
 
-	// bind delegate to double clicking slots
-	if (WBP_InventoryPlayerBlock)
-	{
-		WBP_InventoryPlayerBlock->OnInventorySlotDoubleClickedDelegate.AddDynamic(this, &UTradingInventoryWidget::OnInventorySlotDoubleClicked);
-
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in TradingInventoryWidget, NativeConstruct")); }
-
-	if (WBP_InventoryLootBoxBlock)
-	{
-		WBP_InventoryLootBoxBlock->OnInventorySlotDoubleClickedDelegate.AddDynamic(this, &UTradingInventoryWidget::OnInventorySlotDoubleClicked);
-
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryLootBoxBlock in TradingInventoryWidget, NativeConstruct")); }
+	WBP_InventoryPlayerBlock->OnInventorySlotDoubleClickedDelegate.AddDynamic(this, &UTradingInventoryWidget::OnInventorySlotDoubleClicked);
+	WBP_InventoryLootBoxBlock->OnInventorySlotDoubleClickedDelegate.AddDynamic(this, &UTradingInventoryWidget::OnInventorySlotDoubleClicked);
 
 	SetWidthForInventoryGrids();
 }
 
 void UTradingInventoryWidget::SetWidthForInventoryGrids()
 {
-	int InventorySlotWidth = 100;
-	// Create an empty slot widget to get its size
-	UWBP_InventorySlot* EmptySlot = CreateWidget<UWBP_InventorySlot>(this, UIManager->InventorySlotAssetRef);
-	if (EmptySlot)
+	if (!IsValid(UIManager))
 	{
-		InventorySlotWidth = EmptySlot->GetWidth();
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::SetWidthForInventoryGrids: Invalid UIManager on %s"), *GetName());
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find InventorySlotAssetRef in TradingInventoryWidget, NativeConstruct")); }
+	int InventorySlotWidth = 100;
+
+	// Create an empty slot widget to get its size
+	TSubclassOf<class UUserWidget> InventorySlotAssetRef = UIManager->InventorySlotAssetRef;
+	if (!IsValid(InventorySlotAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::SetWidthForInventoryGrids: Invalid InventorySlotAssetRef on %s. Did you assign one in the editor?"), *GetName());
+		return;
+	}
+
+	UWBP_InventorySlot* EmptySlot = CreateWidget<UWBP_InventorySlot>(this, InventorySlotAssetRef);
+	if (!IsValid(EmptySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::SetWidthForInventoryGrids: Invalid EmptySlot"));
+		return;
+	}
+
+	InventorySlotWidth = EmptySlot->GetWidth();
 
 	int GridWidth = NumInventoryCols * InventorySlotWidth;
 	// Set the width override for both grids based on the number of columns and the size of the slots
-	if (PlayerInventorySizeBox)
+	if (!IsValid(PlayerInventorySizeBox))
 	{
-		PlayerInventorySizeBox->SetWidthOverride(GridWidth);
-
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerInventorySizeBox in TradingInventoryWidget, NativeConstruct")); }
-
-	if (LootInventorySizeBox)
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::SetWidthForInventoryGrids: Invalid PlayerInventorySizeBox"));
+		return;
+	}
+	if (!IsValid(LootInventorySizeBox))
 	{
-		LootInventorySizeBox->SetWidthOverride(GridWidth);
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::SetWidthForInventoryGrids: Invalid LootInventorySizeBox"));
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find LootBoxInventorySizeBox in TradingInventoryWidget, NativeConstruct")); }
+	PlayerInventorySizeBox->SetWidthOverride(GridWidth);
+	LootInventorySizeBox->SetWidthOverride(GridWidth);
 }
 
 void UTradingInventoryWidget::LoadPlayerInventoryUIContents()
 {
-	if (WBP_InventoryPlayerBlock)
+	if (!IsValid(Inventory))
 	{
-		// Populate inventory grid with player inventory contents
-		WBP_InventoryPlayerBlock->LoadInventoryGridContents(Inventory->GetItemRefArray(), Inventory->GetItemCountArray());
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::LoadPlayerInventoryUIContents: Invalid Inventory on %s. Does it have an inventory component?"), *GetName());
+		return;
+	}
+	if (!IsValid(WBP_InventoryPlayerBlock))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::LoadPlayerInventoryUIContents: Invalid WBP_InventoryPlayerBlock on %s. Did you assign it in the editor?"), *GetName());
+		return;
+	}
 
-		
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryPlayerBlock in TradingInventoryWidget, UpdatePlayerInventoryUIContents")); }
+	// Populate inventory grid with player inventory contents
+	WBP_InventoryPlayerBlock->LoadInventoryGridContents(Inventory->GetItemRefArray(), Inventory->GetItemCountArray());
 }
 
 void UTradingInventoryWidget::LoadLootBoxInventoryUIContents(ULootBox* LootBox)
 {
-	if (WBP_InventoryLootBoxBlock)
+	if (!IsValid(LootBox))
 	{
-		CurrentLootBox = LootBox;
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::LoadLootBoxInventoryUIContents: Invalid LootBox on %s"), *GetName());
+		return;
+	}
+	if (!IsValid(WBP_InventoryLootBoxBlock))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::LoadLootBoxInventoryUIContents: Invalid WBP_InventoryLootBoxBlock on %s"), *GetName());
+		return;
+	}
+	CurrentLootBox = LootBox;
 
-		// Populate inventory grid with loot box contents
-		WBP_InventoryLootBoxBlock->LoadInventoryGridContents(LootBox->GetItemRefArray(), LootBox->GetItemCountArray());
-
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find WBP_InventoryLootBoxBlock in TradingInventoryWidget, UpdateAvailableLootUIContents")); }
+	// Populate inventory grid with loot box contents
+	WBP_InventoryLootBoxBlock->LoadInventoryGridContents(LootBox->GetItemRefArray(), LootBox->GetItemCountArray());
 }
 
 
 void UTradingInventoryWidget::OnInventorySlotDoubleClicked(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot)
 {
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnInventorySlotDoubleClicked: Invalid InventorySlot"));
+		return;
+	}
 	UDA_Item* Item = InventorySlot->GetItem();
 
-	// First make sure the slot isn't empty
-	if (Item == nullptr) { return; }
-	if (CurrentLootBox == nullptr) { 
-		UE_LOG(LogTemp, Error, TEXT("CurrentLootBox is null. See TradingInventoryWidget, OnInventorySlotDoubleClicked. Did you get a reference when opening the UI?"));
+	if (!IsValid(Item))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnInventorySlotDoubleClicked: Invalid Item on InventorySlot"));
+		return;
+	}
+	if (!IsValid(InventoryBlockWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnInventorySlotDoubleClicked: Invalid InventoryBlockWidget"));
 		return;
 	}
 
@@ -113,22 +142,42 @@ void UTradingInventoryWidget::OnInventorySlotDoubleClicked(UInventoryPlayerBlock
 	else if (InventoryBlockWidget == WBP_InventoryLootBoxBlock)
 	{
 		OnLootBoxInventorySlotDoubleClicked(InventorySlot);
-
-	} else { UE_LOG(LogTemp, Error, TEXT("Cannot find InventoryGrid in TradingInventoryWidget, OnInventorySlotDoubleClicked")); }
-
+	} 
+	else 
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnInventorySlotDoubleClicked: InventoryBlockWidget doesn't match either inventory block")); 
+		return;
+	}
 }
 
 void UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Player inventory slot double clicked"));
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked: Invalid InventorySlot"));
+		return;
+	}
 
-	UDA_Item* Item = InventorySlot->GetItem();
 	int NumItems = InventorySlot->GetNumItems();
+	UDA_Item* Item = InventorySlot->GetItem();
 
-	// Add item to loot box
+	if (!IsValid(Item))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked: Invalid Item in InventorySlot"));
+		return;
+	}
+	if (!IsValid(CurrentLootBox))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked: Invalid CurrentLootBox"));
+		return;
+	}
+	if (!IsValid(Inventory))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked: Invalid Inventory"));
+		return;
+	}
+
 	CurrentLootBox->AddItem(Item, NumItems);
-
-	// Remove item from player inventory
 	Inventory->RemoveItem(Item, NumItems);
 
 	// Update UI grids
@@ -138,15 +187,31 @@ void UTradingInventoryWidget::OnPlayerInventorySlotDoubleClicked(UWBP_InventoryS
 
 void UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Loot box inventory slot double clicked"));
-
-	UDA_Item* Item = InventorySlot->GetItem();
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked: Invalid InventorySlot"));
+		return;
+	}
 	int NumItems = InventorySlot->GetNumItems();
+	UDA_Item* Item = InventorySlot->GetItem();
 
-	// Add item to inventory
+	if (!IsValid(Item))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked: Invalid Item in InventorySlot"));
+		return;
+	}
+	if (!IsValid(CurrentLootBox))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked: Invalid CurrentLootBox"));
+		return;
+	}
+	if (!IsValid(Inventory))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked: Invalid Inventory"));
+		return;
+	}
+
 	Inventory->AddItem(Item, NumItems);
-
-	// Remove item from loot box
 	CurrentLootBox->RemoveItem(Item, NumItems);
 
 	// Update UI grids

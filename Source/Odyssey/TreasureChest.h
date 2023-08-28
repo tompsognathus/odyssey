@@ -7,24 +7,23 @@
 #include "Interactable.h"
 #include "TreasureChest.generated.h"
 
+class UWidgetComponent;
+
 UCLASS()
 class ODYSSEY_API ATreasureChest : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ATreasureChest();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	void GetInputPromptWidgetComponent();
+	// Interactable Interface function overrides
+	virtual void Highlight_Implementation(bool IsHighlighted) override;
+	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
+	virtual bool GetIsInteractable_Implementation() override;
 
 public:
-	// Variables
-	class UWidgetComponent* InputPromptWidgetComponent;
+	UWidgetComponent* InputPromptWidgetComponent;
 	
 	UPROPERTY(EditAnywhere)
 	float LidOpenAngle = 90.0f;
@@ -35,16 +34,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TreasureChest")
 	bool IsInteractable = true;
 
-	// Loot variables
-	
 
-	// Interface function overrides
-	//virtual void EnteredInteractionZone_Implementation() override;
-	//virtual void LeftInteractionZone_Implementation() override;
-	//virtual void InteractRequest_Implementation() override;
-	virtual void Highlight_Implementation(bool IsHighlighted) override;
-	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
-	virtual bool GetIsInteractable_Implementation() override;
+protected:
+	virtual void BeginPlay() override;
+
+	void GetInputPromptWidgetComponent();
 
 
 private:

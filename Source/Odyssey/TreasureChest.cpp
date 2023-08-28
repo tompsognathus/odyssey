@@ -7,54 +7,55 @@
 #include "Highlighter.h"
 
 
-// Sets default values
 ATreasureChest::ATreasureChest()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
 void ATreasureChest::BeginPlay()
 {
 	Super::BeginPlay();
 
 	GetInputPromptWidgetComponent();
-
 }
 
 void ATreasureChest::GetInputPromptWidgetComponent()
 {
-	// Find the input prompt widget reference
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
-	if (InputPromptActorComponent)
+	if (!IsValid(InputPromptActorComponent))
 	{
-		InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
+		UE_LOG(LogTemp, Error, TEXT("ATreasureChest::GetInputPromptWidgetComponent: Invalid InputPromptActorComponent on %s"), *GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, BeginPlay"), *GetName()); }
+
+	InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
+	if (!IsValid(InputPromptWidgetComponent))
+	{
+		UE_LOG(LogTemp, Error, TEXT("ATreasureChest::GetInputPromptWidgetComponent: Invalid InputPromptWidgetComponent on %s"), *GetName());
+		return;
+	}
 }
 
 void ATreasureChest::Highlight_Implementation(bool IsHighlighted)
 {
-	// Get Highlighter component
-	UHighlighter* Highlighter = FindComponentByClass<UHighlighter>();
-
-	if (Highlighter)
+	UHighlighter* HighlighterComponent = FindComponentByClass<UHighlighter>();
+	if (!IsValid(HighlighterComponent))
 	{
-		Highlighter->SetHighlight(IsHighlighted);
+		UE_LOG(LogTemp, Error, TEXT("ATreasureChest::Highlight_Implementation: Invalid HighlighterComponent on %s"), *GetName());
+		return;
+	}
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("No highlighter component found on %s in TreasureChest, Highlight"), *GetName()); }
+	HighlighterComponent->SetHighlight(IsHighlighted);
 }
 
 void ATreasureChest::DisplayInputPrompt_Implementation(bool IsVisible)
 {
-	// Set input prompt visibility
-	if (InputPromptWidgetComponent)
+	if (!IsValid(InputPromptWidgetComponent))
 	{
-		InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
+		UE_LOG(LogTemp, Error, TEXT("ATreasureChest::DisplayInputPrompt_Implementation: Invalid InputPromptWidgetComponent"));
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, DisplayInputPrompt"), *GetName()); }
-	
+	InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
 }
 
 bool ATreasureChest::GetIsInteractable_Implementation()

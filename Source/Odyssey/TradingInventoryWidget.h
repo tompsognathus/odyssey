@@ -6,42 +6,50 @@
 #include "Blueprint/UserWidget.h"
 #include "TradingInventoryWidget.generated.h"
 
-/**
- * 
- */
+class UInventoryPlayerBlockWidget;
+class USizeBox;
+class UUIManager;
+class UInventory;
+class ULootBox;
+
 UCLASS()
 class ODYSSEY_API UTradingInventoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void LoadPlayerInventoryUIContents();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void LoadLootBoxInventoryUIContents(ULootBox* LootBox);
+
 
 protected:
 	virtual void NativeConstruct() override;
 
 	void SetWidthForInventoryGrids();
 	
+protected:
 	/* WIDGET BINDINGS */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UInventoryPlayerBlockWidget* WBP_InventoryLootBoxBlock;
+	UInventoryPlayerBlockWidget* WBP_InventoryLootBoxBlock;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
+	UInventoryPlayerBlockWidget* WBP_InventoryPlayerBlock;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class USizeBox* PlayerInventorySizeBox;
+	USizeBox* PlayerInventorySizeBox;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class USizeBox* LootInventorySizeBox;
+	USizeBox* LootInventorySizeBox;
 
 	/* VARIABLES */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int NumInventoryCols = 5;
 
+
 private:
-	class UUIManager* UIManager;
-	class UInventory* Inventory;
-
-	class ULootBox* CurrentLootBox;
-
 	UFUNCTION()
 	void OnInventorySlotDoubleClicked(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
 
@@ -49,11 +57,8 @@ private:
 
 	void OnLootBoxInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
 
-
-public:
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void LoadPlayerInventoryUIContents();
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void LoadLootBoxInventoryUIContents(class ULootBox* LootBox);
+private:
+	UUIManager* UIManager;
+	UInventory* Inventory;
+	ULootBox* CurrentLootBox;
 };

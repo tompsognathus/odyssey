@@ -22,7 +22,7 @@ void ATeleporter::GetInputPromptWidgetComponent()
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
 	if (!IsValid(InputPromptActorComponent))
 	{
-		UE_LOG(LogTemp, Error, TEXT("ATeleporter::GetInputPromptWidgetComponent: Invalid InputPromptActorComponent on %s"), GetName());
+		UE_LOG(LogTemp, Error, TEXT("ATeleporter::GetInputPromptWidgetComponent: Invalid InputPromptActorComponent on %s"), *GetName());
 		return;
 	}
 	InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
@@ -32,7 +32,7 @@ void ATeleporter::DisplayInputPrompt_Implementation(bool IsVisible)
 {
 	if (!IsValid(InputPromptWidgetComponent))
 	{
-		UE_LOG(LogTemp, Error, TEXT("ATeleporter::DisplayInputPrompt: Invalid InputPromptWidgetComponent on %s"), GetName());
+		UE_LOG(LogTemp, Error, TEXT("ATeleporter::DisplayInputPrompt: Invalid InputPromptWidgetComponent on %s"), *GetName());
 		return;
 	}
 	InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
