@@ -11,77 +11,102 @@
 #include "Highlighter.h"
 #include "DialogueComponent.h"
 
-// Sets default values
 ANPC::ANPC()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
 void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetInputPromptWidgetComponent();
-
-	// Get UI Manager reference through posessed pawn
-	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	if (PlayerCharacter)
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
 	{
-		UIManager = PlayerCharacter->FindComponentByClass<UUIManager>();
+		UE_LOG(LogTemp, Error, TEXT("World not found in NPC, BeginPlay"));
+		return;
 	}
-	else { UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found")); }
 
-	// Get reference to dialogue component
+	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
+	if (!IsValid(FirstPlayerController))
+	{
+		UE_LOG(LogTemp, Error, TEXT("FirstPlayerController not found in NPC, BeginPlay"));
+		return;
+	}
+
+	APawn* PlayerPawn = FirstPlayerController->GetPawn();
+	if (!IsValid(PlayerPawn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerPawn not found in NPC, BeginPlay"));
+		return;
+	}
+
+	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(PlayerPawn);
+	if (!IsValid(PlayerCharacter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found in NPC, BeginPlay"));
+		return;
+	}
+
+	UActorComponent* UIManagerComponent = PlayerPawn->GetComponentByClass(UUIManager::StaticClass());
+	if (!IsValid(UIManagerComponent))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManagerComponent in ANPC, BeginPlay"));
+		return;
+	}
+
+	UIManager = Cast<UUIManager>(UIManagerComponent);
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot cast UIManagerComponent to UIManager in ANPC, BeginPlay"));
+		return;
+	}
+
 	DialogueComponent = FindComponentByClass<UDialogueComponent>();
-	if (!DialogueComponent) { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, BeginPlay"), *GetName()); }
+	if (!IsValid(DialogueComponent)) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, BeginPlay"), *GetName()); 
+		return;
+	}
+
+	GetInputPromptWidgetComponent();
 
 	CheckIfIsInteractable();
 }
 
 void ANPC::GetInputPromptWidgetComponent()
 {
-	// Find the input prompt widget reference
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
-	if (InputPromptActorComponent)
+	if (!IsValid(InputPromptActorComponent))
 	{
-		InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
+		UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in NPC, GetInputPromptWidgetComponent"), *GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in TreasureChest, BeginPlay"), *GetName()); }
+	
+	InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
 }
 
 FName ANPC::GetParticipantName_Implementation() const
 {
-	if (DialogueComponent)
+	if (!IsValid(DialogueComponent))
 	{
-		return DialogueComponent->GetParticipantName();
-
-	} else { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantName"), *GetName()); }
-
-	return FName();
+		UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantName_Implementation"), *GetName());
+		return FName();
+	}
+	
+	return DialogueComponent->GetParticipantName();
 }
 
 FText ANPC::GetParticipantDisplayName_Implementation(FName ActiveSpeaker) const
 {
-	if (DialogueComponent)
+	if (!IsValid(DialogueComponent))
 	{
-		return DialogueComponent->GetParticipantDisplayName(ActiveSpeaker);
+		UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantDisplayName_Implementation"), *GetName());
+		return FText();
+	}
 
-	} else { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantDisplayName"), *GetName()); }
-	return FText();
+	return DialogueComponent->GetParticipantDisplayName(ActiveSpeaker);
 }
-
-//UMaterial* ANPC::GetParticipantIcon_Implementation(FName ActiveSpeaker, FName ActiveSpeakerState) const
-//{
-//	if (DialogueComponent)
-//	{
-//		return DialogueComponent->GetParticipantAvatar(ActiveSpeaker, ActiveSpeakerState);
-//
-//	} else { UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantIcon"), *GetName()); }
-//	return nullptr;
-//}
-
 
 void ANPC::SetIsInteractable(bool NewInteractable)
 {
@@ -95,35 +120,33 @@ bool ANPC::GetIsInteractable_Implementation()
 
 void ANPC::Highlight_Implementation(bool IsHighlighted)
 {
-	// Get reference to Highlighter
 	UHighlighter* Highlighter = FindComponentByClass<UHighlighter>();
-
-	if (Highlighter)
+	if (!IsValid(Highlighter))
 	{
-		Highlighter->SetHighlight(IsHighlighted);
-	} else { UE_LOG(LogTemp, Warning, TEXT("No highlighter found on %s in NPC, Highlight"), *GetName()); }
+		UE_LOG(LogTemp, Error, TEXT("Highlighter not found in NPC, Highlight_Implementation"));
+		return;
+	}
 
+	Highlighter->SetHighlight(IsHighlighted);
 }
 
 void ANPC::DisplayInputPrompt_Implementation(bool IsVisible)
 {
-	// Set input prompt visibility
-	if (InputPromptWidgetComponent)
+	if (!IsValid(InputPromptWidgetComponent))
 	{
-		InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
+		UE_LOG(LogTemp, Error, TEXT("No input prompt widget found on %s in NPC, DisplayInputPrompt"), *GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in NPC, DisplayInputPrompt"), *GetName()); }
 
+	InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
 }
 
 void ANPC::CheckIfIsInteractable()
 {
-	if (DialogueComponent)
+	if (IsValid(DialogueComponent))
 	{
-		// Check if there are any dialogues in the dialogue component
+		// Check if there are any dialogues in the dialogue component, it's interactable
 		int NumDialogues = DialogueComponent->GetNumDialogues();
-
-		// If there are any dialogues, the NPC is interactable
 		if (NumDialogues > 0)
 		{
 			SetIsInteractable(true);
