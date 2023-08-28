@@ -7,15 +7,13 @@
 #include "Interactable.h"
 #include "Teleporter.generated.h"
 
+class UWidgetComponent;
+
 UCLASS()
 class ODYSSEY_API ATeleporter : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 
-protected:
-	virtual void BeginPlay() override;
-
-	void GetInputPromptWidgetComponent();
 
 public:	
 	ATeleporter();
@@ -27,10 +25,12 @@ public:
 	void SetIsInteractable(bool NewIsInteractable);
 
 
-public:	
-	class UWidgetComponent* InputPromptWidgetComponent;
+protected:
+	virtual void BeginPlay() override;
+	void GetInputPromptWidgetComponent();
+
 
 private:
 	bool IsInteractable = true;
-
+	UWidgetComponent* InputPromptWidgetComponent;
 };

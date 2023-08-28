@@ -4,10 +4,8 @@
 #include "Teleporter.h"
 #include "Components/WidgetComponent.h"
 
-// Sets default values
 ATeleporter::ATeleporter()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
@@ -21,24 +19,23 @@ void ATeleporter::BeginPlay()
 
 void ATeleporter::GetInputPromptWidgetComponent()
 {
-	// Find the input prompt widget reference
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
-	if (InputPromptActorComponent)
+	if (!IsValid(InputPromptActorComponent))
 	{
-		InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
+		UE_LOG(LogTemp, Error, TEXT("ATeleporter::GetInputPromptWidgetComponent: Invalid InputPromptActorComponent on %s"), GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in Teleporter, BeginPlay"), *GetName()); }
+	InputPromptWidgetComponent = Cast<UWidgetComponent>(InputPromptActorComponent);
 }
 
 void ATeleporter::DisplayInputPrompt_Implementation(bool IsVisible)
 {
-	// Set input prompt visibility
-	if (InputPromptWidgetComponent)
+	if (!IsValid(InputPromptWidgetComponent))
 	{
-		InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
+		UE_LOG(LogTemp, Error, TEXT("ATeleporter::DisplayInputPrompt: Invalid InputPromptWidgetComponent on %s"), GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in Teleporter, DisplayInputPrompt"), *GetName()); }
-
+	InputPromptWidgetComponent->SetHiddenInGame(!IsVisible);
 }
 
 bool ATeleporter::GetIsInteractable_Implementation()
