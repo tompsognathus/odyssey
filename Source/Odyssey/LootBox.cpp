@@ -17,7 +17,7 @@ void ULootBox::BeginPlay()
 	// We need to make sure each item also has a corresponding count, so we make sure the arrays are the same size
 	if (ItemRefArray.Num() != ItemCountArray.Num())
 	{
-		UE_LOG(LogTemp, Error, TEXT("Item and ItemCount arrays are not the same size!"));
+		UE_LOG(LogTemp, Error, TEXT("ULootBox::BeginPlay: Item and ItemCount arrays are not the same size!"));
 		return;		
 	}
 }

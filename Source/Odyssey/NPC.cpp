@@ -10,6 +10,7 @@
 #include "UIManager.h"
 #include "Highlighter.h"
 #include "DialogueComponent.h"
+#include "Utility.h"
 
 ANPC::ANPC()
 {
@@ -20,57 +21,21 @@ void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
-	{
-		UE_LOG(LogTemp, Error, TEXT("World not found in NPC, BeginPlay"));
-		return;
-	}
-
-	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
-	if (!IsValid(FirstPlayerController))
-	{
-		UE_LOG(LogTemp, Error, TEXT("FirstPlayerController not found in NPC, BeginPlay"));
-		return;
-	}
-
-	APawn* PlayerPawn = FirstPlayerController->GetPawn();
-	if (!IsValid(PlayerPawn))
-	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerPawn not found in NPC, BeginPlay"));
-		return;
-	}
-
-	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(PlayerPawn);
-	if (!IsValid(PlayerCharacter))
-	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found in NPC, BeginPlay"));
-		return;
-	}
-
-	UActorComponent* UIManagerComponent = PlayerPawn->GetComponentByClass(UUIManager::StaticClass());
-	if (!IsValid(UIManagerComponent))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManagerComponent in ANPC, BeginPlay"));
-		return;
-	}
-
-	UIManager = Cast<UUIManager>(UIManagerComponent);
+	UIManager = Utility::GetUIManager(this);
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot cast UIManagerComponent to UIManager in ANPC, BeginPlay"));
+		UE_LOG(LogTemp, Error, TEXT("ANPC::BeginPlay: Invalid UIManager"));
 		return;
 	}
 
 	DialogueComponent = FindComponentByClass<UDialogueComponent>();
 	if (!IsValid(DialogueComponent)) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, BeginPlay"), *GetName()); 
+		UE_LOG(LogTemp, Warning, TEXT("ANPC::BeginPlay: Invalid DialogueComponent"), *GetName()); 
 		return;
 	}
 
 	GetInputPromptWidgetComponent();
-
 	CheckIfIsInteractable();
 }
 
@@ -79,7 +44,7 @@ void ANPC::GetInputPromptWidgetComponent()
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
 	if (!IsValid(InputPromptActorComponent))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in NPC, GetInputPromptWidgetComponent"), *GetName());
+		UE_LOG(LogTemp, Warning, TEXT("ANPC::GetInputPromptWidgetComponent: Invalid InputPromptActorComponent on %s"), *GetName());
 		return;
 	}
 	
@@ -90,7 +55,7 @@ FName ANPC::GetParticipantName_Implementation() const
 {
 	if (!IsValid(DialogueComponent))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantName_Implementation"), *GetName());
+		UE_LOG(LogTemp, Warning, TEXT("ANPC::GetParticipantName_Implementation: Invalid DialogueComponent on %s"), *GetName());
 		return FName();
 	}
 	
@@ -101,7 +66,7 @@ FText ANPC::GetParticipantDisplayName_Implementation(FName ActiveSpeaker) const
 {
 	if (!IsValid(DialogueComponent))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No dialogue component found on %s in NPC, GetParticipantDisplayName_Implementation"), *GetName());
+		UE_LOG(LogTemp, Warning, TEXT("ANPC::GetParticipantDisplayName_Implementation: Invalid DialogueComponent on %s"), *GetName());
 		return FText();
 	}
 
@@ -120,14 +85,14 @@ bool ANPC::GetIsInteractable_Implementation()
 
 void ANPC::Highlight_Implementation(bool IsHighlighted)
 {
-	UHighlighter* Highlighter = FindComponentByClass<UHighlighter>();
-	if (!IsValid(Highlighter))
+	UHighlighter* HighlighterComponent = FindComponentByClass<UHighlighter>();
+	if (!IsValid(HighlighterComponent))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Highlighter not found in NPC, Highlight_Implementation"));
+		UE_LOG(LogTemp, Error, TEXT("ANPC::Highlight_Implementation: Invalid HighlighterComponent on %s"), *GetName());
 		return;
 	}
 
-	Highlighter->SetHighlight(IsHighlighted);
+	HighlighterComponent->SetHighlight(IsHighlighted);
 }
 
 void ANPC::DisplayInputPrompt_Implementation(bool IsVisible)

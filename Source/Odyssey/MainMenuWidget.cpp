@@ -4,44 +4,16 @@
 #include "MainMenuWidget.h"
 #include "UIManager.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Utility.h"
 
 void UMainMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find World in MainMenuWidget, NativeConstruct"));
-		return;
-	}
-
-	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
-	if (!IsValid(FirstPlayerController))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find FirstPlayerController in MainMenuWidget, NativeConstruct"));
-		return;
-	}
-
-	APawn* PlayerPawn = FirstPlayerController->GetPawn();
-	if (!IsValid(PlayerPawn))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerPawn in MainMenuWidget, NativeConstruct"));
-		return;
-	}
-
-	UActorComponent* UIManagerComponent = PlayerPawn->GetComponentByClass(UUIManager::StaticClass());
-	if (!IsValid(UIManagerComponent))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManagerComponent in MainMenuWidget, NativeConstruct"));
-		return;
-	}
-
-	UIManager = Cast<UUIManager>(UIManagerComponent);
+	UIManager = Utility::GetUIManager(this);
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot cast UIManagerComponent to UIManager in MainMenuWidget, NativeConstruct"));
+		UE_LOG(LogTemp, Error, TEXT("UMainMenuWidget::NativeConstruct: Invalid UIManager"));
 		return;
 	}
 }
@@ -50,7 +22,7 @@ void UMainMenuWidget::HandleContinueGameBtnClicked()
 {
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, HandleContinueGameBtnClicked"));
+		UE_LOG(LogTemp, Error, TEXT("UMainMenuWidget::HandleContinueGameBtnClicked: Invalid UIManager"));
 		return;
 	}
 	UIManager->DisplayHUDWidgetOnly();
@@ -60,7 +32,7 @@ void UMainMenuWidget::HandleNewGameBtnClicked()
 {
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, HandleNewGameBtnClicked"));
+		UE_LOG(LogTemp, Error, TEXT("UMainMenuWidget::HandleNewGameBtnClicked: Invalid UIManager"));
 		return;
 	}
 	UIManager->OverlayNewGameAlertWidget();
@@ -70,7 +42,7 @@ void UMainMenuWidget::HandleOptionsBtnClicked()
 {
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, HandleOptionsBtnClicked"));
+		UE_LOG(LogTemp, Error, TEXT("UMainMenuWidget::HandleOptionsBtnClicked: Invalid UIManager"));
 		return;
 	}
 	UIManager->DisplayOptionsMenuWidget();
@@ -80,7 +52,7 @@ void UMainMenuWidget::HandleQuitGameBtnClicked()
 {
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, HandleQuitGameBtnClicked"));
+		UE_LOG(LogTemp, Error, TEXT("UMainMenuWidget::HandleQuitGameBtnClicked: Invalid UIManager"));
 		return;
 	}
 	UIManager->OverlayQuitGameAlertWidget();

@@ -5,51 +5,68 @@
 #include "UIManager.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
+#include "Utility.h"
 
 void URPEncounterWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn)
+	UIManager = Utility::GetUIManager(this);
+	if (!IsValid(UIManager))
 	{
-		// Get UI Manager component
-		UIManager = Cast<UUIManager>(PlayerPawn->GetComponentByClass(UUIManager::StaticClass()));
-
-		if (!UIManager) { UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in MainMenuWidget, NativeConstruct")); }
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::NativeConstruct: Invalid UIManager"));
+		return;
 	}
 }
 
 void URPEncounterWidget::HandleOption1BtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Option 1 button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::HandleOption1BtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->SelectDialogueOption(0, DialogueOwner);
 }
 
 void URPEncounterWidget::HandleOption2BtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Option 2 button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::HandleOption2BtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->SelectDialogueOption(1, DialogueOwner);
 }
 
 void URPEncounterWidget::HandleOption3BtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Option 3 button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::HandleOption3BtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->SelectDialogueOption(2, DialogueOwner);
 }
 
 void URPEncounterWidget::HandleOption4BtnClicked()
 {
-	UE_LOG(LogTemp, Display, TEXT("Option 4 button clicked"));
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::HandleOption4BtnClicked: Invalid UIManager"));
+		return;
+	}
 	UIManager->SelectDialogueOption(3, DialogueOwner);
 }
 
 void URPEncounterWidget::SetBodyText(FText NewAdventureText)
 {
-	if (AdventureText)
+	if (!IsValid(AdventureText))
 	{
-		AdventureText->SetText(NewAdventureText);
-	} else { UE_LOG(LogTemp, Error, TEXT("AdventureText not found in RPEncounterWidget, SetBodyText")); }
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::SetBodyText: Invalid AdventureText"));
+		return;
+	}
+	AdventureText->SetText(NewAdventureText);
 }
 
 void URPEncounterWidget::SetOptionText(int OptionNumber, FText NewOptionText)
@@ -81,24 +98,35 @@ void URPEncounterWidget::SetOptionText(int OptionNumber, FText NewOptionText)
 		}
 		break;
 	default:
-		UE_LOG(LogTemp, Error, TEXT("Invalid Option Number"))
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::SetOptionText: Invalid Option Number"))
 			break;
 	}
 }
 
 void URPEncounterWidget::SetAvatar(UMaterial* NewAvatarMaterial, FText NewAvatarName)
 {
-	if (AvatarImg)
+	SetAvatarImage(NewAvatarMaterial);
+	SetAvatarName(NewAvatarName);
+}
+
+void URPEncounterWidget::SetAvatarName(FText& NewAvatarName)
+{
+	if (NewAvatarName.IsEmptyOrWhitespace())
 	{
-		AvatarImg->SetBrushFromMaterial(NewAvatarMaterial);
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::SetAvatarName: NewAvatarName is empty or whitespace. Did you set it in the editor?"))
+		return;
+	}
+	AvatarName->SetText(NewAvatarName);
+}
 
-	} else { UE_LOG(LogTemp, Error, TEXT("AvatarImg not found in RPEncounterWidget, SetAvatar")); }
-
-	if (AvatarName)
+void URPEncounterWidget::SetAvatarImage(UMaterial* NewAvatarMaterial)
+{
+	if (!IsValid(AvatarImg))
 	{
-		AvatarName->SetText(NewAvatarName);
-
-	} else { UE_LOG(LogTemp, Error, TEXT("AvatarName not found in RPEncounterWidget, SetAvatar")); }
+		UE_LOG(LogTemp, Error, TEXT("URPEncounterWidget::SetAvatar: Invalid AvatarImg. Did you set it in the editor?"))
+		return;
+	}
+	AvatarImg->SetBrushFromMaterial(NewAvatarMaterial);
 }
 
 UHUDWidget* URPEncounterWidget::GetHUDWidget()

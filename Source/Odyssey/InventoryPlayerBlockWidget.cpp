@@ -9,47 +9,18 @@
 #include "DA_Item.h"
 #include "WBP_InventorySlot.h"
 #include "ItemNames.h"
-
+#include "Utility.h"
 
 void UInventoryPlayerBlockWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid World in InventoryWidget, NativeConstruct"));
-		return;
-	}
 
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	if (!IsValid(PlayerController))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid PlayerController in InventoryWidget, NativeConstruct"));
-		return;
-	}
-
-	APawn* PlayerPawn = PlayerController->GetPawn();
-	if (!IsValid(PlayerPawn))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid PlayerPawn in InventoryWidget, NativeConstruct"));
-		return;
-	}
-
-	UActorComponent* UIManagerComponent = PlayerPawn->GetComponentByClass(UUIManager::StaticClass());
-	if (!UIManagerComponent)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManagerComponent in InventoryWidget, NativeConstruct"));
-		return;
-	}
-
-	UIManager = Cast<UUIManager>(UIManagerComponent);
+	UIManager = Utility::GetUIManager(this);
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot cast UIManagerComponent to UUIManager in InventoryWidget, NativeConstruct"));
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::NativeConstruct: Invalid UIManager"));
 		return;
 	}
-
 }
 
 void UInventoryPlayerBlockWidget::LoadInventoryGridContents(TArray<class UDA_Item*> ItemRefArray, TArray<int> ItemCountArray)
@@ -74,12 +45,12 @@ void UInventoryPlayerBlockWidget::AddItemToGrid(UDA_Item* ItemToAdd, int ItemCou
 {
 	if (!IsValid(ItemToAdd))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid ItemToAdd in InventoryWidget, AddItemToGrid"));
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::AddItemToGrid: Invalid ItemToAdd"));
 		return;
 	}
 	if (!IsValid(InventoryGrid))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid InventoryGrid in InventoryWidget, AddItemToGrid"));
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::AddItemToGrid: Invalid InventoryGrid"));
 		return;
 	}
 
@@ -143,12 +114,12 @@ void UInventoryPlayerBlockWidget::RemoveItemFromGrid(UDA_Item* ItemToRemove, int
 {
 	if (!IsValid(ItemToRemove))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid ItemToRemove in InventoryWidget, RemoveItemFromGrid"));
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::RemoveItemFromGrid: Invalid ItemToRemove"));
 		return;
 	}
 	if (!IsValid(InventoryGrid))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid InventoryGrid in InventoryWidget, RemoveItemFromGrid"));
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::RemoveItemFromGrid: Invalid "));
 		return;
 	}
 
@@ -158,21 +129,21 @@ void UInventoryPlayerBlockWidget::RemoveItemFromGrid(UDA_Item* ItemToRemove, int
 		UWidget* SlotWidget = InventoryGrid->GetChildAt(idx);
 		if (!IsValid(SlotWidget))
 		{
-			UE_LOG(LogTemp, Error, TEXT("Invalid SlotWidget in InventoryWidget, RemoveItemFromGrid"));
+			UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::RemoveItemFromGrid: Invalid SlotWidget"));
 			return;
 		}
 
 		UWBP_InventorySlot* InventorySlot = Cast<UWBP_InventorySlot>(SlotWidget);
 		if (!IsValid(InventorySlot))
 		{
-			UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlot in InventoryWidget, RemoveItemFromGrid"));
+			UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::RemoveItemFromGrid: Invalid InventorySlot"));
 			return;
 		}
 
 		UDA_Item* ItemInSlot = InventorySlot->GetItem();
 		if (!IsValid(ItemInSlot))
 		{
-			UE_LOG(LogTemp, Error, TEXT("Invalid ItemInSlot in InventoryWidget, RemoveItemFromGrid"));
+			UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::RemoveItemFromGrid: Invalid ItemInSlot"));
 			return;
 		}
 
@@ -198,7 +169,7 @@ void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlo
 {
 	if (!IsValid(InventorySlot))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlot in InventoryWidget, OnInventorySlotDoubleClicked"));
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked: Invalid InventorySlot"));
 		return;
 	}
 	OnInventorySlotDoubleClickedDelegate.Broadcast(this, InventorySlot);
@@ -208,7 +179,7 @@ void UInventoryPlayerBlockWidget::OnInventorySlotHovered(UWBP_InventorySlot* Inv
 {
 	if (!IsValid(InventorySlot))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid InventorySlot in InventoryWidget, OnInventorySlotHovered"));
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked: Invalid InventorySlot"));
 		return;
 	}
 	OnInventorySlotHoveredDelegate.Broadcast(this, InventorySlot);

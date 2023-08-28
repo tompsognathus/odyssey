@@ -13,8 +13,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "UIManager.h"
-
 #include "Interactable.h"
+#include "Utility.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,86 +57,26 @@ AOdysseyCharacter::AOdysseyCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
-void AOdysseyCharacter::ActivateExploreMappingContext()
+void AOdysseyCharacter::BeginPlay()
 {
-	APlayerController* PlayerController = Cast<APlayerController>(Controller);
-	if (!IsValid(PlayerController))
+	Super::BeginPlay();
+
+	// Default mapping context is Explore
+	ActivateExploreMappingContext();
+
+	InteractableDetector = FindComponentByClass<USphereComponent>();
+	if (!IsValid(InteractableDetector))
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerController not found in OdysseyCharacter, ActivateExploreMappingContext"));
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::BeginPlay: Invalid InteractableDetector"));
 		return;
 	}
 
-	ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
-	if (!IsValid(LocalPlayer))
+	UIManager = FindComponentByClass<UUIManager>();
+	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("LocalPlayer not found in OdysseyCharacter, ActivateExploreMappingContext"));
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::BeginPlay: Invalid UIManager"));
 		return;
 	}
-
-	UEnhancedInputLocalPlayerSubsystem* LocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
-	if (!IsValid(LocalPlayerSubsystem))
-	{
-		UE_LOG(LogTemp, Error, TEXT("LocalPlayerSubsystem not found in OdysseyCharacter, ActivateExploreMappingContext"));
-		return;
-	}
-	
-	if (!ExploreMappingContext)
-	{
-		UE_LOG(LogTemp, Error, TEXT("ExploreMappingContext not found in OdysseyCharacter, ActivateExploreMappingContext. Did you set it in blueprint?"));
-		return;
-	}
-
-
-	LocalPlayerSubsystem->ClearAllMappings();
-	LocalPlayerSubsystem->AddMappingContext(ExploreMappingContext, 0);
-}
-
-void AOdysseyCharacter::ActivateInteractMappingContext()
-{
-	UE_LOG(LogTemp, Display, TEXT("Activating interact mapping context in OdysseyCharacter"));
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			if (InteractMappingContext)
-			{
-				Subsystem->ClearAllMappings();
-				Subsystem->AddMappingContext(InteractMappingContext, 0);
-
-			} else { UE_LOG(LogTemp, Warning, TEXT("InteractMappingContext is null (not set in blueprint?)")); }
-		} else { UE_LOG(LogTemp, Warning, TEXT("InteractMappingContext is null (not set in blueprint?)")); }
-	} else { UE_LOG(LogTemp, Warning, TEXT("InteractMappingContext is null (not set in blueprint?)")); }
-}
-
-void AOdysseyCharacter::ActivateMenuMappingContext()
-{
-	UE_LOG(LogTemp, Display, TEXT("Activating menu mapping context in OdysseyCharacter"));
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			if (MenuMappingContext)
-			{
-				Subsystem->ClearAllMappings();
-				Subsystem->AddMappingContext(MenuMappingContext, 0);
-
-			} else { UE_LOG(LogTemp, Warning, TEXT("<MenuMappingContext is null (not set in blueprint?)")); }
-		} else { UE_LOG(LogTemp, Warning, TEXT("MenuMappingContext is null (not set in blueprint?)")); }
-	} else { UE_LOG(LogTemp, Warning, TEXT("MenuMappingContext is null (not set in blueprint?)")); }
-}
-
-// Triggered from the BP_ThirdPersonCharacter blueprint when the player presses the interact button
-void AOdysseyCharacter::HandleInteractRequest()
-{
-	if (InteractTarget)
-	{
-		if (InteractTarget->Implements<UInteractable>())
-		{
-			// Get UObject for this class
-			IInteractable::Execute_InteractRequest(InteractTarget);
-
-		} else { UE_LOG(LogTemp, Warning, TEXT("InteractTarget does not implement UInteractable in OddyseyCharacter, HandleInteractRequest")); }
-	} else { UE_LOG(LogTemp, Warning, TEXT("InteractTarget is null in OdysseyCharacter, HandleInteractRequest")); }
 }
 
 void AOdysseyCharacter::Tick(float DeltaTime)
@@ -148,10 +88,89 @@ void AOdysseyCharacter::Tick(float DeltaTime)
 	UpdateInputPromptVisibility();
 }
 
+void AOdysseyCharacter::ActivateExploreMappingContext()
+{
+	UEnhancedInputLocalPlayerSubsystem* LocalPlayerSubsystem = Utility::GetEnhancedInputLocalPlayerSubsystem(this);
+	if (!IsValid(LocalPlayerSubsystem))
+	{
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::ActivateExploreMappingContext: Invalid LocalPlayerSubsystem"));
+		return;
+	}
+	if (ExploreMappingContext == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::ActivateExploreMappingContext: ExploreMappingContext is null (not set in blueprint?)"));
+		return;
+	}
+
+	LocalPlayerSubsystem->ClearAllMappings();
+	LocalPlayerSubsystem->AddMappingContext(ExploreMappingContext, 0);
+}
+
+void AOdysseyCharacter::ActivateInteractMappingContext()
+{
+	UEnhancedInputLocalPlayerSubsystem* LocalPlayerSubsystem = Utility::GetEnhancedInputLocalPlayerSubsystem(this);
+	if (!IsValid(LocalPlayerSubsystem))
+	{
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::ActivateInteractMappingContext: Invalid LocalPlayerSubsystem"));
+		return;
+	}
+	if (InteractMappingContext == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::ActivateInteractMappingContext: InteractMappingContext is null (not set in blueprint?)"));
+		return;
+	}
+
+	LocalPlayerSubsystem->ClearAllMappings();
+	LocalPlayerSubsystem->AddMappingContext(InteractMappingContext, 0);
+}
+
+void AOdysseyCharacter::ActivateMenuMappingContext()
+{
+	UEnhancedInputLocalPlayerSubsystem* LocalPlayerSubsystem = Utility::GetEnhancedInputLocalPlayerSubsystem(this);
+	if (!IsValid(LocalPlayerSubsystem))
+	{
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::ActivateMenuMappingContext: Invalid LocalPlayerSubsystem"));
+		return;
+	}
+	if (MenuMappingContext == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::ActivateMenuMappingContext: MenuMappingContext is null (not set in blueprint?)"));
+		return;
+	}
+
+	LocalPlayerSubsystem->ClearAllMappings();
+	LocalPlayerSubsystem->AddMappingContext(MenuMappingContext, 0);
+}
+
+// Triggered from the BP_ThirdPersonCharacter blueprint when the player presses the interact button
+void AOdysseyCharacter::HandleInteractRequest()
+{
+	if (!IsValid(InteractTarget))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::HandleInteractRequest: Invalid InteractTarget"));
+		return;
+	}
+
+	if (InteractTarget->Implements<UInteractable>())
+	{
+		IInteractable::Execute_InteractRequest(InteractTarget);
+	}
+	else 
+	{ 
+		UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::HandleInteractRequest: InteractTarget does not implement UInteractable"));
+	}
+}
+
 void AOdysseyCharacter::FindLookedAtInteractTarget()
 {
 	// Check for interactable objects inside the detector sphere
 	TArray<AActor*> ActorsInInteractionDetector;
+
+	if (!IsValid(InteractableDetector))
+	{
+		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::FindLookedAtInteractTarget: Invalid InteractableDetector"));
+		return;
+	}
 	InteractableDetector->GetOverlappingActors(ActorsInInteractionDetector, AActor::StaticClass());
 
 	float MinAngularDistance = 360.f;
@@ -182,7 +201,10 @@ void AOdysseyCharacter::FindLookedAtInteractTarget()
 void AOdysseyCharacter::UpdateInputPromptVisibility()
 {
 	// If the current interact target is the same as the previous one, there's nothing to do
-	if (InteractTarget == PreviousInteractTarget) { return; }
+	if (InteractTarget == PreviousInteractTarget) 
+	{ 
+		return; 
+	}
 
     // If we have an interact target now and it's different from the previous interact target, we need to display the new input prompt and hide the old one
 	if (InteractTarget)
@@ -197,7 +219,6 @@ void AOdysseyCharacter::UpdateInputPromptVisibility()
 		bool TargetIsInteractable = IInteractable::Execute_GetIsInteractable(InteractTarget);
 		if (TargetIsInteractable)
 		{
-	
 			// We check if the interface is implemented in FindLookedAtInteractTarget() so no need
 			// to check again here
 			IInteractable::Execute_EnteredInteractionZone(InteractTarget);
@@ -218,20 +239,6 @@ void AOdysseyCharacter::UpdateInputPromptVisibility()
 }
 
 
-void AOdysseyCharacter::BeginPlay()
-{
-	// Call the base class  
-	Super::BeginPlay();
-
-	//Add Input Mapping Context
-	ActivateExploreMappingContext();
-
-	// Get reference to interactable detector sphere
-	InteractableDetector = FindComponentByClass<USphereComponent>();
-
-	// Get reference to UI Manager component
-	UIManager = FindComponentByClass<UUIManager>();
-}
 
 void AOdysseyCharacter::SetInputEnabled(bool bIsEnabled)
 {
@@ -253,7 +260,7 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Jump Action is null. Not set in the Character Blueprint?")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::SetupPlayerInputComponent: Jump Action is null. Not set in the Character Blueprint?")); }
 
 		//Moving
 		if (MoveAction)
@@ -261,7 +268,7 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Move);
 
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Move Action is null. Not set in the Character Blueprint?")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::SetupPlayerInputComponent: Move Action is null. Not set in the Character Blueprint?")); }
 
 		//Looking
 		if (LookAction)
@@ -269,7 +276,7 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Look);
 
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Look Action is null. Not set in the Character Blueprint?")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::SetupPlayerInputComponent: Look Action is null. Not set in the Character Blueprint?")); }
 
 		//Interacting
 		if (InteractAction)
@@ -277,7 +284,7 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::Interact);
 
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Interact Action is null. Not set in the Character Blueprint?")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::SetupPlayerInputComponent: Interact Action is null. Not set in the Character Blueprint?")); }
 
 		//Pause Game
 		if (PauseGameAction)
@@ -285,7 +292,7 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 			EnhancedInputComponent->BindAction(PauseGameAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::PauseGame);
 
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Pause Game Action is null. Not set in the Character Blueprint?")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::SetupPlayerInputComponent: Pause Game Action is null. Not set in the Character Blueprint?")); }
 
 		//Resume Game
 		if (ResumeGameAction)
@@ -293,20 +300,20 @@ void AOdysseyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 			EnhancedInputComponent->BindAction(ResumeGameAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::ResumeGame);
 
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Resume Game Action is null. Not set in the Character Blueprint?")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::SetupPlayerInputComponent: Resume Game Action is null. Not set in the Character Blueprint?")); }
 
 		// Show Inventory
 		if (ShowInventoryAction)
 		{
 			EnhancedInputComponent->BindAction(ShowInventoryAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::ShowInventory);
-		} else { UE_LOG(LogTemp, Warning, TEXT("Show Inventory Action is null. Not set in the Character Blueprint?")); }
+		} else { UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::SetupPlayerInputComponent: Show Inventory Action is null. Not set in the Character Blueprint?")); }
 
 		// Hide Inventory
 		if (HideInventoryAction)
 		{
 			EnhancedInputComponent->BindAction(HideInventoryAction, ETriggerEvent::Triggered, this, &AOdysseyCharacter::HideInventory);
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("Hide Inventory Action is null. Not set in the Character Blueprint?")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::SetupPlayerInputComponent: Hide Inventory Action is null. Not set in the Character Blueprint?")); }
 	}
 }
 

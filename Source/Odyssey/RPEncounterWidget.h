@@ -6,45 +6,41 @@
 #include "Blueprint/UserWidget.h"
 #include "RPEncounterWidget.generated.h"
 
-/**
- * 
- */
+class UHUDWidget;
+class UDialogueComponent;
+class UImage;
+class UTextBlock;
+class UUIManager;
+class UDialogueComponent;
+
 UCLASS()
 class ODYSSEY_API URPEncounterWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-private:
-	class UUIManager* UIManager;
-	class UDialogueComponent* DialogueOwner;
+public:
+	UFUNCTION(BlueprintCallable, Category = "Text Fields")
+	void SetBodyText(FText NewAdventureText);
+
+	UFUNCTION(BlueprintCallable, Category = "Text Fields")
+	void SetOptionText(int OptionNumber, FText NewOptionText);
+
+	UFUNCTION(BlueprintCallable, Category = "Avatar Image")
+	void SetAvatar(UMaterial* NewAvatarMaterial, FText NewAvatarName);
+
+	void SetAvatarName(FText& NewAvatarName);
+
+	void SetAvatarImage(UMaterial* NewAvatarMaterial);
+
+	UFUNCTION()
+	void SetDialogueOwner(class UDialogueComponent* NewDialogueOwner) { DialogueOwner = NewDialogueOwner; }
+
+	UFUNCTION()
+	UHUDWidget* GetHUDWidget();
+
 
 protected:
 	virtual void NativeConstruct() override;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UHUDWidget* HUDWidget;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* AdventureText;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UImage* AvatarImg;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* AvatarName;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* OptionText1;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* OptionText2;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* OptionText3;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* OptionText4;
-
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void HandleOption1BtnClicked();
@@ -58,20 +54,33 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void HandleOption4BtnClicked();
 
-public:
-	UFUNCTION(BlueprintCallable, Category = "Text Fields")
-	void SetBodyText(FText NewAdventureText);
+protected:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UHUDWidget* HUDWidget;
 
-	UFUNCTION(BlueprintCallable, Category = "Text Fields")
-	void SetOptionText(int OptionNumber, FText NewOptionText);
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* AdventureText;
 
-	UFUNCTION(BlueprintCallable, Category = "Avatar Image")
-	void SetAvatar(UMaterial* NewAvatarMaterial, FText NewAvatarName);
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UImage* AvatarImg;
 
-	UFUNCTION()
-	void SetDialogueOwner(class UDialogueComponent* NewDialogueOwner) { DialogueOwner = NewDialogueOwner; }
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* AvatarName;
 
-	UFUNCTION()
-	UHUDWidget* GetHUDWidget();
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* OptionText1;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* OptionText2;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* OptionText3;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* OptionText4;
+
+
+private:
+	UUIManager* UIManager;
+	UDialogueComponent* DialogueOwner;
 };

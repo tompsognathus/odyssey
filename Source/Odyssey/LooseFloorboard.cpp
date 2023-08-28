@@ -26,7 +26,7 @@ void ALooseFloorboard::GetInputPromptWidgetComponent()
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
 	if (!IsValid(InputPromptActorComponent))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No input prompt widget found on %s in LooseFloorboard, BeginPlay"), *GetName());
+		UE_LOG(LogTemp, Warning, TEXT("ALooseFloorboard::GetInputPromptWidgetComponent: Invalid InputPromptActorComponent on %s"), *GetName());
 		return;
 	}
 
@@ -38,7 +38,7 @@ void ALooseFloorboard::Highlight_Implementation(bool IsHighlighted)
 	UHighlighter* Highlighter = FindComponentByClass<UHighlighter>();
 	if (!IsValid(Highlighter))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No highlighter found on %s in LooseFloorboard, Highlight"), *GetName());
+		UE_LOG(LogTemp, Warning, TEXT("ALooseFloorboard::Highlight_Implementation: Invalid highlighter on %s"), *GetName());
 		return;
 	}
 
@@ -49,7 +49,7 @@ void ALooseFloorboard::DisplayInputPrompt_Implementation(bool IsVisible)
 {
 	if (!IsValid(InputPromptWidgetComponent))
 	{
-		UE_LOG(LogTemp, Error, TEXT("No input prompt widget found on %s in LooseFloorboard, DisplayInputPrompt"), *GetName());
+		UE_LOG(LogTemp, Error, TEXT("ALooseFloorboard::DisplayInputPrompt_Implementation: Invalid InputPromptWidgetComponent on %s"), *GetName());
 		return;
 	}
 
