@@ -7,6 +7,7 @@
 #include "NPC.h"
 #include "DA_Item.h"
 #include "CombatWidget.h"
+#include "Utility.h"
 
 UCombatManager::UCombatManager()
 {
@@ -17,66 +18,45 @@ void UCombatManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UWorld* World = GetWorld();
-	if (!IsValid(World)) 
-	{ 
-		UE_LOG(LogTemp, Error, TEXT("Cannot find World in CombatManager, BeginPlay")); 
-		return; 
-	}
-
-	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
-	if (!IsValid(FirstPlayerController))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerController in CombatManager, BeginPlay"));
-		return;
-	}
-
-	APawn* PlayerPawn = FirstPlayerController->GetPawn();
-	if (!IsValid(PlayerPawn))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerPawn in CombatManager, BeginPlay"));
-		return;
-	}
-
-	UActorComponent* UIManagerActorComponent = PlayerPawn->GetComponentByClass(UUIManager::StaticClass());
-	if (!IsValid(UIManagerActorComponent)) 
-	{ 
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManagerActorComponent in CombatManager BeginPlay")); 
-		return;
-	}
-
-	UIManager = Cast<UUIManager>(UIManagerActorComponent);
+	UIManager = Utility::GetUIManager(this);
 	if (!IsValid(UIManager)) 
 	{ 
-		UE_LOG(LogTemp, Error, TEXT("Cannot cast UIManagerActorComponent to UIManager in CombatManager BeginPlay")); 
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::BeginPlay: Cannot get UIManager")); 
+		return;
+	}
+
+	APawn* PlayerPawn = Utility::GetPlayerPawn(this);
+	if (!IsValid(PlayerPawn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::BeginPlay: Cannot get PlayerPawn"));
 		return;
 	}
 
 	UActorComponent* PlayerCharSheetActorComponent = PlayerPawn->GetComponentByClass(UCharSheet::StaticClass());
 	if (!IsValid(PlayerCharSheetActorComponent)) 
 	{ 
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheetActorComponent in CombatManager BeginPlay")); 
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::BeginPlay: Cannot find PlayerCharSheetActorComponent")); 
 		return;
 	}
 
 	PlayerCharSheet = Cast<UCharSheet>(PlayerCharSheetActorComponent);
 	if (!IsValid(PlayerCharSheet)) 
 	{ 
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager BeginPlay")); 
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::BeginPlay: Cannot find PlayerCharSheet")); 
 		return;
 	}
 
 	UUserWidget* CombatUserWidget = UIManager->GetCombatWidgetInstance();
 	if (!IsValid(CombatUserWidget))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find CombatUserWidget in CombatManager BeginPlay"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::BeginPlay: Cannot find CombatUserWidget"));
 		return;
 	}
 
 	CombatWidget = Cast<UCombatWidget>(CombatUserWidget);
 	if (!IsValid(CombatWidget))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot cast CombatUserWidget to CombatWidget in CombatManager BeginPlay"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::BeginPlay: Cannot cast CombatUserWidget to CombatWidget"));
 		return;
 	}
 
@@ -91,28 +71,28 @@ void UCombatManager::StartNewCombat(ANPC* Enemy)
 	UActorComponent* EnemyCharSheetActorComponent = Enemy->GetComponentByClass(UCharSheet::StaticClass());
 	if (!IsValid(EnemyCharSheetActorComponent)) 
 	{ 
-		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheetActorComponent in CombatManager, StartNewCombat")); 
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNewCombat: Cannot find EnemyCharSheetActorComponent")); 
 		return;
 	}
 
 	EnemyCharSheet = Cast<UCharSheet>(EnemyCharSheetActorComponent);
 	if (!IsValid(EnemyCharSheet)) 
 	{ 
-		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheet in CombatManager, StartNewCombat"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNewCombat: Cannot find EnemyCharSheet"));
 		return;
 	}
 
 	// PlayerCharSheet doesn't change, so we only set it in BeginPlay and only need to make sure it's valid here
 	if (!IsValid(PlayerCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager, StartNewCombat"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNewCombat: Cannot find PlayerCharSheet"));
 		return;
 	}
 
 	// Set up player action buttons
 	TObjectPtr<UDA_Item> ActiveWeapon = PlayerCharSheet->GetActiveWeapon();
 	if (!IsValid(ActiveWeapon)) { 
-		UE_LOG(LogTemp, Error, TEXT("Cannot find ActiveWeapon in CombatManager, StartNewCombat")); 
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNewCombat: Cannot find ActiveWeapon")); 
 		return;
 	}
 
@@ -121,7 +101,7 @@ void UCombatManager::StartNewCombat(ANPC* Enemy)
 
 	if (!IsValid(CombatWidget))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find CombatWidget in CombatManager, StartNewCombat"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNewCombat: Cannot find CombatWidget"));
 		return;
 	}
 	CombatWidget->SetUpCombatantBindings(PlayerCharSheet, EnemyCharSheet);
@@ -156,7 +136,7 @@ void UCombatManager::StartNewRound()
 
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in CombatManager, StartNewRound"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNewRound: Cannot find UIManager"));
 		return;
 	}
 	UIManager->SetCurrentRoundText(CombatRound);
@@ -169,22 +149,22 @@ void UCombatManager::StartNextTurn()
 {
 	if (!IsValid(PlayerCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager, StartNextTurn"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find PlayerCharSheet"));
 		return;
 	}
 	if (!IsValid(EnemyCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheet in CombatManager, StartNextTurn"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurnCannot find EnemyCharSheet"));
 		return;
 	}
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find UIManager in CombatManager, StartNextTurn"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find UIManager"));
 		return;
 	}
 	if (!IsValid(CombatWidget))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find CombatWidget in CombatManager, StartNextTurn"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find CombatWidget"));
 		return;
 	}
 	
@@ -192,7 +172,7 @@ void UCombatManager::StartNextTurn()
 	int NumTurns = TurnOrder.Num();
 	if (NumTurns <= 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("TurnOrder contains no turns in CombatManager, StartNextTurn"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: TurnOrder contains no turns"));
 		return;
 	}
 
@@ -246,12 +226,12 @@ void UCombatManager::PerformCombatAction(UDA_ItemAction* CombatAction)
 {
 	if (!IsValid(PlayerCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find PlayerCharSheet in CombatManager, PerformCombatAction"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find PlayerCharSheet"));
 		return;
 	}
 	if (!IsValid(EnemyCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find EnemyCharSheet in CombatManager, PerformCombatAction"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find EnemyCharSheet"));
 		return;
 	}
 

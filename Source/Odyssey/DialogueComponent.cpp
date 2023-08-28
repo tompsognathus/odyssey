@@ -6,44 +6,22 @@
 #include "Kismet/GameplayStatics.h"
 #include "DlgSystem/DlgManager.h"
 #include "UIManager.h"
+#include "Utility.h"
 
-// Sets default values for this component's properties
 UDialogueComponent::UDialogueComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
 }
 
-// Called when the game starts
 void UDialogueComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot get world in DialogueComponent, BeginPlay"));
-		return;
-	}
-
-	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(World, 0);
-	if (!IsValid(PlayerPawn))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot get player pawn in DialogueComponent, BeginPlay"));
-		return;
-	}
-
-	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(PlayerPawn);
-	if (!IsValid(PlayerCharacter))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot get player character in DialogueComponent, BeginPlay"));
-		return;
-	}
-		
-	UIManager = PlayerCharacter->FindComponentByClass<UUIManager>();
+	UIManager = Utility::GetUIManager(this);
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot get UIManager in DialogueComponent, BeginPlay"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::BeginPlay: Invalid UIManager"));
 		return;
 	}
 }
@@ -52,7 +30,7 @@ void UDialogueComponent::PopulateDialogueBodyText()
 {
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot get UIManager in DialogueComponent, PopulateDialogueBodyText"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::PopulateDialogueBodyText: Invalid UIManager"));
 		return;
 	}
 
@@ -70,7 +48,7 @@ void UDialogueComponent::PopulateDialogueOptionsText()
 {
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot get UIManager in DialogueComponent, PopulateDialogueOptionsText"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::PopulateDialogueOptionsText: Invalid UIManager"));
 		return;
 	}
 
@@ -94,34 +72,34 @@ bool UDialogueComponent::StartDialogue(UDlgDialogue* Dialogue, const TArray<UObj
 {
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot get UIManager in DialogueComponent, StartDialogue"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::StartDialogue: Invalid UIManager"));
 		return false;
 	}
 	if (!IsValid(Dialogue))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Dialogue is null in DialogueComponent, StartDialogue"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::StartDialogue: Invalid Dialogue"));
 		return false;
 	}
 	if (DlgParticipants.Num() == 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("DlgParticipants has no participants in DialogueComponent, StartDialogue"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::StartDialogue: DlgParticipants has no participants on %s"), *GetName());
 		return false;
 	}
 	if (!IsValid(DialogueParticipantAvatar))
 	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueParticipantAvatar is null in DialogueComponent, StartDialogue"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::StartDialogue: Invalid DialogueParticipantAvatar"));
 		return false;
 	}
 	if (DialogueParticipantDisplayName.IsEmptyOrWhitespace())
 	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueParticipantDisplayName is empty or whitespace in DialogueComponent, StartDialogue"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::StartDialogue: DialogueParticipantDisplayName is empty or whitespace on %s"), *GetName());
 		return false;
 	}
 
 	DialogueContext = UDlgManager::StartDialogue(Dialogue, DlgParticipants);
 	if (!IsValid(DialogueContext))
 	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null in DialogueComponent, StartDialogue"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::StartDialogue: Invalid DialogueContext"));
 		return false;
 	}
 
@@ -137,7 +115,7 @@ FText UDialogueComponent::GetDialogueBodyText()
 {
 	if (!IsValid(DialogueContext))
 	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null in DialogueComponent, GetDialogueBodyText"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::GetDialogueBodyText: Invalid DialogueContext"));
 		return FText();
 	}
 
@@ -149,7 +127,7 @@ TArray<FText> UDialogueComponent::GetDialogueOptionsText()
 {
 	if (!IsValid(DialogueContext))
 	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null in DialogueComponent, GetDialogueOptionsText"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::GetDialogueOptionsText: Invalid DialogueContext"));
 		return TArray<FText>();
 	}
 
@@ -169,13 +147,13 @@ bool UDialogueComponent::SelectDialogueOption(int32 Index)
 {
 	if (!IsValid(DialogueContext))
 	{
-		UE_LOG(LogTemp, Error, TEXT("DialogueContext is null in DialogueComponent, SelectDialogueOption"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::SelectDialogueOption: Invalid DialogueContext"));
 		return false;
 	}
 	
 	if (!DialogueContext->IsValidOptionIndex(Index))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Index is invalid in DialogueComponent, SelectDialogueOption"));
+		UE_LOG(LogTemp, Error, TEXT("UDialogueComponent::SelectDialogueOption: Invalid option index"));
 		return false;
 	}
 

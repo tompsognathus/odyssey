@@ -35,7 +35,7 @@ void UHighlighter::GetMeshesToOutline()
 	AActor* ParentActor = GetOwner();
 	if (!IsValid(ParentActor))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Could not get parent actor in Highlighter, GetAllMeshes"));
+		UE_LOG(LogTemp, Error, TEXT("UHighlighter::GetMeshesToOutline: Invalid ParentActor"));
 		return;
 	}
 

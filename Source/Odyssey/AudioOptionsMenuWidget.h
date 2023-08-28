@@ -8,9 +8,6 @@
 
 class UUIManager;
 
-/**
- * 
- */
 UCLASS()
 class ODYSSEY_API UAudioOptionsMenuWidget : public UUserWidget
 {

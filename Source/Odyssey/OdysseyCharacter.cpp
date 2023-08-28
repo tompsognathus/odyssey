@@ -59,19 +59,36 @@ AOdysseyCharacter::AOdysseyCharacter()
 
 void AOdysseyCharacter::ActivateExploreMappingContext()
 {
-	UE_LOG(LogTemp, Display, TEXT("Activating explore mapping context in OdysseyCharacter"));
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (!IsValid(PlayerController))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			if (ExploreMappingContext)
-			{
-				Subsystem->ClearAllMappings();
-				Subsystem->AddMappingContext(ExploreMappingContext, 0);
-		
-			} 			else { UE_LOG(LogTemp, Warning, TEXT("ExploreMappingContext is null (not set in blueprint?)")); }
-		} else { UE_LOG(LogTemp, Warning, TEXT("ExploreMappingContext is null (not set in blueprint?)")); }
-	} else { UE_LOG(LogTemp, Warning, TEXT("ExploreMappingContext is null (not set in blueprint?)")); }
+		UE_LOG(LogTemp, Error, TEXT("PlayerController not found in OdysseyCharacter, ActivateExploreMappingContext"));
+		return;
+	}
+
+	ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+	if (!IsValid(LocalPlayer))
+	{
+		UE_LOG(LogTemp, Error, TEXT("LocalPlayer not found in OdysseyCharacter, ActivateExploreMappingContext"));
+		return;
+	}
+
+	UEnhancedInputLocalPlayerSubsystem* LocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+	if (!IsValid(LocalPlayerSubsystem))
+	{
+		UE_LOG(LogTemp, Error, TEXT("LocalPlayerSubsystem not found in OdysseyCharacter, ActivateExploreMappingContext"));
+		return;
+	}
+	
+	if (!ExploreMappingContext)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ExploreMappingContext not found in OdysseyCharacter, ActivateExploreMappingContext. Did you set it in blueprint?"));
+		return;
+	}
+
+
+	LocalPlayerSubsystem->ClearAllMappings();
+	LocalPlayerSubsystem->AddMappingContext(ExploreMappingContext, 0);
 }
 
 void AOdysseyCharacter::ActivateInteractMappingContext()

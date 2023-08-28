@@ -20,7 +20,7 @@ void UInventory::AddItem(UDA_Item* ItemToAdd, int NumToAdd)
 {
 	if (!IsValid(ItemToAdd))
 	{
-		UE_LOG(LogTemp, Error, TEXT("ItemToAdd is not valid in Inventory, AddItem"));
+		UE_LOG(LogTemp, Error, TEXT("UInventory::AddItem: Invalid ItemToAdd"));
 		return;
 	}
 
@@ -43,7 +43,7 @@ void UInventory::RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove)
 {
 	if (!IsValid(ItemToRemove))
 	{
-		UE_LOG(LogTemp, Error, TEXT("ItemToRemove is not valid in Inventory, RemoveItem"));
+		UE_LOG(LogTemp, Error, TEXT("UInventory::RemoveItem: Invalid ItemToRemove"));
 		return;
 	}
 

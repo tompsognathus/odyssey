@@ -25,12 +25,12 @@ void UCombatWidget::SetEnemyAvatar(UMaterial* AvatarMaterial)
 {
 	if (!IsValid(EnemyAvatar))
 	{
-		UE_LOG(LogTemp, Error, TEXT("EnemyAvatar is null in CombatWidget, SetEnemyAvatar. Did you mess up the binding?"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetEnemyAvatar: Invalid EnemyAvatar. Did you mess up the binding?"));
 		return;
 	}
 	if (!IsValid(AvatarMaterial))
 	{
-		UE_LOG(LogTemp, Error, TEXT("AvatarMaterial is null in CombatWidget, SetEnemyAvatar. Did you forget to set the avatar material on the enemy NPC class? Make sure to also set it on the dialogue component."));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetEnemyAvatar: Invalid AvatarMaterial. Did you forget to set the avatar material on the enemy NPC class? Make sure to also set it on the dialogue component."));
 		return;
 	}
 
@@ -41,7 +41,7 @@ void UCombatWidget::SetEnemyName(FText& EnemyName)
 {
 	if (!IsValid(EnemyNameTextBlock))
 	{
-		UE_LOG(LogTemp, Error, TEXT("EnemyNameTextBlock is null in CombatWidget, SetEnemyName. Did you mess up the binding?"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetEnemyName: Invalid EnemyNameTextBlock. Did you mess up the binding?"));
 		return;
 	}
 
@@ -52,7 +52,7 @@ void UCombatWidget::SetCurrentRoundText(int CurrentRound)
 {
 	if (!IsValid(CurrentRoundTextBlock))
 	{
-		UE_LOG(LogTemp, Error, TEXT("CurrentRoundTextBlock is null in CombatWidget, SetCurrentRoundText. Did you mess up the binding?"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetCurrentRoundText: Invalid CurrentRoundTextBlock. Did you mess up the binding?"));
 		return;
 	}
 
@@ -63,7 +63,7 @@ void UCombatWidget::SetEnemyHpBarPercent(float NormalizedPercent)
 {
 	if (!IsValid(EnemyHpBar))
 	{
-		UE_LOG(LogTemp, Error, TEXT("EnemyHpBar is null in CombatWidget, SetEnemyHpBarPercent. Did you mess up the binding?"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetEnemyHpBarPercent: Invalid EnemyHpBar. Did you mess up the binding?"));
 		return;
 	}
 
@@ -74,7 +74,7 @@ void UCombatWidget::SetPlayerHpBarPercent(float NormalizedPercent)
 {
 	if (!IsValid(PlayerHpBar))
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerHpBar is null in CombatWidget, SetPlayerHpBarPercent. Did you mess up the binding?"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetPlayerHpBarPercent: PlayerHpBar is null. Did you mess up the binding?"));
 		return;
 	}
 
@@ -83,14 +83,14 @@ void UCombatWidget::SetPlayerHpBarPercent(float NormalizedPercent)
 
 void UCombatWidget::SetUpAttackButtons(TArray<class UDA_ItemAction*> NewAttackActions)
 {
-	if (!PlayerActionGrid) 
+	if (!IsValid(PlayerActionGrid)) 
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerActionGrid is null in CombatWidget, SetUpAttackBtns")); 
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetUpAttackButtons: Invalid PlayerActionGrid")); 
 		return; 
 	}
-	if (!AttackButtonAssetRef)
+	if (!IsValid(AttackButtonAssetRef))
 	{
-		UE_LOG(LogTemp, Error, TEXT("AttackBtnAssetRef is null in CombatWidget, SetUpAttackBtns"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetUpAttackButtons: Invalid AttackBtnAssetRef"));
 		return;
 	}
 
@@ -103,16 +103,16 @@ void UCombatWidget::SetUpAttackButtons(TArray<class UDA_ItemAction*> NewAttackAc
 	for (int idx = 0; idx < AttackActions.Num(); idx++)
 	{
 		UUserWidget* AttackButtonWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), AttackButtonAssetRef);
-		if (!AttackButtonWidgetInstance) 
+		if (!IsValid(AttackButtonWidgetInstance)) 
 		{ 
-			UE_LOG(LogTemp, Error, TEXT("Cannot create AttackBtnWidgetInstance in CombatWidget, SetUpAttackBtns")); 
+			UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetUpAttackButtons: Cannot create AttackBtnWidgetInstance")); 
 			return; 
 		}
 
 		UWBP_AttackBtn* AttackButton = Cast<UWBP_AttackBtn>(AttackButtonWidgetInstance);
-		if (!AttackButton) 
+		if (!IsValid(AttackButton)) 
 		{ 
-			UE_LOG(LogTemp, Error, TEXT("Cannot cast AttackBtnWidgetInstance to UWBP_AttackBtn in CombatWidget, SetUpAttackBtns")); 
+			UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetUpAttackButtons: Cannot cast AttackBtnWidgetInstance to UWBP_AttackBtn")); 
 			return; 
 		} 
 		
@@ -141,7 +141,7 @@ void UCombatWidget::HandleAttackButtonClicked(UWBP_AttackBtn* AttackButton)
 	// Get corresponding attack action
 	if (!IsValid(AttackActions[ButtonIdx]))
 	{
-		UE_LOG(LogTemp, Error, TEXT("AttackAction is null in CombatWidget, HandleAttackButtonClicked"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::HandleAttackButtonClicked: Invalid AttackAction"));
 		return;
 	}
 
@@ -167,12 +167,12 @@ void UCombatWidget::SetUpCombatantBindings(UCharSheet* NewPlayerCharSheet, UChar
 
 	if (!IsValid(PlayerCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerCharSheet is null in CombatWidget, SetUpCombatantBindings"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetUpCombatantBindings: Invalid PlayerCharSheet"));
 		return;
 	}
 	if (!IsValid(EnemyCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("EnemyCharSheet is null in CombatWidget, SetUpCombatantBindings"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetUpCombatantBindings: Invalid EnemyCharSheet"));
 		return;
 	}
 
@@ -185,12 +185,12 @@ void UCombatWidget::RemoveCombatantBindings()
 {
 	if (!IsValid(PlayerCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerCharSheet is null in CombatWidget, RemoveCombatantBindings"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::RemoveCombatantBindings: Invalid PlayerCharSheet"));
 		return;
 	}
 	if (!IsValid(EnemyCharSheet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("EnemyCharSheet is null in CombatWidget, RemoveCombatantBindings"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::RemoveCombatantBindings: Invalid EnemyCharSheet"));
 		return;
 	}
 	

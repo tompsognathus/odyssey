@@ -7,6 +7,13 @@
 #include "InputActionValue.h"
 #include "OdysseyCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+class UInputMappingContext;
+class UInputAction;
+class UUIManager;
+class USphereComponent;
+class UInputComponent;
 
 UCLASS(config=Game)
 class AOdysseyCharacter : public ACharacter
@@ -15,58 +22,54 @@ class AOdysseyCharacter : public ACharacter
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+	UCameraComponent* FollowCamera;
 	
 	/** MappingContexts */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* ExploreMappingContext;
+	UInputMappingContext* ExploreMappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* InteractMappingContext;
+	UInputMappingContext* InteractMappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* MenuMappingContext;
+	UInputMappingContext* MenuMappingContext;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* JumpAction;
+	UInputAction* JumpAction;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* MoveAction;
+	UInputAction* MoveAction;
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+	UInputAction* LookAction;
 
 	/** Interact Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InteractAction;
+	UInputAction* InteractAction;
 
 	/** Pause Game Input Action **/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* PauseGameAction;
+	UInputAction* PauseGameAction;
 
 	/** ResumeGame Input Action **/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* ResumeGameAction;
+	UInputAction* ResumeGameAction;
 
 	/** Show Inventory Input Action **/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* ShowInventoryAction;
+	UInputAction* ShowInventoryAction;
 
 	/** Hide Inventory Input Action **/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* HideInventoryAction;
+	UInputAction* HideInventoryAction;
 
-private:
-	class UUIManager* UIManager;
-
-	TArray<struct F_InventoryItem*> AvailableLootItems;
 
 public:
 	AOdysseyCharacter();
@@ -83,23 +86,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void HandleInteractRequest();
 
+	UFUNCTION(BlueprintCallable, Category = "Inputs")
+	void SetInputEnabled(bool bIsEnabled);
+
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inputs")
+	bool bIsInputEnabled = true;
+
+
 protected:
-	/** Tick Function **/
 	virtual void Tick(float DeltaTime) override;
 
 	void FindLookedAtInteractTarget();
 
 	void UpdateInputPromptVisibility();
-	
-	// Collision component for detecting interactable actors in range
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input|InteractableDetection")
-	class USphereComponent* InteractableDetector;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Interact")
-	AActor* InteractTarget;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Interact")
-	AActor* PreviousInteractTarget;
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
@@ -127,23 +132,26 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnHideInventory"))
 	void HideInventory();
 
-protected:
 	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
-	// To add mapping context
 	virtual void BeginPlay();
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+protected:
+	// Collision component for detecting interactable actors in range
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input|InteractableDetection")
+	USphereComponent* InteractableDetector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inputs")
-	bool bIsInputEnabled = true;
+	UPROPERTY(BlueprintReadOnly, Category = "Interact")
+	AActor* InteractTarget;
 
-	UFUNCTION(BlueprintCallable, Category = "Inputs")
-	void SetInputEnabled(bool bIsEnabled);
+	UPROPERTY(BlueprintReadOnly, Category = "Interact")
+	AActor* PreviousInteractTarget;
+
+
+private:
+	class UUIManager* UIManager;
+	TArray<struct F_InventoryItem*> AvailableLootItems;
+
 };
 
