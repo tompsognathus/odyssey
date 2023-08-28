@@ -7,6 +7,7 @@
 class UUIManager;
 class UInventory;
 class UEnhancedInputLocalPlayerSubsystem;
+class UCombatManager;
 
 class ODYSSEY_API Utility
 {
@@ -15,10 +16,6 @@ public:
 	static UUIManager* GetUIManager(UObject* Object);
 	static UInventory* GetInventory(UObject* Object);
 	static UEnhancedInputLocalPlayerSubsystem* GetEnhancedInputLocalPlayerSubsystem(UObject* Object);
-
-private:
-	static UWorld* GetWorld(UObject* Object);
-
-
-
+	static UCombatManager* GetCombatManager(UObject* Object);
+	static APlayerController* GetFirstPlayerController(UObject* Object);
 };

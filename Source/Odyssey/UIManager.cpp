@@ -15,39 +15,51 @@
 #include "NPC.h"
 #include "CombatWidget.h"
 #include "CombatManager.h"
+#include "Utility.h"
 
-// Sets default values for this component's properties
 UUIManager::UUIManager()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
+	PrimaryComponentTick.bCanEverTick = false;
 }
-
 
 // Called when the game starts
 void UUIManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// First create a parent widget that only contains a widget switcher and is used to hold 
-	// all other widgets and add it to viewport
-	CreateParentUIWidget();
+	CreateParentUIWidget();  // Used to hold all other widgets
 
-	// Get a reference to the widget switcher we just created inside the parent
-	WidgetSwitcher = Cast<UWidgetSwitcher>(ParentUIWidgetInstance->GetWidgetFromName("WidgetSwitcher"));
+	if (!IsValid(ParentUIWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::BeginPlay: Invalid ParentUIWidgetInstance"));
+		return;
+	}
+	
+	UWidget* WigetSwitcherWidget = ParentUIWidgetInstance->GetWidgetFromName("WidgetSwitcher");
+	if (!IsValid(WigetSwitcherWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::BeginPlay: Invalid WidgetSwitcherWidget"));
+		return;
+	}
 
-	// Create all widgets and add them to the widget switcher
+	WidgetSwitcher = Cast<UWidgetSwitcher>(WigetSwitcherWidget);
+	if (!WidgetSwitcher)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::BeginPlay: Invalid WidgetSwitcher"));
+		return;
+	}
+
 	SetUpUIWidgets();
 	SetUpUIWidgets();
 
-	// Start in the Main Menu
-	DisplayWidget(MainMenuWidgetInstance);
+	DisplayWidget(MainMenuWidgetInstance); 	// Game starts with the main menu widget
 
-	// Get a reference to the combat manager on the player character
-	CombatManager = GetOwner()->FindComponentByClass<UCombatManager>();
-	if (!CombatManager) { UE_LOG(LogTemp, Error, TEXT("CombatManager not found in UIManager, BeginPlay")); }
+	CombatManager = Utility::GetCombatManager(this);
+	if (!IsValid(CombatManager)) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::BeginPlay: Invalid CombatManager")); 
+		return;
+	}
 }
 
 /*
@@ -56,12 +68,25 @@ void UUIManager::BeginPlay()
  */
 void UUIManager::CreateParentUIWidget()
 {
+	if (!IsValid(ParentUIWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateParentUIWidget: Invalid ParentUIWidgetAssetRef. Did you assign it in the editor?"));
+		return;
+	}
+
 	ParentUIWidgetInstance = CreateWidget(GetWorld(), ParentUIWidgetAssetRef);
+	if (!IsValid(ParentUIWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateParentUIWidget: Invalid ParentUIWidgetInstance"));
+		return;
+	}
+	
 	ParentUIWidgetInstance->AddToViewport();
 }
 
 void UUIManager::DisplayHUDWidgetOnly()
 {
+
 	DisplayWidget(HUDWidgetInstance);
 }
 
@@ -89,30 +114,32 @@ void UUIManager::DisplayRPEncounterWidget(UDialogueComponent* DialogueOwnerCompo
 {
 	DisplayWidget(RPEncounterWidgetInstance);
 
-	// Cast to RPEncounterWidget and set the owner of the dialogue
 	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
-	if (RPEncounterWidget)
+	if (!IsValid(RPEncounterWidget))
 	{
-		RPEncounterWidget->SetDialogueOwner(DialogueOwnerComponent);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayRPEncounterWidget: Invalid RPEncounterWidget"));
+		return;
 	}
-	else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, DisplayRPEncounterWidget")); }
+
+	RPEncounterWidget->SetDialogueOwner(DialogueOwnerComponent);
 }
 
 void UUIManager::DisplayCombatWidget(class ANPC* Enemy)
 {
 	DisplayWidget(CombatWidgetInstance);
 
-	if (CombatManager)
+	if (!IsValid(CombatManager))
 	{
-		CombatManager->StartNewCombat(Enemy);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayCombatWidget: Invalid CombatManager"));
+		return;
 	}
+	CombatManager->StartNewCombat(Enemy);
 }
 
 void UUIManager::DisplayInventoryWidget()
 {
 	DisplayWidget(InventoryWidgetInstance);
 	LoadPlayerInventoryWidgetContent();
-	
 }
 
 void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
@@ -123,34 +150,39 @@ void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
 
 void UUIManager::OverlayQuitGameAlertWidget()
 {
-	if (QuitGameAlertWidgetInstance)
+	if (!IsValid(QuitGameAlertWidgetInstance))
 	{
-		QuitGameAlertWidgetInstance->AddToViewport();
-
-	} else { UE_LOG(LogTemp, Warning, TEXT("QuitGameAlertWidgetInstance is null in UIManager, OverlayQuitGameAlertWidget")); }
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::OverlayQuitGameAlertWidget: Invalid QuitGameAlertWidgetInstance"));
+		return;
+	}	
+	QuitGameAlertWidgetInstance->AddToViewport();
 }
 
 void UUIManager::OverlayNewGameAlertWidget()
 {
-	if (NewGameAlertWidgetInstance)
+	if (!IsValid(NewGameAlertWidgetInstance))
 	{
-		NewGameAlertWidgetInstance->AddToViewport();
-
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::OverlayNewGameAlertWidget: Invalid NewGameAlertWidgetInstance"));
+		return;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("QuitGameAlertWidgetInstance is null in UIManager, OverlayNewGameAlertWidget")); }
+	NewGameAlertWidgetInstance->AddToViewport();
 }
 
 void UUIManager::HideAllAlerts()
 {
-	if (QuitGameAlertWidgetInstance)
+	if (!IsValid(QuitGameAlertWidgetAssetRef))
 	{
-		QuitGameAlertWidgetInstance->RemoveFromParent();
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::HideAllAlerts: Invalid QuitGameAlertWidgetAssetRef"));
+		return;
 	}
-
-	if (NewGameAlertWidgetInstance)
+	if (!IsValid(NewGameAlertWidgetAssetRef))
 	{
-		NewGameAlertWidgetInstance->RemoveFromParent();
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::HideAllAlerts: Invalid NewGameAlertWidgetAssetRef"));
+		return;
 	}
+	
+	QuitGameAlertWidgetInstance->RemoveFromParent();
+	NewGameAlertWidgetInstance->RemoveFromParent();
 }
 
 /*
@@ -160,13 +192,20 @@ void UUIManager::HideAllAlerts()
  */
 void UUIManager::SetRPEncounterBodyText(FText BodyText)
 {
-	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
-
-	if (RPEncounterWidget)
+	if (!IsValid(RPEncounterWidgetInstance))
 	{
-		RPEncounterWidget->SetBodyText(BodyText);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterBodyText: Invalid RPEncounterWidgetInstance on %s. Did you set it in the editor?"), *GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found")); }
+
+	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
+	if (!IsValid(RPEncounterWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterBodyText: Invalid RPEncounterWidget"));
+		return;
+	}
+
+	RPEncounterWidget->SetBodyText(BodyText);
 }
 
 /*
@@ -177,63 +216,84 @@ void UUIManager::SetRPEncounterBodyText(FText BodyText)
  */
 void UUIManager::SetRPEncounterOptionText(int OptionNumber, FText NewOptionText)
 {
-	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
-
-	if (RPEncounterWidget)
+	if (!IsValid(RPEncounterWidgetInstance))
 	{
-		switch (OptionNumber)
-		{
-		case 1:
-			RPEncounterWidget->SetOptionText(1, NewOptionText);
-			break;
-		case 2:
-			RPEncounterWidget->SetOptionText(2, NewOptionText);
-			break;
-		case 3:
-			RPEncounterWidget->SetOptionText(3, NewOptionText);
-			break;
-		case 4:
-			RPEncounterWidget->SetOptionText(4, NewOptionText);
-			break;
-		default:
-			UE_LOG(LogTemp, Error, TEXT("Invalid option number in UIManager, SetRPEncounterOptionText"));
-			break;
-		}
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterOptionText: Invalid RPEncounterWidgetInstance on %s. Did you set it in the editor?"), *GetName());
+		return;
 	}
-	else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, SetRPEncounterOptionText")); }
+
+	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
+	if (!IsValid(RPEncounterWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterOptionText: Invalid RPEncounterWidget"));
+		return;
+	}
+
+	switch (OptionNumber)
+	{
+	case 1:
+		RPEncounterWidget->SetOptionText(1, NewOptionText);
+		break;
+	case 2:
+		RPEncounterWidget->SetOptionText(2, NewOptionText);
+		break;
+	case 3:
+		RPEncounterWidget->SetOptionText(3, NewOptionText);
+		break;
+	case 4:
+		RPEncounterWidget->SetOptionText(4, NewOptionText);
+		break;
+	default:
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterOptionText: Invalid option number"));
+		break;
+	}
 }
 
 void UUIManager::StartPrologue()
 {
-	if (GM)
+	if (!IsValid(GM))
 	{
-		// Get dialogue component
-		UDialogueComponent* GMDialogueComponent = GM->GetDialogueComponent();
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::StartPrologue: Invalid GM"));
+		return;
+	}
 
-		if (GMDialogueComponent)
-		{
-			TArray<UDlgDialogue*> Dialogues = GMDialogueComponent->GetDialogues();
-			TArray<UObject*> Participants = GMDialogueComponent->GetParticipants();
+	UDialogueComponent* GMDialogueComponent = GM->GetDialogueComponent();
+	if (!IsValid(GMDialogueComponent))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::StartPrologue: Invalid GMDialogueComponent"));
+		return;
+	}
 
-			if (Dialogues.Num() > 0)
-			{
-				// Start the dialogue
-				GMDialogueComponent->StartDialogue(Dialogues[0], Participants);
+	TArray<UDlgDialogue*> Dialogues = GMDialogueComponent->GetDialogues();
+	TArray<UObject*> Participants = GMDialogueComponent->GetParticipants();
 
-			} else { UE_LOG(LogTemp, Error, TEXT("No dialogues found on DialogueComponent in UIManager, StartPrologue")); }
-		} else { UE_LOG(LogTemp, Error, TEXT("DialogueComponent is null in UIManager, StartPrologue")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("GM is null in UIManager, StartPrologue")); }
+	if (Dialogues.Num() > 0)
+	{
+		GMDialogueComponent->StartDialogue(Dialogues[0], Participants);
+	} 
+	else 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::StartPrologue: No dialogues found on DialogueComponent")); 
+		return;
+	}
 }
 
 void UUIManager::SetRPEncounterAvatar(UMaterial* AvatarMaterial, FText AvatarName)
 {
-	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
-
-	if (RPEncounterWidget)
+	if (!IsValid(RPEncounterWidgetInstance))
 	{
-		RPEncounterWidget->SetAvatar(AvatarMaterial, AvatarName);
-	
-	} else { UE_LOG(LogTemp, Error, TEXT("RPEncounterWidget not found in UIManager, SetRPEncounterAvatar")); }
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterAvatar: Invalid RPEncounterWidgetInstance on %s. Did you set it in the editor?"), *GetName());
+		return;
+	}
+
+	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
+	if (!IsValid(RPEncounterWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterAvatar: Invalid RPEncounterWidget"));
+		return;
+	}
+
+	RPEncounterWidget->SetAvatar(AvatarMaterial, AvatarName);
 }
 
 /*
@@ -246,153 +306,186 @@ void UUIManager::SelectDialogueOption(int OptionNumber, UDialogueComponent* Dial
 {
 	if (OptionNumber < 0 || OptionNumber > 3)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid option number, must be between 1 and 4 in UIManager, SelectDialogueOption"));
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SelectDialogueOption: Invalid option number, must be between 1 and 4"));
+		return;
+	}
+	if (!IsValid(DialogueOwnerComponent))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SelectDialogueOption: Invalid DialogueOwnerComponent"));
 		return;
 	}
 
-	if (DialogueOwnerComponent)
+	bool HasReachedEndOfDialogue = !(DialogueOwnerComponent->SelectDialogueOption(OptionNumber));
+	if (!HasReachedEndOfDialogue)
 	{
-		bool HasReachedEndOfDialogue = !(DialogueOwnerComponent->SelectDialogueOption(OptionNumber));
-		UE_LOG(LogTemp, Display, TEXT("HasReachedEndOfDialogue: %s"), HasReachedEndOfDialogue ? TEXT("true") : TEXT("false"));
-		if (!HasReachedEndOfDialogue)
+		DialogueOwnerComponent->PopulateDialogueBodyText();
+		DialogueOwnerComponent->PopulateDialogueOptionsText();
+	}
+	else
+	{
+		if (!IsValid(HUDWidgetInstance))
 		{
-			DialogueOwnerComponent->PopulateDialogueBodyText();
-			DialogueOwnerComponent->PopulateDialogueOptionsText();
+			UE_LOG(LogTemp, Error, TEXT("UUIManager::SelectDialogueOption: Invalid HUDWidgetInstance on %s. Did you set it in the editor?"), *GetName());
+			return;
 		}
-		else
-		{
-			UE_LOG(LogTemp, Display, TEXT("Reached end of dialogue in UIManager, SelectDialogueOption"));
-			DisplayWidget(HUDWidgetInstance);
-		}
-
-	} else { UE_LOG(LogTemp, Error, TEXT("NPC not found in UIManager, SelectDialogueOption")); }
+		DisplayWidget(HUDWidgetInstance);
+	}
 }
 
 
 void UUIManager::LoadTradingInventoryWidgetContent(ULootBox* LootBox)
 {
-	if (TradingInventoryWidgetInstance)
+	if (!IsValid(TradingInventoryWidgetInstance))
 	{
-		// Cast to TradingInventoryWidget and update the content
-		UTradingInventoryWidget* TradingInventoryWidget = Cast<UTradingInventoryWidget>(TradingInventoryWidgetInstance);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadTradingInventoryWidgetContent: Invalid TradingInventoryWidgetInstance"));
+		return;
+	}
 
-		if (TradingInventoryWidget)
-		{
-			TradingInventoryWidget->LoadLootBoxInventoryUIContents(LootBox);
-			TradingInventoryWidget->LoadPlayerInventoryUIContents();
+	UTradingInventoryWidget* TradingInventoryWidget = Cast<UTradingInventoryWidget>(TradingInventoryWidgetInstance);
+	if (!IsValid(TradingInventoryWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadTradingInventoryWidgetContent: Invalid TradingInventoryWidget"));
+		return;
+	}
 
-		} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidget not found in UIManager, UpdateTradingInventoryWidgetContent")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("TradingInventoryWidgetInstance is null in UIManager, UpdateTradingInventoryWidgetContent")); }
+	TradingInventoryWidget->LoadLootBoxInventoryUIContents(LootBox);
+	TradingInventoryWidget->LoadPlayerInventoryUIContents();
 }
 
 void UUIManager::LoadPlayerInventoryWidgetContent()
 {
-	if (InventoryWidgetInstance)
+	if (!IsValid(InventoryWidgetInstance))
 	{
-		// Cast to InventoryWidget and update the content
-		UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(InventoryWidgetInstance);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadPlayerInventoryWidgetContent: Invalid InventoryWidgetInstance"));
+		return;
+	}
+	
+	UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(InventoryWidgetInstance);
+	if (!IsValid(InventoryWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadPlayerInventoryWidgetContent: Invalid InventoryWidget"));
+		return;
+	}
 
-		if (InventoryWidget)
-		{
-			InventoryWidget->LoadInventoryUIContents();
-
-		} else { UE_LOG(LogTemp, Error, TEXT("InventoryWidget not found in UIManager, UpdateInventoryWidgetContent")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("InventoryWidgetInstance is null in UIManager, UpdateInventoryWidgetContent")); }
+	InventoryWidget->LoadInventoryUIContents();
 }
 
 void UUIManager::SetCurrentRoundText(int CurrentRound)
 {
-	if (CombatWidgetInstance)
+	if (!IsValid(CombatWidgetInstance))
 	{
-		// Cast to CombatWidget
-		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetCurrentRoundText: Invalid CombatWidgetInstance"));
+		return;
+	}
+	
+	UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+	if (!IsValid(CombatWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetCurrentRoundText: Invalid CombatWidget"));
+		return;
+	}
 
-		if (CombatWidget)
-		{
-			CombatWidget->SetCurrentRoundText(CurrentRound);
-
-		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetCurrentRoundText")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetCurrentRoundText")); }
+	CombatWidget->SetCurrentRoundText(CurrentRound);
 }
 
 void UUIManager::SetEnemyInfo(UMaterial* EnemyAvatarMaterial, FText EnemyName)
 {
-	if (CombatWidgetInstance)
+	if (!IsValid(CombatWidgetInstance))
 	{
-		// Cast to CombatWidget
-		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
-	
-		if (CombatWidget)
-		{
-			CombatWidget->SetEnemyAvatar(EnemyAvatarMaterial);
-			CombatWidget->SetEnemyName(EnemyName);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetEnemyInfo: Invalid CombatWidgetInstance"));
+		return;
+	}
 
-		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetEnemyAvatar")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetEnemyAvatar")); }
+	UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+	if (!IsValid(CombatWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetEnemyInfo: Invalid CombatWidget"));
+		return;
+	}
+
+	CombatWidget->SetEnemyAvatar(EnemyAvatarMaterial);
+	CombatWidget->SetEnemyName(EnemyName);
 }
 
 void UUIManager::SetEnemyHpPercent(float NormalizedPercent)
 {
-if (CombatWidgetInstance)
+	if (!IsValid(CombatWidgetInstance))
 	{
-		// Cast to CombatWidget
-		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetEnemyHpPercent: Invalid CombatWidgetInstance"));
+		return;
+	}
 
-		if (CombatWidget)
-		{
-			CombatWidget->SetEnemyHpBarPercent(NormalizedPercent);
+	UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+	if (!IsValid(CombatWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetEnemyHpPercent: Invalid CombatWidget"));
+		return;
+	}
 
-		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetEnemyHpPercent")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetEnemyHpPercent")); }
+	CombatWidget->SetEnemyHpBarPercent(NormalizedPercent);
 }
 
 void UUIManager::SetPlayerHpPercent(float NormalizedPercent)
 {
-	if (CombatWidgetInstance)
+	if (!IsValid(CombatWidgetInstance))
 	{
-		// Cast to CombatWidget
-		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetPlayerHpPercent: Invalid CombatWidgetInstance"));
+		return;
+	}
+	
+	UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+	if (!IsValid(CombatWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetPlayerHpPercent: Invalid CombatWidget"));
+		return;
+	}
 
-		if (CombatWidget)
-		{
-			CombatWidget->SetPlayerHpBarPercent(NormalizedPercent);
-
-		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetPlayerHpPercent")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetPlayerHpPercent")); }
+	CombatWidget->SetPlayerHpBarPercent(NormalizedPercent);
 }
 
 void UUIManager::SetCombatActionBtnsEnabled(bool IsEnabled)
 {
-	if (CombatWidgetInstance)
+	if (!IsValid(CombatWidgetInstance))
 	{
-		// Cast to CombatWidget
-		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetCombatActionBtnsEnabled: Invalid CombatWidgetInstance"));
+		return;
+	}
+	
+	UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+	if (!IsValid(CombatWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetCombatActionBtnsEnabled: Invalid CombatWidget"));
+		return;
+	}
 
-		if (CombatWidget)
-		{
-			CombatWidget->SetActionBtnsEnabled(IsEnabled);
-
-		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, SetPlayerHpPercent")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, SetPlayerHpPercent")); }
+	CombatWidget->SetActionBtnsEnabled(IsEnabled);
 }
 
 void UUIManager::UpdatePlayerCombatActionButtons(TArray<class UDA_ItemAction*> AttackActions)
 {
-	if (CombatWidgetInstance)
+	if (!IsValid(CombatWidgetInstance))
 	{
-		// Cast to CombatWidget
-		UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::UpdatePlayerCombatActionButtons: Invalid CombatWidgetInstance"));
+		return;
+	}
 
-		if (CombatWidget)
-		{
-			CombatWidget->SetUpAttackButtons(AttackActions);
+	UCombatWidget* CombatWidget = Cast<UCombatWidget>(CombatWidgetInstance);
+	if (!IsValid(CombatWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::UpdatePlayerCombatActionButtons: Invalid CombatWidget"));
+		return;
+	}
 
-		} else { UE_LOG(LogTemp, Error, TEXT("CombatWidget not found in UIManager, UpdatePlayerCombatActionBtns")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("CombatWidgetInstance is null in UIManager, UpdatePlayerCombatActionBtns")); }
+	CombatWidget->SetUpAttackButtons(AttackActions);
 }
 
 void UUIManager::DisplayPreviousWidget()
 {
+	if (!IsValid(PreviousWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayPreviousWidget: Invalid PreviousWidget"));
+		return;
+	}
 	DisplayWidget(PreviousWidget);
 }
 
@@ -411,6 +504,62 @@ void UUIManager::SetUpUIWidgets()
  */
 void UUIManager::CreateUIWidgets()
 {
+	if (!IsValid(MainMenuWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid MainMenuWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(PauseMenuWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid PauseMenuWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(OptionsMenuWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid OptionsMenuWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(AudioOptionsMenuWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid AudioOptionsMenuWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(RPEncounterWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid RPEncounterWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(CombatWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid CombatWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(InventoryWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid InventoryWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(TradingInventoryWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid TradingInventoryWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(HUDWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid HUDWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(QuitGameAlertWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid QuitGameAlertWidgetAssetRef"));
+		return;
+	}
+	if (!IsValid(NewGameAlertWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid NewGameAlertWidgetAssetRef"));
+		return;
+	}
+
 	// UI Screens
 	MainMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetAssetRef);
 	PauseMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), PauseMenuWidgetAssetRef);
@@ -436,6 +585,47 @@ void UUIManager::CreateUIWidgets()
  */
 void UUIManager::AddWidgetsToWidgetSwitcher()
 {
+	if (!IsValid(MainMenuWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid MainMenuWidgetInstance"));
+		return;
+	}
+	if (!IsValid(PauseMenuWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid PauseMenuWidgetInstance"));
+		return;
+	}
+	if (!IsValid(OptionsMenuWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid OptionsMenuWidgetInstance"));
+		return;
+	}
+	if (!IsValid(AudioOptionsMenuWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid AudioOptionsMenuWidgetInstance"));
+		return;
+	}
+	if (!IsValid(RPEncounterWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid RPEncounterWidgetInstance"));
+		return;
+	}
+	if (!IsValid(CombatWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid CombatWidgetInstance"));
+		return;
+	}
+	if (!IsValid(InventoryWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid InventoryWidgetInstance"));
+		return;
+	}
+	if (!IsValid(TradingInventoryWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid TradingInventoryWidgetInstance"));
+		return;
+	}
+
 	AddWidgetToWidgetSwitcher(MainMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(PauseMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(OptionsMenuWidgetInstance);
@@ -445,7 +635,6 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
 	AddWidgetToWidgetSwitcher(InventoryWidgetInstance);
 	AddWidgetToWidgetSwitcher(TradingInventoryWidgetInstance);
-
 }
 
 /*
@@ -455,14 +644,18 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
  */
 void UUIManager::AddWidgetToWidgetSwitcher(UUserWidget* WidgetInstanceToAdd)
 {
-	if (WidgetInstanceToAdd)
+	if (!IsValid(WidgetInstanceToAdd))
 	{
-		if (WidgetSwitcher)
-		{
-			WidgetSwitcher->AddChild(WidgetInstanceToAdd);
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetToWidgetSwitcher: Invalid WidgetInstanceToAdd"));
+		return;
+	}
+	if (!WidgetSwitcher)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetToWidgetSwitcher: Invalid WidgetSwitcher"));
+		return;
+	}
 
-		} else { UE_LOG(LogTemp, Error, TEXT("WidgetSwitcher not found in UIManager, AddWidgetToWidgetSwitcher")); }
-	} else { UE_LOG(LogTemp, Error, TEXT("%s not found in UIManager, AddWidgetToWidgetSwitcher"), *WidgetInstanceToAdd->GetName()); }
+	WidgetSwitcher->AddChild(WidgetInstanceToAdd);
 }
 
 /*
@@ -472,15 +665,44 @@ void UUIManager::AddWidgetToWidgetSwitcher(UUserWidget* WidgetInstanceToAdd)
  */
 void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay)
 {
+	if (!IsValid(WidgetInstanceToDisplay))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayWidget: Invalid WidgetInstanceToDisplay"));
+		return;
+	}
+	if (!IsValid(HUDWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayWidget: Invalid HUDWidgetInstance"));
+		return;
+	}
+	if (!WidgetSwitcher)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayWidget: Invalid WidgetSwitcher"));
+		return;
+	}
+
 	PreviousWidget = Cast<UUserWidget>(WidgetSwitcher->GetActiveWidget());
 
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	APlayerController* PlayerController = Utility::GetFirstPlayerController(this);
+	if (!IsValid(PlayerController))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayWidget: Invalid PlayerController"));
+		return;
+	}
+
+	AActor* PlayerCharacterActor = GetOwner();
+	if (!IsValid(PlayerCharacterActor))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayWidget: Invalid PlayerCharacterActor"));
+		return;
+	}
+
 	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(GetOwner());
-
-	if (!WidgetSwitcher) { UE_LOG(LogTemp, Error, TEXT("WidgetSwitcher not found in UIManager, DisplayWidget")); return; }
-	if (!PlayerController) { UE_LOG(LogTemp, Error, TEXT("PlayerController not found in UIManager, DisplayWidget")); return; }
-	if (!PlayerCharacter) { UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found in UIManager, DisplayWidget")); return; }
-
+	if (!IsValid(PlayerCharacter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayWidget: Invalid PlayerCharacter"));
+		return;
+	}
 
 	WidgetSwitcher->SetActiveWidget(WidgetInstanceToDisplay);
 

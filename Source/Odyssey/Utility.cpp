@@ -4,6 +4,7 @@
 #include "UIManager.h"
 #include "Inventory.h"
 #include "EnhancedInputSubsystems.h"
+#include "CombatManager.h"
 
 UUIManager* Utility::GetUIManager(UObject* Object)
 {
@@ -97,16 +98,47 @@ UEnhancedInputLocalPlayerSubsystem* Utility::GetEnhancedInputLocalPlayerSubsyste
 	return LocalPlayerSubsystem;
 }
 
-APawn* Utility::GetPlayerPawn(UObject* Object)
+UCombatManager* Utility::GetCombatManager(UObject* Object)
+{
+	APawn* PlayerPawn = Utility::GetPlayerPawn(Object);
+	if (!IsValid(PlayerPawn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Utility::GetCombatManager: Invalid PlayerPawn"));
+		return nullptr;
+	}
+
+	UCombatManager* CombatManagerComponent = PlayerPawn->FindComponentByClass<UCombatManager>();
+	if (!CombatManagerComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Utility::GetCombatManager: Invalid CombatManagerComponent"));
+		return nullptr;
+	}
+
+	return CombatManagerComponent;
+}
+
+APlayerController* Utility::GetFirstPlayerController(UObject* Object)
 {
 	UWorld* World = Object->GetWorld();
 	if (!IsValid(World))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Utility::GetPlayerPawn: Invalid World"));
+		UE_LOG(LogTemp, Error, TEXT("Utility::GetFirstPlayerController: Invalid World"));
 		return nullptr;
 	}
 
 	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
+	if (!IsValid(FirstPlayerController))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Utility::GetFirstPlayerController:  FirstPlayerController is not valid"));
+		return nullptr;
+	}
+
+	return FirstPlayerController;
+}
+
+APawn* Utility::GetPlayerPawn(UObject* Object)
+{
+	APlayerController* FirstPlayerController = Utility::GetFirstPlayerController(Object);
 	if (!IsValid(FirstPlayerController))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Utility::GetPlayerPawn:  FirstPlayerController is not valid"));

@@ -38,8 +38,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void GetInputPromptWidgetComponent();
 
+private:
+	void CacheInputPromptWidgetComponent();
 
 private:
 	bool IsRotating = false;

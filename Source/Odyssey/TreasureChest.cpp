@@ -16,10 +16,10 @@ void ATreasureChest::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetInputPromptWidgetComponent();
+	CacheInputPromptWidgetComponent();
 }
 
-void ATreasureChest::GetInputPromptWidgetComponent()
+void ATreasureChest::CacheInputPromptWidgetComponent()
 {
 	UActorComponent* InputPromptActorComponent = GetComponentByClass(UWidgetComponent::StaticClass());
 	if (!IsValid(InputPromptActorComponent))
