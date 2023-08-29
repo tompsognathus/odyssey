@@ -164,7 +164,7 @@ protected:
 
 
 private:
-	void DisplayWidget(UUserWidget* WidgetInstanceToDisplay);
+	void DisplayWidget(UUserWidget* WidgetInstanceToDisplay, bool DoAddToWidgetStack = true);
 
 	void SetUpUIWidgets();
 
@@ -194,5 +194,6 @@ private:
 	UUserWidget* NewGameAlertWidgetInstance;
 
 	// Remember what the previous UI widget was
-	UUserWidget* PreviousWidget = MainMenuWidgetInstance;
+	//UUserWidget* PreviousWidget = MainMenuWidgetInstance;
+	TArray<UUserWidget*> WidgetPathThroughMenusStack;
 };

@@ -20,5 +20,5 @@ void UAudioOptionsMenuWidget::HandleBackBtnClicked()
 		return; 
 	}
 
-	UIManager->DisplayOptionsMenuWidget();
+	UIManager->DisplayPreviousWidget();
 }

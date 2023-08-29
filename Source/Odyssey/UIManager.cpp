@@ -481,12 +481,14 @@ void UUIManager::UpdatePlayerCombatActionButtons(TArray<class UDA_ItemAction*> A
 
 void UUIManager::DisplayPreviousWidget()
 {
-	if (!IsValid(PreviousWidget))
+	if (WidgetPathThroughMenusStack.Num() <= 1)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayPreviousWidget: Invalid PreviousWidget"));
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayPreviousWidget: WidgetPathThroughMenusStack only contains %d widgets"), WidgetPathThroughMenusStack.Num());
 		return;
 	}
-	DisplayWidget(PreviousWidget);
+	WidgetPathThroughMenusStack.RemoveAt(WidgetPathThroughMenusStack.Num() - 1);
+
+	DisplayWidget(WidgetPathThroughMenusStack[WidgetPathThroughMenusStack.Num() - 1], false);
 }
 
 /*
@@ -662,8 +664,10 @@ void UUIManager::AddWidgetToWidgetSwitcher(UUserWidget* WidgetInstanceToAdd)
  * Use the widget switcher to display a widget on screen
  *
  * INPUT: UUserWidget* WidgetInstanceToDisplay: The widget to be displayed
+ * INPUT: bool DoAddToWidgetStack: Whether or not to add the widget to the widget stack. We do want to add it when diving deeper into a menu
+ * and not when returning to a previous menu
  */
-void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay)
+void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay, bool DoAddToWidgetStack)
 {
 	if (!IsValid(WidgetInstanceToDisplay))
 	{
@@ -681,7 +685,7 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay)
 		return;
 	}
 
-	PreviousWidget = Cast<UUserWidget>(WidgetSwitcher->GetActiveWidget());
+	//PreviousWidget = Cast<UUserWidget>(WidgetSwitcher->GetActiveWidget());
 
 	APlayerController* PlayerController = Utility::GetFirstPlayerController(this);
 	if (!IsValid(PlayerController))
@@ -706,6 +710,11 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay)
 
 	WidgetSwitcher->SetActiveWidget(WidgetInstanceToDisplay);
 
+	if (DoAddToWidgetStack)
+	{
+		WidgetPathThroughMenusStack.Add(WidgetInstanceToDisplay);
+	}
+
 	// When returning to game world from anywhere
 	if (WidgetInstanceToDisplay == HUDWidgetInstance)
 	{
@@ -713,6 +722,8 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay)
 		PlayerController->bShowMouseCursor = false;
 		// Switch to exploration controls
 		PlayerCharacter->ActivateExploreMappingContext();
+		// Clear widget stack
+		WidgetPathThroughMenusStack.Empty();
 		// Resume game world
 		//UGameplayStatics::SetGamePaused(GetWorld(), false);
 
