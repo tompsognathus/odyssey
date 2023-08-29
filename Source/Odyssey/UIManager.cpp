@@ -685,8 +685,6 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay, bool DoAddT
 		return;
 	}
 
-	//PreviousWidget = Cast<UUserWidget>(WidgetSwitcher->GetActiveWidget());
-
 	APlayerController* PlayerController = Utility::GetFirstPlayerController(this);
 	if (!IsValid(PlayerController))
 	{

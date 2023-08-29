@@ -194,6 +194,5 @@ private:
 	UUserWidget* NewGameAlertWidgetInstance;
 
 	// Remember what the previous UI widget was
-	//UUserWidget* PreviousWidget = MainMenuWidgetInstance;
 	TArray<UUserWidget*> WidgetPathThroughMenusStack;
 };

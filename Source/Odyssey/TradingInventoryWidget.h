@@ -12,6 +12,8 @@ class UUIManager;
 class UInventory;
 class ULootBox;
 
+class UWBP_MenuBtn;
+
 UCLASS()
 class ODYSSEY_API UTradingInventoryWidget : public UUserWidget
 {
@@ -30,6 +32,12 @@ protected:
 
 	void SetWidthForInventoryGrids();
 	
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void HandleTakeAllButtonClicked();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "UI Functions")
+	void SetTakeAllButtonIsActive(bool IsActive);
+
 protected:
 	/* WIDGET BINDINGS */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))

@@ -263,9 +263,4 @@ void UTradingInventoryWidget::OnLootBoxInventorySlotDoubleClicked(UWBP_Inventory
 	// Update UI grids
 	LoadPlayerInventoryUIContents();
 	LoadLootBoxInventoryUIContents(CurrentLootBox);
-
-	if (CurrentLootBox->GetItemRefArray().Num() == 0)
-	{
-		SetTakeAllButtonIsActive(false);
-	}
 }
