@@ -11,8 +11,8 @@ class USizeBox;
 class UUIManager;
 class UInventory;
 class ULootBox;
-
 class UWBP_MenuBtn;
+class UTextBlock;
 
 UCLASS()
 class ODYSSEY_API UTradingInventoryWidget : public UUserWidget
@@ -25,6 +25,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void LoadLootBoxInventoryUIContents(ULootBox* LootBox);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void SetLootBoxNameText(FText NewLootBoxName);
 
 
 protected:
@@ -51,6 +54,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	USizeBox* LootInventorySizeBox;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* LootBoxNameText;
 
 	/* VARIABLES */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")

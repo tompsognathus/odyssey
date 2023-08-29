@@ -11,6 +11,7 @@
 #include "InventoryPlayerBlockWidget.h"
 #include "Components/SizeBox.h"
 #include "Utility.h"
+#include "Components/TextBlock.h"
 
 void UTradingInventoryWidget::NativeConstruct()
 {
@@ -112,6 +113,11 @@ void UTradingInventoryWidget::LoadLootBoxInventoryUIContents(ULootBox* LootBox)
 
 	// Populate inventory grid with loot box contents
 	WBP_InventoryLootBoxBlock->LoadInventoryGridContents(LootBox->GetItemRefArray(), LootBox->GetItemCountArray());
+}
+
+void UTradingInventoryWidget::SetLootBoxNameText(FText NewLootBoxName)
+{
+	LootBoxNameText->SetText(NewLootBoxName);
 }
 
 void UTradingInventoryWidget::HandleTakeAllButtonClicked()

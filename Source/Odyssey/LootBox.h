@@ -18,6 +18,7 @@ public:
 
 	TArray<UDA_Item*> GetItemRefArray() const { return ItemRefArray; }
 	TArray<int> GetItemCountArray() const { return ItemCountArray; }
+	FText GetLootBoxDisplayName() const { return LootBoxDisplayName; }
 
 	void RemoveItem(UDA_Item* ItemToRemove, int AmountToRemove);
 	void AddItem(UDA_Item* ItemToAdd, int NumToAdd);
@@ -37,6 +38,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
 	TArray<int> ItemCountArray = TArray<int>();
 
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LootBox")
+	FText LootBoxDisplayName = FText::FromString("Loot");
 };

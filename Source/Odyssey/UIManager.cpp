@@ -350,6 +350,8 @@ void UUIManager::LoadTradingInventoryWidgetContent(ULootBox* LootBox)
 
 	TradingInventoryWidget->LoadLootBoxInventoryUIContents(LootBox);
 	TradingInventoryWidget->LoadPlayerInventoryUIContents();
+
+	TradingInventoryWidget->SetLootBoxNameText(LootBox->GetLootBoxDisplayName());
 }
 
 void UUIManager::LoadPlayerInventoryWidgetContent()
