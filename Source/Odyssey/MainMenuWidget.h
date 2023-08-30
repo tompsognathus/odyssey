@@ -18,16 +18,19 @@ protected:
 	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void HandleContinueGameBtnClicked();
+	void HandleContinueGameButtonClicked();
 	
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void HandleNewGameBtnClicked();
+	void HandleNewGameButtonClicked();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void HandleOptionsBtnClicked();
+	void HandleOptionsButtonClicked();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void HandleQuitGameBtnClicked();
+	void HandleQuitGameButtonClicked();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void HandleCreditsButtonClicked();
 
 
 private:

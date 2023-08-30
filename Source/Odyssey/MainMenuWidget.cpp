@@ -18,7 +18,7 @@ void UMainMenuWidget::NativeConstruct()
 	}
 }
 
-void UMainMenuWidget::HandleContinueGameBtnClicked()
+void UMainMenuWidget::HandleContinueGameButtonClicked()
 {
 	if (!IsValid(UIManager))
 	{
@@ -28,7 +28,7 @@ void UMainMenuWidget::HandleContinueGameBtnClicked()
 	UIManager->DisplayHUDWidgetOnly();
 }
 
-void UMainMenuWidget::HandleNewGameBtnClicked()
+void UMainMenuWidget::HandleNewGameButtonClicked()
 {
 	if (!IsValid(UIManager))
 	{
@@ -38,7 +38,7 @@ void UMainMenuWidget::HandleNewGameBtnClicked()
 	UIManager->OverlayNewGameAlertWidget();
 }
 
-void UMainMenuWidget::HandleOptionsBtnClicked()
+void UMainMenuWidget::HandleOptionsButtonClicked()
 {
 	if (!IsValid(UIManager))
 	{
@@ -48,7 +48,7 @@ void UMainMenuWidget::HandleOptionsBtnClicked()
 	UIManager->DisplayOptionsMenuWidget();
 }
 
-void UMainMenuWidget::HandleQuitGameBtnClicked()
+void UMainMenuWidget::HandleQuitGameButtonClicked()
 {
 	if (!IsValid(UIManager))
 	{
@@ -56,4 +56,14 @@ void UMainMenuWidget::HandleQuitGameBtnClicked()
 		return;
 	}
 	UIManager->OverlayQuitGameAlertWidget();
+}
+
+void UMainMenuWidget::HandleCreditsButtonClicked()
+{
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UMainMenuWidget::HandleCreditsBtnClicked: Invalid UIManager"));
+		return;
+	}
+	//UIManager->DisplayCreditsWidget();
 }
