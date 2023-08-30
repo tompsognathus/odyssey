@@ -148,6 +148,12 @@ void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
 	LoadTradingInventoryWidgetContent(LootBox);
 }
 
+void UUIManager::DisplayMemoriesWidget()
+{
+	DisplayWidget(MemoriesWidgetInstance);
+	//LoadMemoriesWidgetContent();
+}
+
 void UUIManager::OverlayQuitGameAlertWidget()
 {
 	if (!IsValid(QuitGameAlertWidgetInstance))
@@ -548,6 +554,11 @@ void UUIManager::CreateUIWidgets()
 		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid TradingInventoryWidgetAssetRef"));
 		return;
 	}
+	if (!IsValid(MemoriesWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid MemoriesWidgetAssetRef"));
+		return;
+	}
 	if (!IsValid(HUDWidgetAssetRef))
 	{
 		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid HUDWidgetAssetRef"));
@@ -573,6 +584,7 @@ void UUIManager::CreateUIWidgets()
 	CombatWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), CombatWidgetAssetRef);
 	InventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetAssetRef);
 	TradingInventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), TradingInventoryWidgetAssetRef);
+	MemoriesWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MemoriesWidgetAssetRef);
 
 	// HUD only
 	HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetAssetRef);
@@ -629,6 +641,11 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid TradingInventoryWidgetInstance"));
 		return;
 	}
+	if (!IsValid(MemoriesWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid MemoriesWidgetInstance"));
+		return;
+	}
 
 	AddWidgetToWidgetSwitcher(MainMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(PauseMenuWidgetInstance);
@@ -639,6 +656,7 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
 	AddWidgetToWidgetSwitcher(InventoryWidgetInstance);
 	AddWidgetToWidgetSwitcher(TradingInventoryWidgetInstance);
+	AddWidgetToWidgetSwitcher(MemoriesWidgetInstance);
 }
 
 /*

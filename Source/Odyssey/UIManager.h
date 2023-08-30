@@ -49,6 +49,9 @@ public:
 	void DisplayTradingInventoryWidget(ULootBox* LootBox);
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void DisplayMemoriesWidget();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
 
 	/***** UI Widget Getters *****/
@@ -149,6 +152,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
 	TSubclassOf<UUserWidget> InventorySlotAssetRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
+	TSubclassOf<UUserWidget> MemoriesWidgetAssetRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
+	TSubclassOf<UUserWidget> MemoryCardAssetRef;
+
 	/* Alerts */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Alerts")
 	TSubclassOf<UUserWidget> QuitGameAlertWidgetAssetRef;
@@ -190,6 +199,7 @@ private:
 	UUserWidget* HUDWidgetInstance;
 	UUserWidget* InventoryWidgetInstance;
 	UUserWidget* TradingInventoryWidgetInstance;
+	UUserWidget* MemoriesWidgetInstance;
 	UUserWidget* QuitGameAlertWidgetInstance;
 	UUserWidget* NewGameAlertWidgetInstance;
 
