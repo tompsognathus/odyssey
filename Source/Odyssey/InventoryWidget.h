@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "WidgetSwitchable.h"
 #include "InventoryWidget.generated.h"
 
 class UTextBlock;
@@ -12,11 +13,13 @@ class USizeBox;
 class UInventoryPlayerBlockWidget;
 
 UCLASS()
-class ODYSSEY_API UInventoryWidget : public UUserWidget
+class ODYSSEY_API UInventoryWidget : public UUserWidget, public IWidgetSwitchable
 {
 	GENERATED_BODY()
 
 public:
+	virtual void PrepareToDisplay_Implementation() override;
+
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void LoadInventoryUIContents();
 

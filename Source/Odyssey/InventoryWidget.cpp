@@ -41,6 +41,10 @@ void UInventoryWidget::NativeConstruct()
 	WBP_InventoryPlayerBlock->OnInventorySlotHoveredDelegate.AddDynamic(this, &UInventoryWidget::OnInventorySlotHovered);
 }
 
+void UInventoryWidget::PrepareToDisplay_Implementation()
+{
+	LoadInventoryUIContents();
+}
 
 void UInventoryWidget::SetWidthForInventoryGrid()
 {

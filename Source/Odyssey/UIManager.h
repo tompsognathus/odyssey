@@ -43,13 +43,10 @@ public:
 	void DisplayCombatWidget(ANPC* Enemy);
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayInventoryWidget();
-
-	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayTradingInventoryWidget(ULootBox* LootBox);
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
-	void DisplayMemoriesWidget();
+	void DisplayGameMenuWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
@@ -88,8 +85,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
 	void LoadTradingInventoryWidgetContent(ULootBox* LootBox);
 
-	UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
-	void LoadPlayerInventoryWidgetContent();
+	//UFUNCTION(BlueprintCallable, Category = "Trading Inventory")
+	//void LoadPlayerInventoryWidgetContent();
 
 	/***** Combat UI Widget *****/
 	UFUNCTION(BlueprintCallable, Category = "Combat")
@@ -144,16 +141,13 @@ public:
 	TSubclassOf<UUserWidget> HUDWidgetAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
-	TSubclassOf<UUserWidget> InventoryWidgetAssetRef;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
 	TSubclassOf<UUserWidget> TradingInventoryWidgetAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
 	TSubclassOf<UUserWidget> InventorySlotAssetRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
-	TSubclassOf<UUserWidget> MemoriesWidgetAssetRef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|GameMenu")
+	TSubclassOf<UUserWidget> GameMenuWidgetAssetRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
 	TSubclassOf<UUserWidget> MemoryCardAssetRef;
@@ -197,9 +191,10 @@ private:
 	UUserWidget* RPEncounterWidgetInstance;
 	UUserWidget* CombatWidgetInstance;
 	UUserWidget* HUDWidgetInstance;
-	UUserWidget* InventoryWidgetInstance;
+	//UUserWidget* InventoryWidgetInstance;
 	UUserWidget* TradingInventoryWidgetInstance;
-	UUserWidget* MemoriesWidgetInstance;
+	//UUserWidget* MemoriesWidgetInstance;
+	UUserWidget* GameMenuWidgetInstance;
 	UUserWidget* QuitGameAlertWidgetInstance;
 	UUserWidget* NewGameAlertWidgetInstance;
 

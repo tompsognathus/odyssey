@@ -2,7 +2,7 @@
 
 
 #include "UIManager.h"
-
+#include "WidgetSwitchable.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/WidgetSwitcher.h"
 #include "OdysseyCharacter.h"
@@ -49,7 +49,6 @@ void UUIManager::BeginPlay()
 		return;
 	}
 
-	SetUpUIWidgets();
 	SetUpUIWidgets();
 
 	DisplayWidget(MainMenuWidgetInstance); 	// Game starts with the main menu widget
@@ -136,22 +135,16 @@ void UUIManager::DisplayCombatWidget(class ANPC* Enemy)
 	CombatManager->StartNewCombat(Enemy);
 }
 
-void UUIManager::DisplayInventoryWidget()
-{
-	DisplayWidget(InventoryWidgetInstance);
-	LoadPlayerInventoryWidgetContent();
-}
-
 void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
 {
 	DisplayWidget(TradingInventoryWidgetInstance);
 	LoadTradingInventoryWidgetContent(LootBox);
 }
 
-void UUIManager::DisplayMemoriesWidget()
+void UUIManager::DisplayGameMenuWidget()
 {
-	DisplayWidget(MemoriesWidgetInstance);
-	//LoadMemoriesWidgetContent();
+	IWidgetSwitchable::Execute_PrepareToDisplay(GameMenuWidgetInstance);
+	DisplayWidget(GameMenuWidgetInstance);
 }
 
 void UUIManager::OverlayQuitGameAlertWidget()
@@ -360,23 +353,23 @@ void UUIManager::LoadTradingInventoryWidgetContent(ULootBox* LootBox)
 	TradingInventoryWidget->SetLootBoxNameText(LootBox->GetLootBoxDisplayName());
 }
 
-void UUIManager::LoadPlayerInventoryWidgetContent()
-{
-	if (!IsValid(InventoryWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadPlayerInventoryWidgetContent: Invalid InventoryWidgetInstance"));
-		return;
-	}
-	
-	UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(InventoryWidgetInstance);
-	if (!IsValid(InventoryWidget))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadPlayerInventoryWidgetContent: Invalid InventoryWidget"));
-		return;
-	}
-
-	InventoryWidget->LoadInventoryUIContents();
-}
+//void UUIManager::LoadPlayerInventoryWidgetContent()
+//{
+//	if (!IsValid(InventoryWidgetInstance))
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadPlayerInventoryWidgetContent: Invalid InventoryWidgetInstance"));
+//		return;
+//	}
+//	
+//	UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(InventoryWidgetInstance);
+//	if (!IsValid(InventoryWidget))
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadPlayerInventoryWidgetContent: Invalid InventoryWidget"));
+//		return;
+//	}
+//
+//	InventoryWidget->LoadInventoryUIContents();
+//}
 
 void UUIManager::SetCurrentRoundText(int CurrentRound)
 {
@@ -544,19 +537,24 @@ void UUIManager::CreateUIWidgets()
 		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid CombatWidgetAssetRef"));
 		return;
 	}
-	if (!IsValid(InventoryWidgetAssetRef))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid InventoryWidgetAssetRef"));
-		return;
-	}
+	//if (!IsValid(InventoryWidgetAssetRef))
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid InventoryWidgetAssetRef"));
+	//	return;
+	//}
 	if (!IsValid(TradingInventoryWidgetAssetRef))
 	{
 		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid TradingInventoryWidgetAssetRef"));
 		return;
 	}
-	if (!IsValid(MemoriesWidgetAssetRef))
+	//if (!IsValid(MemoriesWidgetAssetRef))
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid MemoriesWidgetAssetRef"));
+	//	return;
+	//}
+	if (!IsValid(GameMenuWidgetAssetRef))
 	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid MemoriesWidgetAssetRef"));
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid GameMenuWidgetAssetRef"));
 		return;
 	}
 	if (!IsValid(HUDWidgetAssetRef))
@@ -582,9 +580,10 @@ void UUIManager::CreateUIWidgets()
 	AudioOptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), AudioOptionsMenuWidgetAssetRef);
 	RPEncounterWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), RPEncounterWidgetAssetRef);
 	CombatWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), CombatWidgetAssetRef);
-	InventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetAssetRef);
+	//InventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetAssetRef);
 	TradingInventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), TradingInventoryWidgetAssetRef);
-	MemoriesWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MemoriesWidgetAssetRef);
+	//MemoriesWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MemoriesWidgetAssetRef);
+	GameMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), GameMenuWidgetAssetRef);
 
 	// HUD only
 	HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetAssetRef);
@@ -601,52 +600,6 @@ void UUIManager::CreateUIWidgets()
  */
 void UUIManager::AddWidgetsToWidgetSwitcher()
 {
-	if (!IsValid(MainMenuWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid MainMenuWidgetInstance"));
-		return;
-	}
-	if (!IsValid(PauseMenuWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid PauseMenuWidgetInstance"));
-		return;
-	}
-	if (!IsValid(OptionsMenuWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid OptionsMenuWidgetInstance"));
-		return;
-	}
-	if (!IsValid(AudioOptionsMenuWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid AudioOptionsMenuWidgetInstance"));
-		return;
-	}
-	if (!IsValid(RPEncounterWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid RPEncounterWidgetInstance"));
-		return;
-	}
-	if (!IsValid(CombatWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid CombatWidgetInstance"));
-		return;
-	}
-	if (!IsValid(InventoryWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid InventoryWidgetInstance"));
-		return;
-	}
-	if (!IsValid(TradingInventoryWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid TradingInventoryWidgetInstance"));
-		return;
-	}
-	if (!IsValid(MemoriesWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::AddWidgetsToWidgetSwitcher: Invalid MemoriesWidgetInstance"));
-		return;
-	}
-
 	AddWidgetToWidgetSwitcher(MainMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(PauseMenuWidgetInstance);
 	AddWidgetToWidgetSwitcher(OptionsMenuWidgetInstance);
@@ -654,9 +607,10 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 	AddWidgetToWidgetSwitcher(RPEncounterWidgetInstance);
 	AddWidgetToWidgetSwitcher(CombatWidgetInstance);
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
-	AddWidgetToWidgetSwitcher(InventoryWidgetInstance);
+	//AddWidgetToWidgetSwitcher(InventoryWidgetInstance);
 	AddWidgetToWidgetSwitcher(TradingInventoryWidgetInstance);
-	AddWidgetToWidgetSwitcher(MemoriesWidgetInstance);
+	//AddWidgetToWidgetSwitcher(MemoriesWidgetInstance);
+	AddWidgetToWidgetSwitcher(GameMenuWidgetInstance);
 }
 
 /*
