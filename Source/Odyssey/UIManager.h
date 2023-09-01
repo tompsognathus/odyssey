@@ -49,6 +49,9 @@ public:
 	void DisplayGameMenuWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void DisplayCreditsWidget();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void DisplayPreviousWidget();
 
 	/***** UI Widget Getters *****/
@@ -152,6 +155,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Inventory")
 	TSubclassOf<UUserWidget> MemoryCardAssetRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|MainMenu")
+	TSubclassOf<UUserWidget> CreditsWidgetAssetRef;
+
 	/* Alerts */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Widgets|Alerts")
 	TSubclassOf<UUserWidget> QuitGameAlertWidgetAssetRef;
@@ -191,12 +197,11 @@ private:
 	UUserWidget* RPEncounterWidgetInstance;
 	UUserWidget* CombatWidgetInstance;
 	UUserWidget* HUDWidgetInstance;
-	//UUserWidget* InventoryWidgetInstance;
 	UUserWidget* TradingInventoryWidgetInstance;
-	//UUserWidget* MemoriesWidgetInstance;
 	UUserWidget* GameMenuWidgetInstance;
 	UUserWidget* QuitGameAlertWidgetInstance;
 	UUserWidget* NewGameAlertWidgetInstance;
+	UUserWidget* CreditsWidgetInstance;
 
 	// Remember what the previous UI widget was
 	TArray<UUserWidget*> WidgetPathThroughMenusStack;

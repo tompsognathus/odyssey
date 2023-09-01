@@ -115,7 +115,7 @@ void UGameMenuWidget::DisplayWidget(int Index)
 	}
 	else 
 	{ 
-		UE_LOG(LogTemp, Warning, TEXT("UGameMenuWidget::DisplayWidget: Couldn't find interface on widget.")); 
+		UE_LOG(LogTemp, Warning, TEXT("UGameMenuWidget::DisplayWidget: Couldn't find interface on widget %s."), *WidgetToDisplay->GetName()); 
 	}
 
 	WidgetSwitcher->SetActiveWidget(WidgetToDisplay);

@@ -85,7 +85,6 @@ void UUIManager::CreateParentUIWidget()
 
 void UUIManager::DisplayHUDWidgetOnly()
 {
-
 	DisplayWidget(HUDWidgetInstance);
 }
 
@@ -145,6 +144,11 @@ void UUIManager::DisplayGameMenuWidget()
 {
 	IWidgetSwitchable::Execute_PrepareToDisplay(GameMenuWidgetInstance);
 	DisplayWidget(GameMenuWidgetInstance);
+}
+
+void UUIManager::DisplayCreditsWidget()
+{
+	DisplayWidget(CreditsWidgetInstance);
 }
 
 void UUIManager::OverlayQuitGameAlertWidget()
@@ -353,24 +357,6 @@ void UUIManager::LoadTradingInventoryWidgetContent(ULootBox* LootBox)
 	TradingInventoryWidget->SetLootBoxNameText(LootBox->GetLootBoxDisplayName());
 }
 
-//void UUIManager::LoadPlayerInventoryWidgetContent()
-//{
-//	if (!IsValid(InventoryWidgetInstance))
-//	{
-//		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadPlayerInventoryWidgetContent: Invalid InventoryWidgetInstance"));
-//		return;
-//	}
-//	
-//	UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(InventoryWidgetInstance);
-//	if (!IsValid(InventoryWidget))
-//	{
-//		UE_LOG(LogTemp, Error, TEXT("UUIManager::LoadPlayerInventoryWidgetContent: Invalid InventoryWidget"));
-//		return;
-//	}
-//
-//	InventoryWidget->LoadInventoryUIContents();
-//}
-
 void UUIManager::SetCurrentRoundText(int CurrentRound)
 {
 	if (!IsValid(CombatWidgetInstance))
@@ -572,6 +558,11 @@ void UUIManager::CreateUIWidgets()
 		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid NewGameAlertWidgetAssetRef"));
 		return;
 	}
+	if (!IsValid(CreditsWidgetAssetRef))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateUIWidgets: Invalid CreditsWidgetAssetRef"));
+		return;
+	}
 
 	// UI Screens
 	MainMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetAssetRef);
@@ -580,10 +571,9 @@ void UUIManager::CreateUIWidgets()
 	AudioOptionsMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), AudioOptionsMenuWidgetAssetRef);
 	RPEncounterWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), RPEncounterWidgetAssetRef);
 	CombatWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), CombatWidgetAssetRef);
-	//InventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetAssetRef);
 	TradingInventoryWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), TradingInventoryWidgetAssetRef);
-	//MemoriesWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), MemoriesWidgetAssetRef);
 	GameMenuWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), GameMenuWidgetAssetRef);
+	CreditsWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), CreditsWidgetAssetRef);
 
 	// HUD only
 	HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetAssetRef);
@@ -607,10 +597,9 @@ void UUIManager::AddWidgetsToWidgetSwitcher()
 	AddWidgetToWidgetSwitcher(RPEncounterWidgetInstance);
 	AddWidgetToWidgetSwitcher(CombatWidgetInstance);
 	AddWidgetToWidgetSwitcher(HUDWidgetInstance);
-	//AddWidgetToWidgetSwitcher(InventoryWidgetInstance);
 	AddWidgetToWidgetSwitcher(TradingInventoryWidgetInstance);
-	//AddWidgetToWidgetSwitcher(MemoriesWidgetInstance);
 	AddWidgetToWidgetSwitcher(GameMenuWidgetInstance);
+	AddWidgetToWidgetSwitcher(CreditsWidgetInstance);
 }
 
 /*

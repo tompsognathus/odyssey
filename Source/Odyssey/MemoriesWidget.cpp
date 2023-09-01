@@ -3,3 +3,7 @@
 
 #include "MemoriesWidget.h"
 
+void UMemoriesWidget::PrepareToDisplay_Implementation()
+{
+
+}

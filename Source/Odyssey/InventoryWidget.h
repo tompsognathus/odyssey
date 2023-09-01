@@ -20,7 +20,6 @@ class ODYSSEY_API UInventoryWidget : public UUserWidget, public IWidgetSwitchabl
 public:
 	virtual void PrepareToDisplay_Implementation() override;
 
-
 	UFUNCTION()
 	void OnInventorySlotHovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
 

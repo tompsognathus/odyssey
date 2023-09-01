@@ -65,5 +65,5 @@ void UMainMenuWidget::HandleCreditsButtonClicked()
 		UE_LOG(LogTemp, Error, TEXT("UMainMenuWidget::HandleCreditsBtnClicked: Invalid UIManager"));
 		return;
 	}
-	//UIManager->DisplayCreditsWidget();
+	UIManager->DisplayCreditsWidget();
 }

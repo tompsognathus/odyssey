@@ -4,12 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "WidgetSwitchable.h"
 #include "MemoriesWidget.generated.h"
 
 
 UCLASS()
-class ODYSSEY_API UMemoriesWidget : public UUserWidget
+class ODYSSEY_API UMemoriesWidget : public UUserWidget, public IWidgetSwitchable
 {
 	GENERATED_BODY()
+
+public:
+	virtual void PrepareToDisplay_Implementation() override;
 	
 };
