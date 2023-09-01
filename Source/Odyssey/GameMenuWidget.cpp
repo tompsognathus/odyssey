@@ -24,6 +24,25 @@ void UGameMenuWidget::NativeConstruct()
 
 }
 
+void UGameMenuWidget::HandleNextButtonClicked()
+{
+	int NextWidgetIndex = CurrentWidgetIndex + 1;
+	NextWidgetIndex = NextWidgetIndex % WidgetsArray.Num();
+
+	DisplayWidget(NextWidgetIndex);
+}
+
+void UGameMenuWidget::HandlePreviousButtonClicked()
+{
+	int PreviousWidgetIndex = CurrentWidgetIndex - 1;
+	if (PreviousWidgetIndex < 0)
+	{
+		PreviousWidgetIndex = WidgetsArray.Num() - 1;
+	}
+
+	DisplayWidget(PreviousWidgetIndex);
+}
+
 void UGameMenuWidget::SetUpUIWidgets()
 {
 	for (TSubclassOf<UUserWidget> WidgetAssetRef : WidgetsRefsArray)
@@ -100,4 +119,5 @@ void UGameMenuWidget::DisplayWidget(int Index)
 	}
 
 	WidgetSwitcher->SetActiveWidget(WidgetToDisplay);
+	CurrentWidgetIndex = Index;
 }

@@ -20,8 +20,6 @@ class ODYSSEY_API UInventoryWidget : public UUserWidget, public IWidgetSwitchabl
 public:
 	virtual void PrepareToDisplay_Implementation() override;
 
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void LoadInventoryUIContents();
 
 	UFUNCTION()
 	void OnInventorySlotHovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
@@ -46,8 +44,8 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SetItemImg(UTexture2D* NewItemImg);
 
-protected:
 
+protected:
 	/* WIDGET BINDINGS */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* ItemNameText;
@@ -64,6 +62,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	USizeBox* PlayerInventorySizeBox;
 
+
+private:
+	void LoadInventoryUIContents();
 
 private:
 	class UInventory* Inventory;

@@ -22,6 +22,11 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	UFUNCTION(BlueprintCallable, Category = "UI Widgets")
+	void HandleNextButtonClicked();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Widgets")
+	void HandlePreviousButtonClicked();
 
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
@@ -40,4 +45,5 @@ private:
 private:
 	UUIManager* UIManager;
 	TArray<UUserWidget*> WidgetsArray = TArray<UUserWidget*>();
+	int CurrentWidgetIndex = 0;
 };
