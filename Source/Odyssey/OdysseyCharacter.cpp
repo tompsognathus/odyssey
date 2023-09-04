@@ -15,6 +15,8 @@
 #include "UIManager.h"
 #include "Interactable.h"
 #include "Utility.h"
+#include "DialogueComponent.h"
+#include "DlgSystem/DlgManager.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,6 +79,24 @@ void AOdysseyCharacter::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("AOdysseyCharacter::BeginPlay: Invalid UIManager"));
 		return;
 	}
+
+	DialogueComponent = FindComponentByClass<UDialogueComponent>();
+	if (!IsValid(DialogueComponent))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::BeginPlay: Invalid DialogueComponent on %s"), *GetName());
+		return;
+	}
+}
+
+FName AOdysseyCharacter::GetParticipantName_Implementation() const
+{
+	if (!IsValid(DialogueComponent))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AOdysseyCharacter::GetParticipantName_Implementation: Invalid DialogueComponent on %s"), *GetName());
+		return FName();
+	}
+
+	return DialogueComponent->GetParticipantName();
 }
 
 void AOdysseyCharacter::Tick(float DeltaTime)

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "DlgSystem/DlgDialogueParticipant.h"
+#include "DlgSystem/DlgContext.h"
 #include "OdysseyCharacter.generated.h"
 
 class USpringArmComponent;
@@ -16,7 +18,7 @@ class USphereComponent;
 class UInputComponent;
 
 UCLASS(config=Game)
-class AOdysseyCharacter : public ACharacter
+class AOdysseyCharacter : public ACharacter, public IDlgDialogueParticipant
 {
 	GENERATED_BODY()
 
@@ -73,7 +75,14 @@ class AOdysseyCharacter : public ACharacter
 
 public:
 	AOdysseyCharacter();
-	
+
+	/***** Dialogue *****/
+	UFUNCTION()
+	UDialogueComponent* GetDialogueComponent() const { return DialogueComponent; }
+
+	FName GetParticipantName_Implementation() const override;
+
+	/**** Inputs *****/
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void ActivateExploreMappingContext();
 
@@ -97,6 +106,10 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inputs")
 	bool bIsInputEnabled = true;
+
+	/***** Dialogue *****/
+	UPROPERTY()
+	UDialogueComponent* DialogueComponent = nullptr;
 
 
 protected:

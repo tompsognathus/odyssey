@@ -24,14 +24,14 @@ void ANPC::BeginPlay()
 	UIManager = Utility::GetUIManager(this);
 	if (!IsValid(UIManager))
 	{
-		UE_LOG(LogTemp, Error, TEXT("ANPC::BeginPlay: Invalid UIManager"));
+		UE_LOG(LogTemp, Error, TEXT("ANPC::BeginPlay: Invalid UIManager on %s"), *GetName());
 		return;
 	}
 
 	DialogueComponent = FindComponentByClass<UDialogueComponent>();
 	if (!IsValid(DialogueComponent)) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ANPC::BeginPlay: Invalid DialogueComponent"), *GetName()); 
+		UE_LOG(LogTemp, Warning, TEXT("ANPC::BeginPlay: Invalid DialogueComponent on %s"), *GetName()); 
 		return;
 	}
 
