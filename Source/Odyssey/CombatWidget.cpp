@@ -14,12 +14,19 @@
 #include "DA_ItemAction.h"
 #include "WBP_AttackBtn.h"
 #include "CombatManager.h"
+#include "Math/Color.h"
 
 
 void UCombatWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	if (!IsValid(PlayerBorder))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::NativeConstruct: Invalid PlayerBorder"));
+		return;
+	}
+	DefaultBorderBrushColor = PlayerBorder->GetBrushColor();
 }
 
 void UCombatWidget::SetEnemyAvatar(UMaterial* AvatarMaterial)
@@ -143,6 +150,16 @@ void UCombatWidget::SetUpAttackButtons(TArray<class UDA_ItemAction*> NewAttackAc
 	}
 }
 
+void UCombatWidget::HighlightPlayerBorder()
+{
+	HighlightBorder(PlayerBorder, EnemyBorder);
+}
+
+void UCombatWidget::HighlightEnemyBorder()
+{
+	HighlightBorder(EnemyBorder, PlayerBorder);
+}
+
 void UCombatWidget::HandleAttackButtonClicked(UWBP_AttackBtn* AttackButton)
 {
 	// Get button index by comparing against buttons in grid
@@ -203,6 +220,23 @@ void UCombatWidget::HandleAttackButtonUnhovered(UWBP_AttackBtn* AttackButton)
 void UCombatWidget::HandleCombatActionRequested(UDA_ItemAction* ItemAction)
 {
 	OnCombatActionRequestedDelegate.Broadcast(ItemAction);
+}
+
+void UCombatWidget::HighlightBorder(UBorder* BorderToHighlight, UBorder* BorderToUnhighlight)
+{
+	if (!IsValid(BorderToHighlight))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::HighlightBorder: Invalid BorderToHighlight"));
+		return;
+	}
+	if (!IsValid(BorderToUnhighlight))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::HighlightBorder: Invalid BorderToUnhighlight"));
+		return;
+	}
+
+	BorderToHighlight->SetBrushColor(HighlightedBorderBrushColor);
+	BorderToUnhighlight->SetBrushColor(DefaultBorderBrushColor);
 }
 
 void UCombatWidget::SetActionBtnsEnabled_Implementation(bool IsEnabled)

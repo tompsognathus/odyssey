@@ -188,7 +188,7 @@ void UCombatManager::StartNextTurn()
 
 	if (CurrentTurnCharSheet == PlayerCharSheet)
 	{
-		CombatWidget->HighlightPlayerBorder();
+
 		UIManager->SetCombatActionBtnsEnabled(true);
 		
 		// We've activated the buttons and are now waitng for the player to select an action,
@@ -198,7 +198,6 @@ void UCombatManager::StartNextTurn()
 	else
 	{
 		// Enemy turn
-		CombatWidget->HighlightEnemyBorder();
 		UIManager->SetCombatActionBtnsEnabled(false);
 
 		int EnemyDamageBase = RollD100();

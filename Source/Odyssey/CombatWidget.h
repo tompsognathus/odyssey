@@ -43,8 +43,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
 	void SetUpAttackButtons(TArray<UDA_ItemAction*> AttackActions);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	void HighlightPlayerBorder();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat UI Functions")
+	void HighlightEnemyBorder();
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat UI Functions")
 	void SetActionBtnsEnabled(bool IsEnabled);
+
 
 	void SetUpCombatantBindings(class UCharSheet* PlayerCharSheet, class UCharSheet* EnemyCharSheet);
 
@@ -63,6 +70,11 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat UI")
+	FLinearColor HighlightedBorderBrushColor;
+
+	/***** Bindings *****/
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UImage* EnemyAvatar;
 	
@@ -80,6 +92,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UUniformGridPanel* PlayerActionGrid;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UBorder* PlayerBorder;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UBorder* EnemyBorder;
 
 	/* Featured attack pop-up */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
@@ -101,11 +119,15 @@ private:
 	UFUNCTION()
 	void HandleCombatActionRequested(UDA_ItemAction* ItemAction);
 
+	void HighlightBorder(UBorder* BorderToHighlight, UBorder* BorderToUnhighlight);
+
 private:
 	class UCharSheet* PlayerCharSheet;
 	class UCharSheet* EnemyCharSheet;
 
 	TArray<UWBP_AttackBtn*> AttackButtons = TArray<UWBP_AttackBtn*>();
 	TArray<UDA_ItemAction*> AttackActions = TArray<UDA_ItemAction*>();
+
+	FLinearColor DefaultBorderBrushColor;
 	
 };
