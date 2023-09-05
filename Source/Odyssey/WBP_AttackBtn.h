@@ -9,6 +9,8 @@
 #include "WBP_AttackBtn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionBtnClickedSignature, UWBP_AttackBtn*, AttackBtn);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionBtnHoveredSignature, UWBP_AttackBtn*, AttackBtn);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionBtnUnhoveredSignature, UWBP_AttackBtn*, AttackBtn);
 
 class UTextBlock;
 class UButton;
@@ -24,6 +26,8 @@ public:
 
 public:
 	FOnActionBtnClickedSignature OnActionButtonClickedDelegate;
+	FOnActionBtnClickedSignature OnActionButtonHoveredDelegate;
+	FOnActionBtnClickedSignature OnActionButtonUnhoveredDelegate;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* ActionBtnText;
@@ -31,8 +35,14 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* ActionBtn;
 
-
 private:
 	UFUNCTION()
 	void OnActionBtnClicked();
+
+	UFUNCTION()
+	void OnActionBtnHovered();
+
+	UFUNCTION()
+	void OnActionBtnUnhovered();
+
 };

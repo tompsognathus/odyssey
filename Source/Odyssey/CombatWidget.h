@@ -17,7 +17,7 @@ class UUserWidget;
 class UMaterial;
 class UDA_ItemAction;
 class UWBP_AttackBtn;
-
+class UBorder;
 
 UCLASS()
 class ODYSSEY_API UCombatWidget : public UUserWidget
@@ -81,10 +81,22 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UUniformGridPanel* PlayerActionGrid;
 
+	/* Featured attack pop-up */
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UBorder* AttackDetailsPopup;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* FeaturedAttackName;
 
 private:
 	UFUNCTION()
 	void HandleAttackButtonClicked(UWBP_AttackBtn* AttackBtn);
+
+	UFUNCTION()
+	void HandleAttackButtonHovered(UWBP_AttackBtn* AttackBtn);
+
+	UFUNCTION()
+	void HandleAttackButtonUnhovered(UWBP_AttackBtn* AttackBtn);
 
 	UFUNCTION()
 	void HandleCombatActionRequested(UDA_ItemAction* ItemAction);

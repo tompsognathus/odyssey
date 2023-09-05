@@ -22,9 +22,21 @@ void UWBP_AttackBtn::SetActionButtonText(FText NewText)
 		return;
 	}
 	ActionBtn->OnClicked.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnClicked);
+	ActionBtn->OnHovered.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnHovered);
+	ActionBtn->OnUnhovered.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnUnhovered);
 }
 
 void UWBP_AttackBtn::OnActionBtnClicked()
 {
 	OnActionButtonClickedDelegate.Broadcast(this);
+}
+
+void UWBP_AttackBtn::OnActionBtnHovered()
+{
+	OnActionButtonHoveredDelegate.Broadcast(this);
+}
+
+void UWBP_AttackBtn::OnActionBtnUnhovered()
+{
+	OnActionButtonUnhoveredDelegate.Broadcast(this);
 }
