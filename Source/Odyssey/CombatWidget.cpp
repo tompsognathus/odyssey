@@ -101,13 +101,6 @@ void UCombatWidget::SetUpAttackButtons(TArray<class UDA_ItemAction*> NewAttackAc
 		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetUpAttackButtons: Invalid AttackBtnAssetRef"));
 		return;
 	}
-	if (!IsValid(AttackDetailsPopup))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetUpAttackButtons: Invalid AttackDetailsPopup"));
-		return;
-	}
-
-	AttackDetailsPopup->SetVisibility(ESlateVisibility::Hidden); // only displayed on hover over attack buttons
 
 	AttackActions = NewAttackActions;
 
@@ -147,6 +140,7 @@ void UCombatWidget::SetUpAttackButtons(TArray<class UDA_ItemAction*> NewAttackAc
 		AttackButtons[idx]->OnActionButtonClickedDelegate.AddUniqueDynamic(this, &UCombatWidget::HandleAttackButtonClicked);
 		AttackButtons[idx]->OnActionButtonHoveredDelegate.AddUniqueDynamic(this, &UCombatWidget::HandleAttackButtonHovered);
 		AttackButtons[idx]->OnActionButtonUnhoveredDelegate.AddUniqueDynamic(this, &UCombatWidget::HandleAttackButtonUnhovered);
+
 	}
 }
 
@@ -179,41 +173,12 @@ void UCombatWidget::HandleAttackButtonClicked(UWBP_AttackBtn* AttackButton)
 
 void UCombatWidget::HandleAttackButtonHovered(UWBP_AttackBtn* AttackButton)
 {
-	int ButtonIdx = AttackButtons.Find(AttackButton);
 
-	if (!IsValid(AttackActions[ButtonIdx]))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::HandleAttackButtonClicked: Invalid AttackAction"));
-		return;
-	}
-	UDA_ItemAction* AttackAction = AttackActions[ButtonIdx];
-
-	// Update popup with action details
-	FText AttackActionDisplayName = FText::FromName(AttackAction->ActionDisplayName);
-	if (AttackActionDisplayName.IsEmptyOrWhitespace())
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::HandleAttackButtonClicked: AttackActionDisplayName is empty"));
-		return;
-	}
-
-	FeaturedAttackName->SetText(AttackActionDisplayName);
-
-	if (!IsValid(AttackDetailsPopup))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::HandleAttackButtonHovered: Invalid AttackDetailsPopup"));
-		return;
-	}
-	AttackDetailsPopup->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UCombatWidget::HandleAttackButtonUnhovered(UWBP_AttackBtn* AttackButton)
 {
-	if (!IsValid(AttackDetailsPopup))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::HandleAttackButtonUnhovered: Invalid AttackDetailsPopup"));
-		return;
-	}
-	AttackDetailsPopup->SetVisibility(ESlateVisibility::Hidden);
+
 }
 
 

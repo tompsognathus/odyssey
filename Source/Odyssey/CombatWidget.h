@@ -99,13 +99,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UBorder* EnemyBorder;
 
-	/* Featured attack pop-up */
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UBorder* AttackDetailsPopup;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* FeaturedAttackName;
-
 private:
 	UFUNCTION()
 	void HandleAttackButtonClicked(UWBP_AttackBtn* AttackBtn);

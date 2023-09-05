@@ -14,6 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionBtnUnhoveredSignature, UWBP
 
 class UTextBlock;
 class UButton;
+class UBorder;
 
 UCLASS()
 class ODYSSEY_API UWBP_AttackBtn : public UUserWidget
@@ -34,6 +35,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* ActionBtn;
+
+protected:
+	virtual void NativeConstruct() override;
+
 
 private:
 	UFUNCTION()

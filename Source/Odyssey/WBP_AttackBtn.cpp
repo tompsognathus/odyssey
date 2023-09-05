@@ -4,8 +4,25 @@
 #include "WBP_AttackBtn.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Components/Border.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
 
+
+void UWBP_AttackBtn::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (!IsValid(ActionBtnText))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_AttackBtn::NativeConstruct: Invalid ActionBtnText"));
+		return;
+	}
+	if (!IsValid(ActionBtn))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_AttackBtn::NativeConstruct: Invalid ActionBtn"));
+		return;
+	}
+}
 
 void UWBP_AttackBtn::SetActionButtonText(FText NewText)
 {
@@ -25,6 +42,7 @@ void UWBP_AttackBtn::SetActionButtonText(FText NewText)
 	ActionBtn->OnHovered.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnHovered);
 	ActionBtn->OnUnhovered.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnUnhovered);
 }
+
 
 void UWBP_AttackBtn::OnActionBtnClicked()
 {
