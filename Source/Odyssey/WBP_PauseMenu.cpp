@@ -58,3 +58,12 @@ void UWBP_PauseMenu::HandleQuitGameBtnClicked()
 	UIManager->OverlayQuitGameAlertWidget();
 }
 
+void UWBP_PauseMenu::HandleCreditsButtonClicked()
+{
+	if (!IsValid(UIManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_PauseMenu::HandleCreditsBtnClicked: Invalid UIManager"));
+		return;
+	}
+	UIManager->DisplayCreditsWidget();
+}

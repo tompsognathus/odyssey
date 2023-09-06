@@ -28,6 +28,8 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "UI Functions")
 	void HandleQuitGameBtnClicked();
 
+	UFUNCTION(BlueprintCallable, Category = "UI Functions")
+	void HandleCreditsButtonClicked();
 
 private:
 	UUIManager* UIManager;
