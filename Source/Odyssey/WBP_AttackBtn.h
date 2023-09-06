@@ -15,6 +15,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionBtnUnhoveredSignature, UWBP
 class UTextBlock;
 class UButton;
 class UBorder;
+class UMenuAnchor;
+class UCombatActionTooltipWidget;
 
 UCLASS()
 class ODYSSEY_API UWBP_AttackBtn : public UUserWidget
@@ -24,6 +26,12 @@ class ODYSSEY_API UWBP_AttackBtn : public UUserWidget
 public:
 	UFUNCTION(BlueprintCallable, Category = "AttackBtn")
 	void SetActionButtonText(FText Text);
+
+	UFUNCTION(BlueprintCallable, Category = "Tooltip")
+	FText GetActionName() const { return ActionName; }
+
+	UFUNCTION(BlueprintCallable, Category = "Tooltip")
+	void UpdateTooltipWidget(UCombatActionTooltipWidget* ActionTooltip);
 
 public:
 	FOnActionBtnClickedSignature OnActionButtonClickedDelegate;
@@ -35,7 +43,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* ActionBtn;
-
+	
 protected:
 	virtual void NativeConstruct() override;
 
@@ -49,5 +57,8 @@ private:
 
 	UFUNCTION()
 	void OnActionBtnUnhovered();
+
+private:
+	FText ActionName;
 
 };

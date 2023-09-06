@@ -63,7 +63,7 @@ void UWBP_AttackBtn::OnActionBtnUnhovered()
 	OnActionButtonUnhoveredDelegate.Broadcast(this);
 }
 
-void UWBP_AttackBtn::UpdateTooltipWidget(UCombatActionTooltipWidget* ActionTooltip)
+void UWBP_AttackBtn::HandleTooltipUpdateRequested(UCombatActionTooltipWidget* ActionTooltip)
 {
 	if (!IsValid(ActionTooltip))
 	{
