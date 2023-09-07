@@ -40,6 +40,7 @@ void AQuestItem::HandleInteractRequest()
 {
 	// Add item to inventory
 	// Destroy actor
+	UE_LOG(LogTemp, Warning, TEXT("Hellooooo"));
 	this->Destroy();
 }
 
