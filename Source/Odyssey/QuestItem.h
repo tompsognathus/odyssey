@@ -4,23 +4,35 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interactable.h"
 #include "QuestItem.generated.h"
 
+class UWidgetComponent;
+
 UCLASS()
-class ODYSSEY_API AQuestItem : public AActor
+class ODYSSEY_API AQuestItem : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AQuestItem();
 
+	UFUNCTION(BlueprintCallable, Category = "QuestItem")
+	void HandleInteractRequest();
+
+	virtual bool GetIsInteractable_Implementation() override;
+	virtual void Highlight_Implementation(bool IsHighlighted) override;
+	virtual void DisplayInputPrompt_Implementation(bool IsVisible) override;
+
+public:
+	UWidgetComponent* InputPromptWidgetComponent;
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+private:
+	void CacheInputPromptWidgetComponent();
 
+private:
+	bool IsInteractable = true;
 };

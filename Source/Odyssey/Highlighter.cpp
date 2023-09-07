@@ -19,6 +19,12 @@ void UHighlighter::BeginPlay()
 
 void UHighlighter::SetHighlight(bool IsHighlighted)
 {
+	if (StaticMeshesToOutline.Num() == 0 && SkeletalMeshesToOutline.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UHighlighter::SetHighlight: No meshes to outline on %s"), *GetOwner()->GetName());
+		return;
+	}
+
 	for (UStaticMeshComponent* StaticMesh : StaticMeshesToOutline)
 	{
 		StaticMesh->SetRenderCustomDepth(IsHighlighted);

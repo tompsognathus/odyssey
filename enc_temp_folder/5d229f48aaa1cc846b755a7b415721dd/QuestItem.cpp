@@ -38,9 +38,7 @@ void AQuestItem::CacheInputPromptWidgetComponent()
 
 void AQuestItem::HandleInteractRequest()
 {
-	// Add item to inventory
-	// Destroy actor
-	this->Destroy();
+
 }
 
 bool AQuestItem::GetIsInteractable_Implementation()
