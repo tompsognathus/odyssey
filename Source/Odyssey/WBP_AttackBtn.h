@@ -30,8 +30,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Tooltip")
 	FText GetActionName() const { return ActionName; }
 
-	UFUNCTION(BlueprintCallable, Category = "Tooltip")
-	void UpdateTooltipWidget(UCombatActionTooltipWidget* ActionTooltip);
 
 public:
 	FOnActionBtnClickedSignature OnActionButtonClickedDelegate;
@@ -43,6 +41,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* ActionBtn;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UMenuAnchor* TooltipMenuAnchor;
 	
 protected:
 	virtual void NativeConstruct() override;
@@ -58,7 +59,12 @@ private:
 	UFUNCTION()
 	void OnActionBtnUnhovered();
 
+	UFUNCTION()
+	UUserWidget* GetUserMenuContent();
+
+	void UpdateTooltipWidget();
+
 private:
 	FText ActionName;
-
+	UCombatActionTooltipWidget* ActionTooltipWidget;
 };

@@ -64,7 +64,7 @@ void UWBP_AttackBtn::OnActionBtnHovered()
 {
 	OnActionButtonHoveredDelegate.Broadcast(this);
 
-	TooltipMenuAnchor->Open(false);
+	TooltipMenuAnchor->Open(true);
 }
 
 void UWBP_AttackBtn::OnActionBtnUnhovered()

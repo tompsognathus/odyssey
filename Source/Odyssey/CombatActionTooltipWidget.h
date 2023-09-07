@@ -17,7 +17,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat Action Tooltip")
 	void SetCombatActionName(FText NewActionName);
 
+
+protected:
+	virtual void NativeConstruct() override;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* ActionName;
+
 };
