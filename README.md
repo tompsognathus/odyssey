@@ -1,4 +1,12 @@
 # Odyssey
+## Combet Encounter
+![Combat Encounter](https://raw.githubusercontent.com/tompsognathus/odyssey/main/Screenshots/combat_encounter.png)
+## RP Encounter
+![RP Encounter](https://raw.githubusercontent.com/tompsognathus/odyssey/main/Screenshots/rp_encounter.png)
+## Inventory
+![Combat Encounter](https://raw.githubusercontent.com/tompsognathus/odyssey/main/Screenshots/inventory.png)
+## Pause Menu
+![Combat Encounter](https://raw.githubusercontent.com/tompsognathus/odyssey/main/Screenshots/pause_menu.png)
 
 ## NPCs
 ### Creating a New NPC
