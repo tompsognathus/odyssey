@@ -59,7 +59,7 @@ void AQuestItem::HandleInteractRequest()
 	Inventory->AddItem(ItemDataAsset, ItemCount);
 	UGameplayStatics::PlaySound2D(Inventory, PickupSound, 4.f);
 
-	PlayerCharacter->HasBoblinsBox = true;
+	// update has boblins box variable on player
 
 	this->Destroy();
 }

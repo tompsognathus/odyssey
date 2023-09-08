@@ -111,6 +111,10 @@ public:
 	UPROPERTY()
 	UDialogueComponent* DialogueComponent = nullptr;
 
+	/***** Quest Variables *****/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quests")
+	bool HasBoblinsBox = false;
+
 
 protected:
 	virtual void Tick(float DeltaTime) override;

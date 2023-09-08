@@ -5,6 +5,7 @@
 #include "Inventory.h"
 #include "EnhancedInputSubsystems.h"
 #include "CombatManager.h"
+#include "OdysseyCharacter.h"
 
 UUIManager* Utility::GetUIManager(UObject* Object)
 {
@@ -153,4 +154,18 @@ APawn* Utility::GetPlayerPawn(UObject* Object)
 	}
 
 	return PlayerPawn;
+}
+
+AOdysseyCharacter* Utility::GetPlayerCharacter(UObject* Object)
+{
+	APawn* PlayerPawn = Utility::GetPlayerPawn(Object);
+	AOdysseyCharacter* PlayerCharacter = Cast<AOdysseyCharacter>(PlayerPawn);
+
+	if (!IsValid(PlayerCharacter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Utility::GetPlayerCharacter: Invalid PlayerCharacter"));
+		return nullptr;
+	}
+	
+	return PlayerCharacter;
 }
