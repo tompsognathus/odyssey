@@ -13,7 +13,6 @@
 
 class UDA_Item;
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ODYSSEY_API UInventory : public UActorComponent
 {

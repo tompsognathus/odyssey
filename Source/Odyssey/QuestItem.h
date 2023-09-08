@@ -9,6 +9,7 @@
 
 class UWidgetComponent;
 class UDA_Item;
+class UInventory;
 
 UCLASS()
 class ODYSSEY_API AQuestItem : public AActor, public IInteractable
@@ -27,7 +28,13 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "QuestItem")
-	UDA_Item* Item;
+	UDA_Item* ItemDataAsset;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "QuestItem")
+	int ItemCount = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "QuestItem")
+	USoundWave* PickupSound;
 
 	UWidgetComponent* InputPromptWidgetComponent;
 
@@ -39,4 +46,5 @@ private:
 
 private:
 	bool IsInteractable = true;
+	UInventory* Inventory;
 };

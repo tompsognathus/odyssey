@@ -4,6 +4,9 @@
 #include "QuestItem.h"
 #include "Highlighter.h"
 #include "Components/WidgetComponent.h"
+#include "Inventory.h"
+#include "Utility.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AQuestItem::AQuestItem()
@@ -17,6 +20,8 @@ void AQuestItem::BeginPlay()
 	Super::BeginPlay();
 
 	CacheInputPromptWidgetComponent();
+
+	Inventory = Utility::GetInventory(this);
 }
 
 void AQuestItem::CacheInputPromptWidgetComponent()
@@ -38,9 +43,15 @@ void AQuestItem::CacheInputPromptWidgetComponent()
 
 void AQuestItem::HandleInteractRequest()
 {
-	// Add item to inventory
-	// Destroy actor
-	UE_LOG(LogTemp, Warning, TEXT("Hellooooo"));
+	if (!IsValid(Inventory))
+	{
+		UE_LOG(LogTemp, Error, TEXT("AQuestItem::HandleInteractRequest: Invalid Inventory on %s"), *GetName());
+		return;
+	}
+
+	Inventory->AddItem(ItemDataAsset, ItemCount);
+	UGameplayStatics::PlaySound2D(Inventory, PickupSound);
+
 	this->Destroy();
 }
 
