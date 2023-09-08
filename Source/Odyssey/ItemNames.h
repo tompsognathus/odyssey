@@ -9,4 +9,5 @@ enum class EItemNames : uint8 {
     VE_Sword       UMETA(DisplayName = "Sword"),
     VE_Bow        UMETA(DisplayName = "Bow"),
     VE_Axe        UMETA(DisplayName = "Axe"),
+    VE_BoblinsBox UMETA(DisplayName = "Boblin's Box"),
 };

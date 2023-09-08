@@ -6,7 +6,6 @@
 #include "Engine/DataAsset.h"
 
 #include "ItemNames.h"
-#include "ItemType.h"
 #include "DA_ItemAction.h"
 
 #include "DA_Item.generated.h"
@@ -22,9 +21,6 @@ class ODYSSEY_API UDA_Item : public UPrimaryDataAsset
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TSubclassOf<AActor> ActorRef;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	EItemType Type;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	EItemNames Name;

@@ -62,7 +62,7 @@ private:
 	UFUNCTION()
 	UUserWidget* GetUserMenuContent();
 
-	void UpdateTooltipWidget();
+	void UpdateTooltipWidgetContent();
 
 private:
 	FText ActionName;

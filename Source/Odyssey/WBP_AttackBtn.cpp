@@ -52,7 +52,6 @@ void UWBP_AttackBtn::SetActionButtonText(FText NewText)
 	ActionBtn->OnUnhovered.AddUniqueDynamic(this, &UWBP_AttackBtn::OnActionBtnUnhovered);
 
 	ActionName = NewText;
-
 }
 
 void UWBP_AttackBtn::OnActionBtnClicked()
@@ -81,18 +80,26 @@ UUserWidget* UWBP_AttackBtn::GetUserMenuContent()
 		UE_LOG(LogTemp, Error, TEXT("UWBP_AttackBtn::HandleTooltipUpdateRequested: Invalid MenuAnchor"));
 		return nullptr;
 	}
+
+	// Create the widget if it doesn't exist yet
 	if (!IsValid(ActionTooltipWidget))
 	{
 		ActionTooltipWidget = CreateWidget<UCombatActionTooltipWidget>(GetWorld(), TooltipMenuAnchor->MenuClass);
 	}
+	// Check if the widget was created successfully
+	if (!IsValid(ActionTooltipWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UWBP_AttackBtn::HandleTooltipUpdateRequested: Failed to create ActionTooltipWidget"));
+		return nullptr;
+	}
 
-	UpdateTooltipWidget();
+	UpdateTooltipWidgetContent();
 
 	return ActionTooltipWidget;
 }
 
 
-void UWBP_AttackBtn::UpdateTooltipWidget()
+void UWBP_AttackBtn::UpdateTooltipWidgetContent()
 {
 	if (!IsValid(ActionTooltipWidget))
 	{
