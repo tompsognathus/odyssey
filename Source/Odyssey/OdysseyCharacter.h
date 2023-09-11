@@ -111,9 +111,18 @@ public:
 	UPROPERTY()
 	UDialogueComponent* DialogueComponent = nullptr;
 
-	/***** Quest Variables *****/
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Quests")
+	/***** Quest Variables - Boblin's Box Quest *****/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quests | Boblin's Box")
 	bool HasBoblinsBox = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quests | Boblin's Box")
+	bool AgreedToHelpBoblin = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quests | Boblin's Box")
+	bool HasTalkedToBoblin = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quests | Boblin's Box")
+	bool HasReturnedBoxToBoblin = false;
 
 protected:
 	virtual void Tick(float DeltaTime) override;
