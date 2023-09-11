@@ -12,6 +12,7 @@ class UImage;
 class UTextBlock;
 class UUIManager;
 class UDialogueComponent;
+class UButton;
 
 UCLASS()
 class ODYSSEY_API URPEncounterWidget : public UUserWidget
@@ -24,6 +25,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Text Fields")
 	void SetOptionText(int OptionNumber, FText NewOptionText);
+
+	UFUNCTION(BlueprintCallable, Category = "Text Fields")
+	void SetOptionVisibility(int OptionNumber, bool IsVisible);
 
 	UFUNCTION(BlueprintCallable, Category = "Avatar Image")
 	void SetAvatar(UMaterial* NewAvatarMaterial, FText NewAvatarName);
@@ -68,6 +72,18 @@ protected:
 	UTextBlock* AvatarName;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* OptionBtn1;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* OptionBtn2;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* OptionBtn3;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* OptionBtn4;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* OptionText1;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
@@ -78,7 +94,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* OptionText4;
-
 
 private:
 	UUIManager* UIManager;

@@ -76,6 +76,9 @@ public:
 	void SetRPEncounterOptionText(int OptionNumber, FText NewOptionText);
 
 	UFUNCTION()
+	void SetRPEncounterOptionVisibility(int OptionNumber, bool IsVisible);
+
+	UFUNCTION()
 	void SetRPEncounterAvatar(UMaterial* AvatarMaterial, FText AvatarName);
 
 	UFUNCTION()

@@ -252,6 +252,23 @@ void UUIManager::SetRPEncounterOptionText(int OptionNumber, FText NewOptionText)
 	}
 }
 
+void UUIManager::SetRPEncounterOptionVisibility(int OptionNumber, bool IsVisible)
+{
+	if (!IsValid(RPEncounterWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterOptionVisibility: Invalid RPEncounterWidgetInstance on %s. Did you set it in the editor?"), *GetName());
+		return;
+	}
+	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
+	if (!IsValid(RPEncounterWidget))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::SetRPEncounterOptionVisibility: Invalid RPEncounterWidget"));
+		return;
+	}
+
+	RPEncounterWidget->SetOptionVisibility(OptionNumber, IsVisible);
+}
+
 void UUIManager::StartPrologue()
 {
 	if (!IsValid(GM))

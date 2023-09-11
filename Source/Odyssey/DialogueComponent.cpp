@@ -59,11 +59,14 @@ void UDialogueComponent::PopulateDialogueOptionsText()
 		if (i < Options.Num())
 		{
 			UIManager->SetRPEncounterOptionText(i + 1, Options[i]); // Options are currently indexed from 1
+			UIManager->SetRPEncounterOptionVisibility(i + 1, true);
 		}
 		else
 		{
 			// TODO: Hide/disable the option button and also hide the A/B/C/D text
 			UIManager->SetRPEncounterOptionText(i + 1, FText::FromString(""));
+			UIManager->SetRPEncounterOptionVisibility(i + 1, false);
+
 		}
 	}
 }
