@@ -13,13 +13,16 @@ class ODYSSEY_API UMemories : public UActorComponent
 	GENERATED_BODY()
 
 public:	
+	// Sets default values for this component's properties
 	UMemories();
 
 protected:
+	// Called when the game starts
 	virtual void BeginPlay() override;
 
-//private:
-	//Tarray<Memory*> Memories;
+public:	
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 		
 };

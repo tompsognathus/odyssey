@@ -263,6 +263,10 @@ bool FDlgCondition::CheckName(const UDlgContext& Context, FName Value) const
 	return bResult == bBoolValue;
 }
 
+bool FDlgCondition::CheckInventoryItem(const UDlgContext& Context, FName Value) const
+{
+	return false;
+}
 
 bool FDlgCondition::ValidateIsParticipantValid(const UDlgContext& Context, const FString& ContextString, const UObject* Participant) const
 {

@@ -112,7 +112,7 @@ public:
 	UDialogueComponent* DialogueComponent = nullptr;
 
 	/***** Quest Variables *****/
-	UPROPERTY(ReadAnywhere, BlueprintReadWrite, Category = "Quests")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quests")
 	bool HasBoblinsBox = false;
 
 
