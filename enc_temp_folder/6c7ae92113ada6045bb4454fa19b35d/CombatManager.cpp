@@ -206,8 +206,6 @@ void UCombatManager::StartNextTurn()
 
 		float EnemyDamage = EnemyDamageBase * EnemyDamageMultiplier;
 
-		// Play enemy turn
-
 		// Deal damage to player
 		PlayerCharSheet->TakeDamage(EnemyDamage);
 	}
