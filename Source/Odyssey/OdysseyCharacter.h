@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "DlgSystem/DlgDialogueParticipant.h"
 #include "DlgSystem/DlgContext.h"
+#include "Avatar.h"
 #include "OdysseyCharacter.generated.h"
 
 class USpringArmComponent;
@@ -16,6 +17,7 @@ class UInputAction;
 class UUIManager;
 class USphereComponent;
 class UInputComponent;
+class AAvatar;
 
 UCLASS(config=Game)
 class AOdysseyCharacter : public ACharacter, public IDlgDialogueParticipant
@@ -75,6 +77,9 @@ class AOdysseyCharacter : public ACharacter, public IDlgDialogueParticipant
 
 public:
 	AOdysseyCharacter();
+
+	UFUNCTION(BlueprintCallable, Category = "Avatar")
+	AAvatar* GetAvatar() const { return Avatar; }
 
 	/***** Dialogue *****/
 	UFUNCTION()
@@ -163,6 +168,9 @@ protected:
 	virtual void BeginPlay();
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Avatar")
+	AAvatar* Avatar;
+
 	// Collision component for detecting interactable actors in range
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input|InteractableDetection")
 	USphereComponent* InteractableDetector;

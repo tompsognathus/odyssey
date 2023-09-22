@@ -19,8 +19,8 @@ UCLASS()
 class ODYSSEY_API ANPC : public AActor, public IInteractable, public IDlgDialogueParticipant
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	ANPC();
 
 public:
@@ -29,8 +29,11 @@ public:
 	/***** NPC Info *****/
 	UFUNCTION(BlueprintCallable, Category = "NPC|Info")
 	FText GetDisplayName() const { return UIDisplayName; }
- 
+
 	/***** Avatar *****/
+	UFUNCTION(BlueprintCallable, Category = "NPC|Avatar")
+	AAvatar* GetAvatar() const { return Avatar; }
+
 	UFUNCTION(BlueprintCallable, Category = "NPC|Avatar")
 	UMaterial* GetAvatarMaterial() const { return AvatarMaterial; }
 
@@ -53,17 +56,6 @@ public:
 	virtual bool GetIsInteractable_Implementation() override;
 
 public:
-	/***** NPC Info *****/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC|Info")
-	FText UIDisplayName;
-
-	/***** Avatar *****/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC|Avatar")
-	UMaterial* AvatarMaterial = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC|Avatar")
-	UMaterial* PortraitAvatarMaterial = nullptr;
-
 	/***** Dialogue *****/
 	UPROPERTY()
 	UDialogueComponent* DialogueComponent = nullptr;
@@ -79,6 +71,20 @@ protected:
 	void GetInputPromptWidgetComponent();
 
 protected:
+	/***** NPC Info *****/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC|Info")
+	FText UIDisplayName;
+
+	/***** Avatar *****/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC|Avatar")
+	AAvatar* Avatar = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC|Avatar")
+	UMaterial* AvatarMaterial = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC|Avatar")
+	UMaterial* PortraitAvatarMaterial = nullptr;
+
 	UUIManager* UIManager;
 
 

@@ -122,12 +122,12 @@ void UCombatManager::StartNewCombat(ANPC* Enemy)
 	}
 
 	// Update UI with player and enemy details
-	UIManager->SetEnemyInfo(Enemy->GetAvatarMaterial(), Enemy->GetDisplayName());
+	UIManager->SetEnemyInfo(Enemy->GetAvatar(), Enemy->GetAvatarMaterial(), Enemy->GetDisplayName());
 	UIManager->SetPlayerHpPercent(PlayerCharSheet->GetHpNormalizedPercent());
 	UIManager->SetEnemyHpPercent(EnemyCharSheet->GetHpNormalizedPercent());
 
 	// Start combat
-	StartNextTurn();
+	StartNewRound();
 }
 
 void UCombatManager::StartNewRound()
@@ -145,106 +145,19 @@ void UCombatManager::StartNewRound()
 	UIManager->SetCombatActionBtnsEnabled(false);
 }
 
-void UCombatManager::StartNextTurn()
-{
-	if (!IsValid(PlayerCharSheet))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find PlayerCharSheet"));
-		return;
-	}
-	if (!IsValid(EnemyCharSheet))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurnCannot find EnemyCharSheet"));
-		return;
-	}
-	if (!IsValid(UIManager))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find UIManager"));
-		return;
-	}
-	if (!IsValid(CombatWidget))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find CombatWidget"));
-		return;
-	}
-	
-	CurrentTurnIdx += 1;
-	int NumTurns = TurnOrder.Num();
-	if (NumTurns <= 0)
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: TurnOrder contains no turns"));
-		return;
-	}
-
-	CurrentTurnIdx = CurrentTurnIdx % TurnOrder.Num();
-
-	if (CurrentTurnIdx == 0)
-	{
-		StartNewRound();
-	}
-
-	// Take either a player or enemy turn
-	UCharSheet* CurrentTurnCharSheet = TurnOrder[CurrentTurnIdx];
-
-	if (CurrentTurnCharSheet == PlayerCharSheet)
-	{
-		CombatWidget->HighlightPlayerBorder();
-		UIManager->SetCombatActionBtnsEnabled(true);
-		
-		// We've activated the buttons and are now waitng for the player to select an action,
-		// which will end up triggering this function again unless we reach the end of the combat
-		return;
-	}
-	else
-	{
-		// Enemy turn
-		CombatWidget->HighlightEnemyBorder();
-		UIManager->SetCombatActionBtnsEnabled(false);
-
-		int EnemyDamageBase = RollD100();
-		float EnemyDamageMultiplier = CurrentTurnCharSheet->GetDamageMultiplier();
-
-		float EnemyDamage = EnemyDamageBase * EnemyDamageMultiplier;
-
-		// Play enemy turn
-
-		// Deal damage to player
-		PlayerCharSheet->TakeDamage(EnemyDamage);
-	}
-
-	if (PlayerCharSheet->GetHp() > 0 && EnemyCharSheet->GetHp() > 0)
-	{
-		StartNextTurn();
-	}
-	else
-	{
-		CombatWidget->RemoveCombatantBindings();
-		// Return to game
-		UIManager->DisplayHUDWidgetOnly();
-		return;
-	}
-}
-
 void UCombatManager::PerformCombatAction(UDA_ItemAction* CombatAction)
 {
-	if (!IsValid(PlayerCharSheet))
+	if (!IsValid(CombatWidget))
 	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find PlayerCharSheet"));
-		return;
-	}
-	if (!IsValid(EnemyCharSheet))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UCombatManager::StartNextTurn: Cannot find EnemyCharSheet"));
+		UE_LOG(LogTemp, Error, TEXT("UCombatManager::PerformCombatAction: Cannot find CombatWidget"));
 		return;
 	}
 
-	// Deal damage to enemy
-	int DamageBase = CombatAction->ActionDamageBase;
-	float DamageMultiplier = PlayerCharSheet->GetDamageMultiplier();
-	float Damage = DamageBase * DamageMultiplier;
-	EnemyCharSheet->TakeDamage(Damage);
+	float PlayerAttackDamage = CombatAction->ActionDamageBase + PlayerCharSheet->GetDamageMultiplier();
+	CombatWidget->ResolveCombatRound(PlayerAttackDamage);
 
-	StartNextTurn();
+	// Call StartNewRound to continue combat from blueprints because we want to wait until all the 
+	// delays for animations etc have finished...
 }
 
 int UCombatManager::RollD100()

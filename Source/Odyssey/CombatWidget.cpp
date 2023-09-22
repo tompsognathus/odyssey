@@ -15,6 +15,8 @@
 #include "WBP_AttackBtn.h"
 #include "CombatManager.h"
 #include "Math/Color.h"
+#include "Utility.h"
+#include "OdysseyCharacter.h"
 
 
 void UCombatWidget::NativeConstruct()
@@ -27,11 +29,21 @@ void UCombatWidget::NativeConstruct()
 		return;
 	}
 	DefaultBorderBrushColor = PlayerBorder->GetBrushColor();
+
+	AOdysseyCharacter* PlayerCharacter = Utility::GetPlayerCharacter(this);
+	if (!IsValid(PlayerCharacter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::NativeConstruct: Invalid PlayerCharacter"));
+		return;
+	}
+
+	PlayerAvatar = PlayerCharacter->GetAvatar();
+
 }
 
-void UCombatWidget::SetEnemyAvatar(UMaterial* AvatarMaterial)
+void UCombatWidget::SetEnemyAvatar(AAvatar* NewEnemyAvatar, UMaterial* AvatarMaterial)
 {
-	if (!IsValid(EnemyAvatar))
+	if (!IsValid(EnemyAvatarImage))
 	{
 		UE_LOG(LogTemp, Error, TEXT("UCombatWidget::SetEnemyAvatar: Invalid EnemyAvatar. Did you mess up the binding?"));
 		return;
@@ -42,7 +54,8 @@ void UCombatWidget::SetEnemyAvatar(UMaterial* AvatarMaterial)
 		return;
 	}
 
-	EnemyAvatar->SetBrushFromMaterial(AvatarMaterial);
+	EnemyAvatarImage->SetBrushFromMaterial(AvatarMaterial);
+	EnemyAvatar = NewEnemyAvatar;
 }
 
 void UCombatWidget::SetEnemyName(FText& EnemyName)
@@ -181,7 +194,6 @@ void UCombatWidget::HandleAttackButtonUnhovered(UWBP_AttackBtn* AttackButton)
 
 }
 
-
 void UCombatWidget::HandleCombatActionRequested(UDA_ItemAction* ItemAction)
 {
 	OnCombatActionRequestedDelegate.Broadcast(ItemAction);
@@ -204,9 +216,18 @@ void UCombatWidget::HighlightBorder(UBorder* BorderToHighlight, UBorder* BorderT
 	BorderToUnhighlight->SetBrushColor(DefaultBorderBrushColor);
 }
 
-void UCombatWidget::SetActionBtnsEnabled_Implementation(bool IsEnabled)
+void UCombatWidget::SetActionBtnsEnabled(bool IsEnabled)
 {
-	// Implement in Blueprint because we need to access the buttons
+	for (UWBP_AttackBtn* AttackButton : AttackButtons)
+	{
+		AttackButton->SetIsEnabled(IsEnabled);
+	}
+}
+
+void UCombatWidget::ResolveCombatRound_Implementation(float PlayerAttackDamage)
+{
+	// Implement in Blueprint because we need to wait for animations to finish and things like that
+
 }
 
 void UCombatWidget::SetUpCombatantBindings(UCharSheet* NewPlayerCharSheet, UCharSheet* NewEnemyCharSheet)
@@ -245,7 +266,6 @@ void UCombatWidget::RemoveCombatantBindings()
 	
 	PlayerCharSheet->OnHpChangedDelegate.RemoveDynamic(this, &UCombatWidget::SetPlayerHpBarPercent);
 	EnemyCharSheet->OnHpChangedDelegate.RemoveDynamic(this, &UCombatWidget::SetEnemyHpBarPercent);
-
 }
 
 

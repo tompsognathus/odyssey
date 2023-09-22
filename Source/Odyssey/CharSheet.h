@@ -48,13 +48,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
 	UDA_Item* ActiveWeapon;
 
-	// Stats
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charsheet")
-	float DamageMultiplier = 1.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
-	int InitiativeBase = 50;
-
 
 protected:
 	virtual void BeginPlay() override;
@@ -63,6 +56,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
 	int MaxHp = 100;
 
+	// Stats
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charsheet")
+	float DamageMultiplier = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharSheet")
+	int InitiativeBase = 50;
 
 private:
 	int Gold = 50;

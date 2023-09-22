@@ -16,6 +16,7 @@
 #include "CombatWidget.h"
 #include "CombatManager.h"
 #include "Utility.h"
+#include "Avatar.h"
 
 UUIManager::UUIManager()
 {
@@ -70,6 +71,13 @@ void UUIManager::CreateParentUIWidget()
 	if (!IsValid(ParentUIWidgetAssetRef))
 	{
 		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateParentUIWidget: Invalid ParentUIWidgetAssetRef. Did you assign it in the editor?"));
+		return;
+	}
+
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::CreateParentUIWidget: Couldn't find world"));
 		return;
 	}
 
@@ -392,7 +400,7 @@ void UUIManager::SetCurrentRoundText(int CurrentRound)
 	CombatWidget->SetCurrentRoundText(CurrentRound);
 }
 
-void UUIManager::SetEnemyInfo(UMaterial* EnemyAvatarMaterial, FText EnemyName)
+void UUIManager::SetEnemyInfo(AAvatar* EnemyAvatar, UMaterial* EnemyAvatarMaterial, FText EnemyName)
 {
 	if (!IsValid(CombatWidgetInstance))
 	{
@@ -407,7 +415,7 @@ void UUIManager::SetEnemyInfo(UMaterial* EnemyAvatarMaterial, FText EnemyName)
 		return;
 	}
 
-	CombatWidget->SetEnemyAvatar(EnemyAvatarMaterial);
+	CombatWidget->SetEnemyAvatar(EnemyAvatar, EnemyAvatarMaterial);
 	CombatWidget->SetEnemyName(EnemyName);
 }
 

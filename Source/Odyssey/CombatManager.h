@@ -19,9 +19,6 @@ class ODYSSEY_API UCombatManager : public UActorComponent
 public:	
 	UCombatManager();
 
-	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void StartNewCombat(class ANPC* Enemy);
-
 	// Getters
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	UCharSheet* GetPlayerCharSheet() const { return PlayerCharSheet; }
@@ -29,19 +26,26 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	UCharSheet* GetEnemyCharSheet() const { return EnemyCharSheet; }
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	TArray<UCharSheet*> GetTurnOrder() const { return TurnOrder; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void StartNewCombat(class ANPC* Enemy);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void StartNewRound();
+	
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	int RollD100();
 
 protected:
 	virtual void BeginPlay() override;
 
 
 private:
-	void StartNewRound();
-	void StartNextTurn();
 
 	UFUNCTION()
 	void PerformCombatAction(UDA_ItemAction* Action);
-
-	int RollD100();
 
 private:
 	UUIManager* UIManager;

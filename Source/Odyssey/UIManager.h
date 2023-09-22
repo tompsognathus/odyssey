@@ -11,6 +11,7 @@ class ANPC;
 class ULootBox;
 class UDA_ItemAction;
 class UWidgetSwitcher;
+class AAvatar;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ODYSSEY_API UUIManager : public UActorComponent
@@ -99,7 +100,7 @@ public:
 	void SetCurrentRoundText(int CurrentRound);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void SetEnemyInfo(UMaterial* EnemyAvatarMaterial, FText EnemyName);
+	void SetEnemyInfo(AAvatar* EnemyAvatar, UMaterial* EnemyAvatarMaterial, FText EnemyName);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void SetEnemyHpPercent(float NormalizedPercent);
