@@ -130,7 +130,7 @@ APlayerController* Utility::GetFirstPlayerController(UObject* Object)
 	APlayerController* FirstPlayerController = World->GetFirstPlayerController();
 	if (!IsValid(FirstPlayerController))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Utility::GetFirstPlayerController:  FirstPlayerController is not valid"));
+		UE_LOG(LogTemp, Error, TEXT("Utility::GetFirstPlayerController: FirstPlayerController is not valid"));
 		return nullptr;
 	}
 
