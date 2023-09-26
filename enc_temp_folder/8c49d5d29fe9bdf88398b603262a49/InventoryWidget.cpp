@@ -86,16 +86,49 @@ void UInventoryWidget::SetWidthForInventoryGrid()
 
 void UInventoryWidget::SetItemNameText(FText NewItemNameText)
 {
+	if (!IsValid(ItemNameText))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UInventoryWidget::SetItemNameText: Invalid ItemNameText"));
+		return;
+	}
+	if (NewItemNameText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UInventoryWidget::SetItemNameText: NewItemNameText is empty or whitespace"));
+		return;
+	}
+
 	ItemNameText->SetText(NewItemNameText);
 }
 
 void UInventoryWidget::SetItemDescriptionText(FText NewItemDescriptionText)
 {
+	if (!IsValid(ItemDescriptionText))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::SetItemDescriptionText: Invalid ItemDescriptionText"));
+		return;
+	}
+	if (NewItemDescriptionText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::SetItemDescriptionText: NewItemDescriptionText is empty or whitespace"));
+		return;
+	}
+
 	ItemDescriptionText->SetText(NewItemDescriptionText);
 }
 
 void UInventoryWidget::SetItemImg(UTexture2D* NewItemImg)
 {
+	if (!IsValid(ItemImg))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::SetItemImg: Invalid ItemImg"));
+		return;
+	}
+	if (!IsValid(NewItemImg))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::SetItemImg: Invalid NewItemImg"));
+		return;
+	}
+
 	ItemImg->SetBrushFromTexture(NewItemImg);
 }
 

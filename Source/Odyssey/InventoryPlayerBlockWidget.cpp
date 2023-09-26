@@ -107,6 +107,7 @@ void UInventoryPlayerBlockWidget::AddItemToGrid(UDA_Item* ItemToAdd, int ItemCou
 	// Bind functions to On Double Clicked event in inventory slot widget
 	InventorySlot->OnDoubleClicked.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked);
 	InventorySlot->OnHovered.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotHovered);
+	InventorySlot->OnUnhovered.AddDynamic(this, &UInventoryPlayerBlockWidget::OnInventorySlotUnhovered);
 
 }
 
@@ -165,16 +166,6 @@ void UInventoryPlayerBlockWidget::RemoveItemFromGrid(UDA_Item* ItemToRemove, int
 	}
 }
 
-void UInventoryPlayerBlockWidget::OnInventorySlotClicked(UWBP_InventorySlot* InventorySlot)
-{
-	if (!IsValid(InventorySlot))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::OnInventorySlotClicked: Invalid InventorySlot"));
-		return;
-	}
-	OnInventorySlotClickedDelegate.Broadcast(this, InventorySlot);
-}
-
 void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
 	if (!IsValid(InventorySlot))
@@ -195,7 +186,7 @@ void UInventoryPlayerBlockWidget::OnInventorySlotHovered(UWBP_InventorySlot* Inv
 	OnInventorySlotHoveredDelegate.Broadcast(this, InventorySlot);
 }
 
-void UInventoryPlayerBlockWidget::OnInventorySlotUnhhovered(UWBP_InventorySlot* InventorySlot)
+void UInventoryPlayerBlockWidget::OnInventorySlotUnhovered(UWBP_InventorySlot* InventorySlot)
 {
 	if (!IsValid(InventorySlot))
 	{

@@ -49,3 +49,6 @@ Make sure the ExampleComponentName matches the name you set in your blueprint.
    4. Now go to your cpp file and implement your DisplayYourWidgetName() function. Use DisplayWidget and add whatever other functionality you need.
    5. Find the CreateUIWidgets() function and add your widget...
    6. Add your widget to the AddWidgetsToWidgetSwitcher() function
+
+
+Licences Used: https://www.unrealengine.com/en-US/eula/content (Quixel materials)

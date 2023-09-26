@@ -27,9 +27,6 @@ public:
 	UFUNCTION()
 	void OnInventorySlotUnhovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
 
-	UFUNCTION()
-	void OnInventorySlotClicked(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int NumInventoryCols = 6;
@@ -71,10 +68,9 @@ protected:
 
 private:
 	void LoadInventoryUIContents();
+	void ClearFeaturedItem();
 
 private:
 	class UInventory* Inventory;
 	class UUIManager* UIManager;
-
-	UWBP_InventorySlot* SelectedInventorySlot;
 };

@@ -9,9 +9,9 @@
 
 #include "WBP_InventorySlot.generated.h"
 
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDoubleClicked, UWBP_InventorySlot*, InventorySlot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHovered, UWBP_InventorySlot*, InventorySlot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnhovered, UWBP_InventorySlot*, InventorySlot);
 
 class UDA_Item;
 class UImage;
@@ -47,6 +47,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnHovered OnHovered;
 
+	UPROPERTY(BlueprintAssignable, Category = "Inventory")
+	FOnUnhovered OnUnhovered;
 
 protected:
 	virtual void NativeConstruct() override;
@@ -56,6 +58,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void DispatchOnHovered();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void DispatchOnUnhovered();
 
 protected:
 	EItemNames ItemName = EItemNames::VE_None;
@@ -81,7 +86,6 @@ protected:
 
 	UPROPERTY()
 	int StackSize;
-
 
 
 private:

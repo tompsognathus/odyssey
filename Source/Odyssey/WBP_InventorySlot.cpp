@@ -95,10 +95,14 @@ int UWBP_InventorySlot::GetWidth()
 void UWBP_InventorySlot::DispatchOnDoubleClicked()
 {
 	OnDoubleClicked.Broadcast(this);
-
 }
 
 void UWBP_InventorySlot::DispatchOnHovered()
 {
 	OnHovered.Broadcast(this);
+}
+
+void UWBP_InventorySlot::DispatchOnUnhovered()
+{
+	OnUnhovered.Broadcast(this);
 }

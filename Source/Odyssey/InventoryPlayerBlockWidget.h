@@ -6,7 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "InventoryPlayerBlockWidget.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotClicked, UInventoryPlayerBlockWidget*, InventoryBlockWidget, UWBP_InventorySlot*, InventorySlot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotDoubleClicked, UInventoryPlayerBlockWidget*, InventoryBlockWidget, UWBP_InventorySlot*, InventorySlot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotHovered, UInventoryPlayerBlockWidget*, InventoryBlockWidget, UWBP_InventorySlot*, InventorySlot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotUnhovered, UInventoryPlayerBlockWidget*, InventoryBlockWidget, UWBP_InventorySlot*, InventorySlot);
@@ -36,9 +35,6 @@ public:
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
-	FOnInventorySlotClicked OnInventorySlotClickedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnInventorySlotDoubleClicked OnInventorySlotDoubleClickedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
@@ -60,16 +56,13 @@ protected:
 
 private:
 	UFUNCTION()
-	void OnInventorySlotClicked(UWBP_InventorySlot* InventorySlot);
-
-	UFUNCTION()
 	void OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot);
 
 	UFUNCTION()
 	void OnInventorySlotHovered(UWBP_InventorySlot* InventorySlot);
 
 	UFUNCTION()
-	void OnInventorySlotUnhhovered(UWBP_InventorySlot* InventorySlot);
+	void OnInventorySlotUnhovered(UWBP_InventorySlot* InventorySlot);
 
 private:
 	UUIManager* UIManager;
