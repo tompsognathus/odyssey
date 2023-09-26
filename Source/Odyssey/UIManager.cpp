@@ -94,31 +94,37 @@ void UUIManager::CreateParentUIWidget()
 
 void UUIManager::DisplayHUDWidgetOnly()
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(HUDWidgetInstance);
 }
 
 void UUIManager::DisplayMainMenuWidget()
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(MainMenuWidgetInstance);
 }
 
 void UUIManager::DisplayPauseMenuWidget()
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(PauseMenuWidgetInstance);
 }
 
 void UUIManager::DisplayOptionsMenuWidget()
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(OptionsMenuWidgetInstance);
 }
 
 void UUIManager::DisplayAudioOptionsMenuWidget()
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(AudioOptionsMenuWidgetInstance);
 }
 
 void UUIManager::DisplayRPEncounterWidget(UDialogueComponent* DialogueOwnerComponent)
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(RPEncounterWidgetInstance);
 
 	URPEncounterWidget* RPEncounterWidget = Cast<URPEncounterWidget>(RPEncounterWidgetInstance);
@@ -133,6 +139,7 @@ void UUIManager::DisplayRPEncounterWidget(UDialogueComponent* DialogueOwnerCompo
 
 void UUIManager::DisplayCombatWidget(class ANPC* Enemy)
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(CombatWidgetInstance);
 
 	if (!IsValid(CombatManager))
@@ -145,32 +152,20 @@ void UUIManager::DisplayCombatWidget(class ANPC* Enemy)
 
 void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(TradingInventoryWidgetInstance);
 	LoadTradingInventoryWidgetContent(LootBox);
 }
 
 void UUIManager::DisplayGameMenuWidget()
 {
-	if (!IsValid(GameMenuWidgetInstance))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayGameMenuWidget: Invalid GameMenuWidgetInstance"));
-		return;
-	}
-
-	UGameMenuWidget* GameMenuWidget = Cast<UGameMenuWidget>(GameMenuWidgetInstance);
-
-	if (!GameMenuWidget->Implements<UWidgetSwitchable>())
-	{
-		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayGameMenuWidget: GameMenuWidgetInstance doesn't implement IWidgetSwitchable"));
-		return;
-	}
-
-	IWidgetSwitchable::Execute_PrepareToDisplay(GameMenuWidgetInstance);
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(GameMenuWidgetInstance);
 }
 
 void UUIManager::DisplayCreditsWidget()
 {
+	// DisplayWidget checks if widget is valid, no need to check here
 	DisplayWidget(CreditsWidgetInstance);
 }
 
@@ -686,6 +681,11 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay, bool DoAddT
 	{
 		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayWidget: Invalid WidgetSwitcher"));
 		return;
+	}
+
+	if (WidgetInstanceToDisplay->Implements<UWidgetSwitchable>())
+	{
+		IWidgetSwitchable::Execute_PrepareToDisplay(GameMenuWidgetInstance);
 	}
 
 	APlayerController* PlayerController = Utility::GetFirstPlayerController(this);
