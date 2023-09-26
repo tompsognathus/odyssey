@@ -39,6 +39,8 @@ void UInventoryWidget::NativeConstruct()
 		return;
 	}
 	WBP_InventoryPlayerBlock->OnInventorySlotHoveredDelegate.AddDynamic(this, &UInventoryWidget::OnInventorySlotHovered);
+	WBP_InventoryPlayerBlock->OnInventorySlotUnhoveredDelegate.AddDynamic(this, &UInventoryWidget::OnInventorySlotUnhovered);
+	WBP_InventoryPlayerBlock->OnInventorySlotClickedDelegate.AddDynamic(this, &UInventoryWidget::OnInventorySlotClicked);
 }
 
 void UInventoryWidget::PrepareToDisplay_Implementation()
@@ -154,11 +156,8 @@ void UInventoryWidget::OnInventorySlotHovered(UInventoryPlayerBlockWidget* Inven
 		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::OnInventorySlotHovered: InvalidInventorySlot"));
 		return;
 	}
-	if (!IsValid(InventoryBlockWidget))
-	{
-		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::OnInventorySlotHovered: Invalid InventoryBlockWidget"));
-		return;
-	}
+
+	UE_LOG(LogTemp, Error, TEXT("Hovered"));
 
 	FText HoveredItemDisplayNameText = FText::FromString(InventorySlot->GetItem()->DisplayName);
 	if (HoveredItemDisplayNameText.IsEmptyOrWhitespace())
@@ -183,5 +182,53 @@ void UInventoryWidget::OnInventorySlotHovered(UInventoryPlayerBlockWidget* Inven
 		return;
 	}
 	SetItemImg(HoveredItemImgTexture);
+}
+
+void UInventoryWidget::OnInventorySlotUnhovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot)
+{
+	if (!IsValid(SelectedInventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::OnInventorySlotUnhovered: Invalid SelectedInventorySlot"));
+		return;
+	}
+
+	UE_LOG(LogTemp, Error, TEXT("Unhovered"));
+
+	// Display currently selected item
+	FText SelectedItemDisplayNameText = FText::FromString(SelectedInventorySlot->GetItem()->DisplayName);
+	if (SelectedItemDisplayNameText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::OnInventorySlotUnhovered: ItemDisplayNameText is empty or whitespace"));
+		return;
+	}
+	SetItemNameText(SelectedItemDisplayNameText);
+
+	FText SelectedItemDescriptionText = FText::FromString(SelectedInventorySlot->GetItem()->Description);
+	if (SelectedItemDescriptionText.IsEmptyOrWhitespace())
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::OnInventorySlotUnhovered: ItemDescriptionText is empty or whitespace"));
+		return;
+	}
+	SetItemDescriptionText(SelectedItemDescriptionText);
+
+	UTexture2D* SelectedItemImgTexture = SelectedInventorySlot->GetItem()->Icon;
+	if (!IsValid(SelectedItemImgTexture))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::OnInventorySlotUnhovered: Invalid ItemImgTexture"));
+		return;
+	}
+	SetItemImg(SelectedItemImgTexture);
+}
+
+void UInventoryWidget::OnInventorySlotClicked(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot)
+{
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::OnInventorySlotClicked: Invalid InventorySlot"));
+		return;
+	}
+
+	UE_LOG(LogTemp, Error, TEXT("Clicked"));
+	SelectedInventorySlot = InventorySlot;
 }
 

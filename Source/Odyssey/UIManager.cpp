@@ -17,6 +17,7 @@
 #include "CombatManager.h"
 #include "Utility.h"
 #include "Avatar.h"
+#include "GameMenuWidget.h"
 
 UUIManager::UUIManager()
 {
@@ -150,6 +151,20 @@ void UUIManager::DisplayTradingInventoryWidget(ULootBox* LootBox)
 
 void UUIManager::DisplayGameMenuWidget()
 {
+	if (!IsValid(GameMenuWidgetInstance))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayGameMenuWidget: Invalid GameMenuWidgetInstance"));
+		return;
+	}
+
+	UGameMenuWidget* GameMenuWidget = Cast<UGameMenuWidget>(GameMenuWidgetInstance);
+
+	if (!GameMenuWidget->Implements<UWidgetSwitchable>())
+	{
+		UE_LOG(LogTemp, Error, TEXT("UUIManager::DisplayGameMenuWidget: GameMenuWidgetInstance doesn't implement IWidgetSwitchable"));
+		return;
+	}
+
 	IWidgetSwitchable::Execute_PrepareToDisplay(GameMenuWidgetInstance);
 	DisplayWidget(GameMenuWidgetInstance);
 }

@@ -165,6 +165,16 @@ void UInventoryPlayerBlockWidget::RemoveItemFromGrid(UDA_Item* ItemToRemove, int
 	}
 }
 
+void UInventoryPlayerBlockWidget::OnInventorySlotClicked(UWBP_InventorySlot* InventorySlot)
+{
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::OnInventorySlotClicked: Invalid InventorySlot"));
+		return;
+	}
+	OnInventorySlotClickedDelegate.Broadcast(this, InventorySlot);
+}
+
 void UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked(UWBP_InventorySlot* InventorySlot)
 {
 	if (!IsValid(InventorySlot))
@@ -179,10 +189,20 @@ void UInventoryPlayerBlockWidget::OnInventorySlotHovered(UWBP_InventorySlot* Inv
 {
 	if (!IsValid(InventorySlot))
 	{
-		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::OnInventorySlotDoubleClicked: Invalid InventorySlot"));
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::OnInventorySlotHovered: Invalid InventorySlot"));
 		return;
 	}
 	OnInventorySlotHoveredDelegate.Broadcast(this, InventorySlot);
+}
+
+void UInventoryPlayerBlockWidget::OnInventorySlotUnhhovered(UWBP_InventorySlot* InventorySlot)
+{
+	if (!IsValid(InventorySlot))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryPlayerBlockWidget::OnInventorySlotUnhhovered: Invalid InventorySlot"));
+		return;
+	}
+	OnInventorySlotUnhoveredDelegate.Broadcast(this, InventorySlot);
 }
 
 

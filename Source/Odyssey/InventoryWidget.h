@@ -11,6 +11,7 @@ class UTextBlock;
 class UImage;
 class USizeBox;
 class UInventoryPlayerBlockWidget;
+class UWBP_InventorySlot;
 
 UCLASS()
 class ODYSSEY_API UInventoryWidget : public UUserWidget, public IWidgetSwitchable
@@ -22,6 +23,12 @@ public:
 
 	UFUNCTION()
 	void OnInventorySlotHovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
+
+	UFUNCTION()
+	void OnInventorySlotUnhovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
+
+	UFUNCTION()
+	void OnInventorySlotClicked(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
@@ -69,4 +76,5 @@ private:
 	class UInventory* Inventory;
 	class UUIManager* UIManager;
 
+	UWBP_InventorySlot* SelectedInventorySlot;
 };
