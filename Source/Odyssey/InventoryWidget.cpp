@@ -119,7 +119,7 @@ void UInventoryWidget::ClearFeaturedItem()
 {
 	SetItemNameText(FText::FromString(""));
 	SetItemDescriptionText(FText::FromString(""));
-	SetItemImg(nullptr);
+	SetItemImg(nullptr); 
 }
 
 void UInventoryWidget::OnInventorySlotHovered(UInventoryPlayerBlockWidget* InventoryBlockWidget, UWBP_InventorySlot* InventorySlot)
