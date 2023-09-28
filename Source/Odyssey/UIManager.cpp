@@ -722,7 +722,7 @@ void UUIManager::DisplayWidget(UUserWidget* WidgetInstanceToDisplay, bool DoAddT
 		// Hide mouse cursor
 		PlayerController->bShowMouseCursor = false;
 		// Switch to exploration controls
-		PlayerCharacter->ActivateExploreMappingContext();
+		PlayerCharacter->ActivateExploreOrInteractMappingContext();
 		// Clear widget stack
 		WidgetPathThroughMenusStack.Empty();
 		// Resume game world

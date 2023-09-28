@@ -88,6 +88,9 @@ public:
 	FName GetParticipantName_Implementation() const override;
 
 	/**** Inputs *****/
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void ActivateExploreOrInteractMappingContext();
+
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void ActivateExploreMappingContext();
 

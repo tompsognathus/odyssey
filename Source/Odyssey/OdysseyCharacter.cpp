@@ -108,6 +108,18 @@ void AOdysseyCharacter::Tick(float DeltaTime)
 	UpdateInputPromptVisibility();
 }
 
+void AOdysseyCharacter::ActivateExploreOrInteractMappingContext()
+{
+	if (InteractTarget != nullptr)
+	{
+		ActivateInteractMappingContext();
+	}
+	else
+	{
+		ActivateExploreMappingContext();
+	}
+}
+
 void AOdysseyCharacter::ActivateExploreMappingContext()
 {
 	UEnhancedInputLocalPlayerSubsystem* LocalPlayerSubsystem = Utility::GetEnhancedInputLocalPlayerSubsystem(this);
