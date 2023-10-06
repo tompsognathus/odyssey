@@ -40,6 +40,21 @@ void UInventoryWidget::NativeConstruct()
 	}
 	WBP_InventoryPlayerBlock->OnInventorySlotHoveredDelegate.AddDynamic(this, &UInventoryWidget::OnInventorySlotHovered);
 	WBP_InventoryPlayerBlock->OnInventorySlotUnhoveredDelegate.AddDynamic(this, &UInventoryWidget::OnInventorySlotUnhovered);
+
+	// Clear default item description text
+	if (!IsValid(ItemNameText))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::NativeConstruct: Invalid ItemNameText"));
+		return;
+	}
+	ItemNameText->SetText(FText::FromString(""));
+
+	if (!IsValid(ItemDescriptionText))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UInventoryWidget::NativeConstruct: Invalid ItemDescriptionText"));
+		return;
+	}
+	ItemDescriptionText->SetText(FText::FromString(""));
 }
 
 void UInventoryWidget::PrepareToDisplay_Implementation()
