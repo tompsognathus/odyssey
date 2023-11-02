@@ -23,7 +23,6 @@ class ODYSSEY_API ANPC : public AActor, public IInteractable, public IDlgDialogu
 public:
 	ANPC();
 
-public:
 	class UWidgetComponent* InputPromptWidgetComponent;
 
 	/***** NPC Info *****/
